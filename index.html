@@ -9,7 +9,7 @@
     <!-- Firebase App y Firestore CDN (Compat) -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-    <!-- CryptoJS para cifrado de contraseñas (URL corregida) -->
+    <!-- CryptoJS para cifrado de contraseñas -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 </head>
 <body class="bg-slate-100 min-h-screen flex items-center justify-center p-2 sm:p-4 md:p-6 relative">
@@ -17,7 +17,7 @@
     <!-- CONTENEDOR DE NOTIFICACIONES FLOTANTES (TOAST) -->
     <div id="toast-container" class="fixed top-5 right-5 z-[100] flex flex-col gap-2 pointer-events-none"></div>
 
-    <!-- MODAL DE CONFIRMACIÓN PERSONALIZADO (CENTRADO EN PANTALLA) -->
+    <!-- MODAL DE CONFIRMACIÓN PERSONALIZADO -->
     <div id="custom-confirm-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[60] hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 border-t-4 border-yellow-400 transform transition-all scale-100">
             <h3 id="confirm-title" class="text-lg font-bold text-slate-800 mb-2">Confirmación</h3>
@@ -45,16 +45,16 @@
                 <p class="text-xs text-slate-400 mt-1 font-semibold">YELLO MKT GROUP - ACCESO SEGURO</p>
             </div>
 
-            <form onsubmit="handleLogin(event)" class="space-y-4">
+            <form onsubmit="handleLogin(event)" autocomplete="off" class="space-y-4">
                 <div>
                     <label class="block text-sm font-semibold text-slate-600 mb-1">Nombre de Usuario o Teléfono</label>
-                    <input type="text" id="login-identifier" placeholder="Usuario o Teléfono" required class="w-full px-4 py-2.5 bg-blue-50/50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-slate-700 font-medium text-sm sm:text-base">
+                    <input type="text" id="login-identifier" autocomplete="off" placeholder="Usuario o Teléfono" required class="w-full px-4 py-2.5 bg-blue-50/50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-slate-700 font-medium text-sm sm:text-base">
                 </div>
 
                 <div>
                     <label class="block text-sm font-semibold text-slate-600 mb-1">Contraseña</label>
                     <div class="relative">
-                        <input type="password" id="login-pass" placeholder="••••••••" required class="w-full px-4 py-2.5 bg-blue-50/50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-slate-700 font-medium pr-10 text-sm sm:text-base">
+                        <input type="password" id="login-pass" autocomplete="new-password" placeholder="••••••••" required class="w-full px-4 py-2.5 bg-blue-50/50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-slate-700 font-medium pr-10 text-sm sm:text-base">
                         <button type="button" onclick="togglePassword('login-pass')" class="absolute right-3 top-3 text-slate-400 hover:text-slate-600 text-sm">👁️</button>
                     </div>
                 </div>
@@ -74,27 +74,27 @@
             </form>
         </div>
 
-        <!-- VISTA DE RECUPERACIÓN AVANZADA (PREGUNTA SECRETA) -->
+        <!-- VISTA DE RECUPERACIÓN AVANZADA -->
         <div id="view-recovery" class="p-6 sm:p-10 md:p-12 max-w-md mx-auto w-full hidden">
             <div class="text-center mb-6 sm:mb-8">
                 <h1 class="text-xl sm:text-2xl font-bold text-slate-800">Recuperación de Cuenta</h1>
                 <p class="text-xs text-slate-500 mt-1">Verifica tu identidad mediante tu Teléfono y Pregunta Secreta</p>
             </div>
 
-            <form onsubmit="handleRecovery(event)" class="space-y-4">
+            <form onsubmit="handleRecovery(event)" autocomplete="off" class="space-y-4">
                 <div>
                     <label class="block text-sm font-semibold text-slate-600 mb-1">Número de Teléfono</label>
-                    <input type="tel" id="rec-phone" placeholder="Ej. 5512345678" required class="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm sm:text-base">
+                    <input type="tel" id="rec-phone" autocomplete="off" placeholder="Ej. 5512345678" required class="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm sm:text-base">
                 </div>
                 <div>
                     <label class="block text-sm font-semibold text-slate-600 mb-1">Pregunta de Seguridad</label>
                     <p class="text-xs text-slate-500 mb-1 bg-slate-100 p-2 rounded-lg" id="rec-question-text">Ingresa tu teléfono primero para cargar tu pregunta...</p>
-                    <input type="text" id="rec-answer" placeholder="Respuesta secreta" required class="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm sm:text-base">
+                    <input type="text" id="rec-answer" autocomplete="off" placeholder="Respuesta secreta" required class="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm sm:text-base">
                     <button type="button" onclick="fetchSecurityQuestion()" class="mt-1 text-xs text-blue-600 font-semibold hover:underline">Cargar mi pregunta secreta</button>
                 </div>
                 <div>
                     <label class="block text-sm font-semibold text-slate-600 mb-1">Nueva Contraseña</label>
-                    <input type="password" id="rec-newpass" placeholder="Mínimo 8 caracteres, Mayúscula, Número" required class="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm sm:text-base">
+                    <input type="password" id="rec-newpass" autocomplete="new-password" placeholder="Mínimo 8 caracteres, Mayúscula, Número" required class="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm sm:text-base">
                 </div>
 
                 <button type="submit" class="w-full py-3 bg-yellow-400 hover:bg-yellow-500 text-slate-900 font-bold rounded-xl transition duration-200 shadow-md text-sm sm:text-base">
@@ -116,34 +116,34 @@
                 <p class="text-xs text-slate-500 mt-1">Configura usuario, teléfono y medidas de seguridad</p>
             </div>
 
-            <form onsubmit="handleRegister(event)" class="space-y-3">
+            <form onsubmit="handleRegister(event)" autocomplete="off" class="space-y-3">
                 <div>
                     <label class="block text-xs font-semibold text-slate-600 mb-1">Nombre Completo</label>
-                    <input type="text" id="reg-nombre" placeholder="Nombre completo" required class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm">
+                    <input type="text" id="reg-nombre" autocomplete="off" placeholder="Nombre completo" required class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm">
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-slate-600 mb-1">Nombre de Usuario Único</label>
-                    <input type="text" id="reg-username" placeholder="Ej. angel_delgado" required class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm">
+                    <input type="text" id="reg-username" autocomplete="off" placeholder="Ej. angel_delgado" required class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm">
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-slate-600 mb-1">Número de Teléfono (10 dígitos)</label>
-                    <input type="tel" id="reg-phone" placeholder="Ej. 5512345678" required class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm">
+                    <input type="tel" id="reg-phone" autocomplete="off" placeholder="Ej. 5512345678" required class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm">
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-slate-600 mb-1">Contraseña Segura</label>
-                    <input type="password" id="reg-pass" placeholder="Mínimo 8 caracteres, 1 mayúscula, 1 número" required class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm">
+                    <input type="password" id="reg-pass" autocomplete="new-password" placeholder="Mínimo 8 caracteres, 1 mayúscula, 1 número" required class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm">
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-slate-600 mb-1">Pregunta de Recuperación (Ej. ¿Nombre de tu mascota?)</label>
-                    <input type="text" id="reg-question" placeholder="Escribe tu pregunta secreta" required class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm">
+                    <input type="text" id="reg-question" autocomplete="off" placeholder="Escribe tu pregunta secreta" required class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm">
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-slate-600 mb-1">Respuesta Secreta</label>
-                    <input type="text" id="reg-answer" placeholder="Respuesta a tu pregunta" required class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm">
+                    <input type="text" id="reg-answer" autocomplete="off" placeholder="Respuesta a tu pregunta" required class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm">
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-slate-600 mb-1">Código Secreto Admin (Opcional)</label>
-                    <input type="password" id="reg-secret" placeholder="Solo administradores" class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm bg-amber-50/50">
+                    <input type="password" id="reg-secret" autocomplete="new-password" placeholder="Solo administradores" class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm bg-amber-50/50">
                 </div>
 
                 <button type="submit" class="w-full py-2.5 bg-yellow-400 hover:bg-yellow-500 text-slate-900 font-bold rounded-xl transition duration-200 shadow-md text-sm">
@@ -174,7 +174,7 @@
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
                 <div class="bg-slate-50 p-4 sm:p-6 rounded-2xl border border-slate-200/80">
                     <h2 class="text-base sm:text-lg font-bold text-slate-800 mb-4">Registrar Nueva Incapacidad</h2>
-                    <form onsubmit="saveIncapacidad(event)" class="space-y-4">
+                    <form onsubmit="saveIncapacidad(event)" autocomplete="off" class="space-y-4">
                         <div>
                             <label class="block text-xs font-semibold text-slate-600 mb-1">Nombre del Colaborador:</label>
                             <input type="text" id="emp-nombre-colaborador" required class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none bg-white text-sm font-medium text-slate-700">
@@ -245,28 +245,62 @@
                 </div>
             </div>
 
-            <div class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-3">
-                <input type="text" id="search-input" placeholder="Buscar por empleado..." onkeyup="renderAdminTable()" class="px-4 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none w-full sm:w-72 text-sm">
+            <!-- PESTAÑAS DEL ADMINISTRADOR -->
+            <div class="flex border-b border-slate-200 mb-6">
+                <button onclick="switchAdminTab('incapacidades')" id="tab-btn-incapacidades" class="px-6 py-2.5 font-bold text-sm text-yellow-600 border-b-2 border-yellow-400 transition">Incapacidades</button>
+                <button onclick="switchAdminTab('usuarios')" id="tab-btn-usuarios" class="px-6 py-2.5 font-bold text-sm text-slate-400 hover:text-slate-600 transition">Usuarios Registrados</button>
             </div>
 
-            <div class="overflow-x-auto rounded-xl border border-slate-100 shadow-sm">
-                <table class="w-full text-left border-collapse min-w-[700px]">
-                    <thead>
-                        <tr class="bg-yellow-50/80 text-yellow-900 text-sm font-semibold border-b border-yellow-100">
-                            <th class="p-3">Empleado</th>
-                            <th class="p-3">Motivo</th>
-                            <th class="p-3">Fechas</th>
-                            <th class="p-3">Días</th>
-                            <th class="p-3">Estatus</th>
-                            <th class="p-3">PDF / Archivo</th>
-                            <th class="p-3 text-center">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody id="admin-table-body" class="divide-y divide-slate-100 text-sm text-slate-700">
-                        <!-- Dinámico -->
-                    </tbody>
-                </table>
+            <!-- SECCIÓN 1: INCAPACIDADES -->
+            <div id="admin-section-incapacidades">
+                <div class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-3">
+                    <input type="text" id="search-input" placeholder="Buscar por empleado..." onkeyup="renderAdminTable()" class="px-4 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none w-full sm:w-72 text-sm">
+                </div>
+
+                <div class="overflow-x-auto rounded-xl border border-slate-100 shadow-sm">
+                    <table class="w-full text-left border-collapse min-w-[700px]">
+                        <thead>
+                            <tr class="bg-yellow-50/80 text-yellow-900 text-sm font-semibold border-b border-yellow-100">
+                                <th class="p-3">Empleado</th>
+                                <th class="p-3">Motivo</th>
+                                <th class="p-3">Fechas</th>
+                                <th class="p-3">Días</th>
+                                <th class="p-3">Estatus</th>
+                                <th class="p-3">PDF / Archivo</th>
+                                <th class="p-3 text-center">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-table-body" class="divide-y divide-slate-100 text-sm text-slate-700">
+                            <!-- Dinámico -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
+
+            <!-- SECCIÓN 2: USUARIOS REGISTRADOS -->
+            <div id="admin-section-usuarios" class="hidden">
+                <div class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-3">
+                    <input type="text" id="search-user-input" placeholder="Buscar usuario o teléfono..." onkeyup="renderUsersTable()" class="px-4 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none w-full sm:w-72 text-sm">
+                </div>
+
+                <div class="overflow-x-auto rounded-xl border border-slate-100 shadow-sm">
+                    <table class="w-full text-left border-collapse min-w-[600px]">
+                        <thead>
+                            <tr class="bg-yellow-50/80 text-yellow-900 text-sm font-semibold border-b border-yellow-100">
+                                <th class="p-3">Nombre Completo</th>
+                                <th class="p-3">Usuario</th>
+                                <th class="p-3">Teléfono</th>
+                                <th class="p-3">Rol</th>
+                                <th class="p-3 text-center">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-users-table-body" class="divide-y divide-slate-100 text-sm text-slate-700">
+                            <!-- Dinámico -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
         </div>
 
     </div>
@@ -339,10 +373,19 @@
 
         let sessionActual = JSON.parse(localStorage.getItem('yello_session')) || null;
         let incapacidadesGlobales = [];
+        let usuariosGlobales = [];
         let intentosFallidosLogin = 5;
 
         window.onload = function() {
             inicializarAdminPorDefecto();
+
+            setTimeout(() => {
+                document.querySelectorAll('input').forEach(input => {
+                    if(input.type !== 'submit' && input.type !== 'button') {
+                        input.value = '';
+                    }
+                });
+            }, 50);
 
             if (sessionActual) {
                 if (sessionActual.role === 'admin') {
@@ -397,6 +440,26 @@
             } else if (viewName === 'admin') {
                 document.getElementById('view-admin').classList.remove('hidden');
                 escucharIncapacidadesAdmin();
+                escucharUsuariosAdmin();
+            }
+        }
+
+        function switchAdminTab(tabName) {
+            const secInc = document.getElementById('admin-section-incapacidades');
+            const secUsr = document.getElementById('admin-section-usuarios');
+            const btnInc = document.getElementById('tab-btn-incapacidades');
+            const btnUsr = document.getElementById('tab-btn-usuarios');
+
+            if (tabName === 'incapacidades') {
+                secInc.classList.remove('hidden');
+                secUsr.classList.add('hidden');
+                btnInc.className = "px-6 py-2.5 font-bold text-sm text-yellow-600 border-b-2 border-yellow-400 transition";
+                btnUsr.className = "px-6 py-2.5 font-bold text-sm text-slate-400 hover:text-slate-600 transition";
+            } else {
+                secInc.classList.add('hidden');
+                secUsr.classList.remove('hidden');
+                btnUsr.className = "px-6 py-2.5 font-bold text-sm text-yellow-600 border-b-2 border-yellow-400 transition";
+                btnInc.className = "px-6 py-2.5 font-bold text-sm text-slate-400 hover:text-slate-600 transition";
             }
         }
 
@@ -734,6 +797,19 @@
                 });
         }
 
+        function escucharUsuariosAdmin() {
+            db.collection('usuarios')
+                .onSnapshot(snapshot => {
+                    usuariosGlobales = [];
+                    snapshot.forEach(doc => {
+                        let item = doc.data();
+                        item.docId = doc.id; // Guardamos el ID real de Firestore
+                        usuariosGlobales.push(item);
+                    });
+                    renderUsersTable();
+                });
+        }
+
         function renderAdminTable() {
             const tbody = document.getElementById('admin-table-body');
             const search = document.getElementById('search-input').value.toLowerCase();
@@ -756,7 +832,7 @@
                     <td class="p-3">
                         <select onchange="updateStatus('${item.docId}', this.value)" class="px-2 py-1 border border-slate-200 rounded-lg bg-white text-xs font-medium focus:outline-none focus:ring-1 focus:ring-yellow-400">
                             <option value="Pendiente" ${item.estatus === 'Pendiente' ? 'selected' : ''}>Pendiente</option>
-                            <option value="Aprobado" ${item.estual === 'Aprobado' ? 'selected' : ''}>Aprobado</option>
+                            <option value="Aprobado" ${item.estatus === 'Aprobado' ? 'selected' : ''}>Aprobado</option>
                             <option value="Rechazado" ${item.estatus === 'Rechazado' ? 'selected' : ''}>Rechazado</option>
                         </select>
                     </td>
@@ -768,6 +844,41 @@
                     </td>
                     <td class="p-3 text-center">
                         <button onclick="deleteItem('${item.docId}')" class="bg-rose-100 text-rose-700 px-3 py-1 rounded-lg text-xs font-semibold hover:bg-rose-200 transition">Eliminar</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function renderUsersTable() {
+            const tbody = document.getElementById('admin-users-table-body');
+            const search = document.getElementById('search-user-input').value.toLowerCase();
+            tbody.innerHTML = '';
+
+            const filtered = usuariosGlobales.filter(u => 
+                (u.nombre && u.nombre.toLowerCase().includes(search)) || 
+                (u.username && u.username.toLowerCase().includes(search)) || 
+                (u.phone && u.phone.includes(search))
+            );
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="text-center p-6 text-slate-400">No hay usuarios encontrados</td></tr>`;
+                return;
+            }
+
+            filtered.forEach(u => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="p-3 font-medium text-slate-800">${u.nombre || 'N/D'}</td>
+                    <td class="p-3 text-slate-600">${u.username || 'N/D'}</td>
+                    <td class="p-3 text-slate-600">${u.phone || 'N/D'}</td>
+                    <td class="p-3">
+                        <span class="px-2 py-1 rounded-lg text-xs font-bold ${u.role === 'admin' ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 text-slate-700'}">
+                            ${u.role || 'employee'}
+                        </span>
+                    </td>
+                    <td class="p-3 text-center">
+                        ${u.phone === sessionActual.phone ? '<span class="text-xs text-slate-400 italic">Sesión actual</span>' : `<button onclick="deleteUser('${u.docId}')" class="bg-rose-100 text-rose-700 px-3 py-1 rounded-lg text-xs font-semibold hover:bg-rose-200 transition">Eliminar</button>`}
                     </td>
                 `;
                 tbody.appendChild(tr);
@@ -792,6 +903,18 @@
                 } catch (error) {
                     console.error("Error al eliminar:", error);
                     showToast("Error al eliminar el registro", 'error');
+                }
+            });
+        }
+
+        function deleteUser(docId) {
+            showConfirm('Eliminar usuario', '¿Estás seguro de eliminar este usuario del sistema?', async () => {
+                try {
+                    await db.collection('usuarios').doc(docId).delete();
+                    showToast('Usuario eliminado con éxito', 'success');
+                } catch (error) {
+                    console.error("Error al eliminar usuario:", error);
+                    showToast("Error al eliminar el usuario", 'error');
                 }
             });
         }
