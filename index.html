@@ -9,12 +9,29 @@
     <!-- Firebase App y Firestore CDN (Compat) -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <!-- CryptoJS para cifrado de contraseñas (URL corregida) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 </head>
-<body class="bg-slate-100 min-h-screen flex items-center justify-center p-2 sm:p-4 md:p-6">
+<body class="bg-slate-100 min-h-screen flex items-center justify-center p-2 sm:p-4 md:p-6 relative">
+
+    <!-- CONTENEDOR DE NOTIFICACIONES FLOTANTES (TOAST) -->
+    <div id="toast-container" class="fixed top-5 right-5 z-[100] flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- MODAL DE CONFIRMACIÓN PERSONALIZADO (CENTRADO EN PANTALLA) -->
+    <div id="custom-confirm-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[60] hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 border-t-4 border-yellow-400 transform transition-all scale-100">
+            <h3 id="confirm-title" class="text-lg font-bold text-slate-800 mb-2">Confirmación</h3>
+            <p id="confirm-message" class="text-sm text-slate-600 mb-6">¿Estás seguro de realizar esta acción?</p>
+            <div class="flex justify-end gap-3">
+                <button id="confirm-cancel-btn" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl text-sm transition">Cancelar</button>
+                <button id="confirm-ok-btn" class="px-4 py-2 bg-yellow-400 hover:bg-yellow-500 text-slate-900 font-bold rounded-xl text-sm transition shadow-sm">Aceptar</button>
+            </div>
+        </div>
+    </div>
 
     <div class="w-full max-w-5xl bg-white rounded-2xl shadow-xl overflow-hidden relative border-t-8 border-yellow-400 my-auto">
         
-        <!-- VISTA 1: LOGIN / ACCESO -->
+        <!-- VISTA 1: LOGIN / ACCESO SEGURO -->
         <div id="view-login" class="p-6 sm:p-10 md:p-12 max-w-md mx-auto w-full">
             <div class="text-center mb-6 sm:mb-8">
                 <div class="flex justify-center mb-4">
@@ -24,25 +41,30 @@
                         </div>
                     </div>
                 </div>
-                <h1 class="text-lg sm:text-xl font-bold text-slate-700 tracking-tight">INGRESO A LA PLATAFORMA DE INCAPACIDADES (Yello)</h1>
-                <p class="text-xs text-slate-400 mt-1 font-semibold">YELLO MKT GROUP</p>
+                <h1 class="text-lg sm:text-xl font-bold text-slate-700 tracking-tight">INGRESO A LA PLATAFORMA</h1>
+                <p class="text-xs text-slate-400 mt-1 font-semibold">YELLO MKT GROUP - ACCESO SEGURO</p>
             </div>
 
             <form onsubmit="handleLogin(event)" class="space-y-4">
                 <div>
-                    <label class="block text-sm font-semibold text-slate-600 mb-1">Usuario</label>
-                    <input type="text" id="login-user" placeholder="Ej. admin1 o tu usuario" required class="w-full px-4 py-2.5 bg-blue-50/50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-slate-700 font-medium text-sm sm:text-base">
+                    <label class="block text-sm font-semibold text-slate-600 mb-1">Nombre de Usuario o Teléfono</label>
+                    <input type="text" id="login-identifier" placeholder="Usuario o Teléfono" required class="w-full px-4 py-2.5 bg-blue-50/50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-slate-700 font-medium text-sm sm:text-base">
                 </div>
 
                 <div>
                     <label class="block text-sm font-semibold text-slate-600 mb-1">Contraseña</label>
                     <div class="relative">
                         <input type="password" id="login-pass" placeholder="••••••••" required class="w-full px-4 py-2.5 bg-blue-50/50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-slate-700 font-medium pr-10 text-sm sm:text-base">
-                        <button type="button" onclick="togglePassword()" class="absolute right-3 top-3 text-slate-400 hover:text-slate-600 text-sm">👁️</button>
+                        <button type="button" onclick="togglePassword('login-pass')" class="absolute right-3 top-3 text-slate-400 hover:text-slate-600 text-sm">👁️</button>
                     </div>
                 </div>
 
-                <button type="submit" class="w-full py-3 bg-lime-500 hover:bg-lime-600 text-white font-bold rounded-xl transition duration-200 shadow-md text-sm sm:text-base">
+                <div class="flex justify-between items-center text-xs">
+                    <span id="login-attempts-msg" class="text-rose-500 font-semibold"></span>
+                    <button type="button" onclick="switchView('recovery')" class="text-blue-600 hover:underline font-semibold ml-auto">¿Olvidaste tu contraseña o usuario?</button>
+                </div>
+
+                <button type="submit" id="login-btn" class="w-full py-3 bg-lime-500 hover:bg-lime-600 text-white font-bold rounded-xl transition duration-200 shadow-md text-sm sm:text-base">
                     Ingresar
                 </button>
 
@@ -52,38 +74,84 @@
             </form>
         </div>
 
-        <!-- VISTA DE NUEVO REGISTRO DE USUARIO -->
-        <div id="view-register" class="p-6 sm:p-10 md:p-12 max-w-md mx-auto w-full hidden">
+        <!-- VISTA DE RECUPERACIÓN AVANZADA (PREGUNTA SECRETA) -->
+        <div id="view-recovery" class="p-6 sm:p-10 md:p-12 max-w-md mx-auto w-full hidden">
             <div class="text-center mb-6 sm:mb-8">
-                <h1 class="text-xl sm:text-2xl font-bold text-slate-800">Crear Cuenta</h1>
-                <p class="text-xs text-slate-500 mt-1">Regístrate para acceder a tu portal</p>
+                <h1 class="text-xl sm:text-2xl font-bold text-slate-800">Recuperación de Cuenta</h1>
+                <p class="text-xs text-slate-500 mt-1">Verifica tu identidad mediante tu Teléfono y Pregunta Secreta</p>
             </div>
 
-            <form onsubmit="handleRegister(event)" class="space-y-4">
+            <form onsubmit="handleRecovery(event)" class="space-y-4">
                 <div>
-                    <label class="block text-sm font-semibold text-slate-600 mb-1">Nombre Completo</label>
-                    <input type="text" id="reg-nombre" placeholder="Tu nombre" required class="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm sm:text-base">
+                    <label class="block text-sm font-semibold text-slate-600 mb-1">Número de Teléfono</label>
+                    <input type="tel" id="rec-phone" placeholder="Ej. 5512345678" required class="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm sm:text-base">
                 </div>
                 <div>
-                    <label class="block text-sm font-semibold text-slate-600 mb-1">Usuario único</label>
-                    <input type="text" id="reg-user" placeholder="Ej. SUP001" required class="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm sm:text-base">
+                    <label class="block text-sm font-semibold text-slate-600 mb-1">Pregunta de Seguridad</label>
+                    <p class="text-xs text-slate-500 mb-1 bg-slate-100 p-2 rounded-lg" id="rec-question-text">Ingresa tu teléfono primero para cargar tu pregunta...</p>
+                    <input type="text" id="rec-answer" placeholder="Respuesta secreta" required class="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm sm:text-base">
+                    <button type="button" onclick="fetchSecurityQuestion()" class="mt-1 text-xs text-blue-600 font-semibold hover:underline">Cargar mi pregunta secreta</button>
                 </div>
                 <div>
-                    <label class="block text-sm font-semibold text-slate-600 mb-1">Contraseña</label>
-                    <input type="password" id="reg-pass" placeholder="••••••••" required class="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm sm:text-base">
-                </div>
-                <div>
-                    <label class="block text-sm font-semibold text-slate-600 mb-1">Código Secreto de Administrador (Opcional)</label>
-                    <input type="password" id="reg-secret" placeholder="Déjalo vacío si eres empleado" class="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm sm:text-base bg-amber-50/50">
-                    <p class="text-[11px] text-slate-400 mt-1">Solo escríbelo si estás autorizado para crear cuenta de Admin.</p>
+                    <label class="block text-sm font-semibold text-slate-600 mb-1">Nueva Contraseña</label>
+                    <input type="password" id="rec-newpass" placeholder="Mínimo 8 caracteres, Mayúscula, Número" required class="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm sm:text-base">
                 </div>
 
                 <button type="submit" class="w-full py-3 bg-yellow-400 hover:bg-yellow-500 text-slate-900 font-bold rounded-xl transition duration-200 shadow-md text-sm sm:text-base">
-                    Completar Registro
+                    Restablecer Credenciales
                 </button>
 
                 <div class="text-center pt-2">
                     <button type="button" onclick="switchView('login')" class="text-sm text-slate-600 hover:text-slate-900 font-medium">
+                        ← Regresar al login
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- VISTA DE NUEVO REGISTRO SEGURO -->
+        <div id="view-register" class="p-6 sm:p-10 md:p-12 max-w-md mx-auto w-full hidden">
+            <div class="text-center mb-6 sm:mb-8">
+                <h1 class="text-xl sm:text-2xl font-bold text-slate-800">Crear Cuenta</h1>
+                <p class="text-xs text-slate-500 mt-1">Configura usuario, teléfono y medidas de seguridad</p>
+            </div>
+
+            <form onsubmit="handleRegister(event)" class="space-y-3">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Nombre Completo</label>
+                    <input type="text" id="reg-nombre" placeholder="Nombre completo" required class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Nombre de Usuario Único</label>
+                    <input type="text" id="reg-username" placeholder="Ej. angel_delgado" required class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Número de Teléfono (10 dígitos)</label>
+                    <input type="tel" id="reg-phone" placeholder="Ej. 5512345678" required class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Contraseña Segura</label>
+                    <input type="password" id="reg-pass" placeholder="Mínimo 8 caracteres, 1 mayúscula, 1 número" required class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Pregunta de Recuperación (Ej. ¿Nombre de tu mascota?)</label>
+                    <input type="text" id="reg-question" placeholder="Escribe tu pregunta secreta" required class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Respuesta Secreta</label>
+                    <input type="text" id="reg-answer" placeholder="Respuesta a tu pregunta" required class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Código Secreto Admin (Opcional)</label>
+                    <input type="password" id="reg-secret" placeholder="Solo administradores" class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm bg-amber-50/50">
+                </div>
+
+                <button type="submit" class="w-full py-2.5 bg-yellow-400 hover:bg-yellow-500 text-slate-900 font-bold rounded-xl transition duration-200 shadow-md text-sm">
+                    Completar Registro
+                </button>
+
+                <div class="text-center pt-1">
+                    <button type="button" onclick="switchView('login')" class="text-xs text-slate-600 hover:text-slate-900 font-medium">
                         ← Regresar al login
                     </button>
                 </div>
@@ -96,10 +164,11 @@
                 <div>
                     <h1 class="text-xl sm:text-2xl font-bold text-slate-800" id="welcome-employee-title">Mi Portal</h1>
                     <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider">Yello MKT Group - Colaborador</p>
+                    </div>
+                    <button onclick="logout()" class="bg-slate-100 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold hover:bg-slate-200 transition text-center">
+                        Cerrar Sesión
+                    </button>
                 </div>
-                <button onclick="logout()" class="w-full sm:w-auto bg-slate-100 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold hover:bg-slate-200 transition text-center">
-                    Cerrar Sesión
-                </button>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
@@ -127,8 +196,8 @@
                             <input type="date" id="emp-fin" required class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm">
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-slate-600 mb-1">PDF Incapacidad:</label>
-                            <input type="file" id="emp-pdf" accept=".pdf" class="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-yellow-100 file:text-yellow-800 cursor-pointer">
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">PDF Incapacidad <span class="text-rose-500">*Obligatorio (Máx 10 MB)</span>:</label>
+                            <input type="file" id="emp-pdf" accept=".pdf" required class="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-yellow-100 file:text-yellow-800 cursor-pointer">
                         </div>
                         <button type="submit" class="w-full py-2.5 bg-yellow-400 hover:bg-yellow-500 text-slate-900 font-bold rounded-xl text-sm transition shadow-sm">
                             Guardar Solicitud
@@ -144,10 +213,10 @@
                                 <tr class="bg-yellow-50/80 text-yellow-900 text-xs font-semibold border-b border-yellow-100">
                                     <th class="p-3">Colaborador</th>
                                     <th class="p-3">Motivo</th>
-                                    <th class="p-3">Inicio</th>
-                                    <th class="p-3">Fin</th>
+                                    <th class="p-3">Fechas</th>
+                                    <th class="p-3">Días</th>
                                     <th class="p-3">Estatus</th>
-                                    <th class="p-3">PDF / Subir Final</th>
+                                    <th class="p-3">PDF / Actualizar</th>
                                 </tr>
                             </thead>
                             <tbody id="employee-table-body" class="divide-y divide-slate-100 text-xs text-slate-700">
@@ -186,10 +255,10 @@
                         <tr class="bg-yellow-50/80 text-yellow-900 text-sm font-semibold border-b border-yellow-100">
                             <th class="p-3">Empleado</th>
                             <th class="p-3">Motivo</th>
-                            <th class="p-3">Inicio</th>
-                            <th class="p-3">Fin</th>
+                            <th class="p-3">Fechas</th>
+                            <th class="p-3">Días</th>
                             <th class="p-3">Estatus</th>
-                            <th class="p-3">PDF / Archivo Final</th>
+                            <th class="p-3">PDF / Archivo</th>
                             <th class="p-3 text-center">Acciones</th>
                         </tr>
                     </thead>
@@ -204,7 +273,53 @@
 
     <script>
         // ==========================================
-        // CONFIGURACIÓN DE FIREBASE
+        // SISTEMA DE NOTIFICACIONES Y MODAL CENTRADO
+        // ==========================================
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            
+            let bgClass = 'bg-emerald-600 text-white';
+            if (type === 'error') bgClass = 'bg-rose-600 text-white';
+            if (type === 'info') bgClass = 'bg-slate-800 text-white';
+
+            toast.className = `pointer-events-auto px-4 py-3 rounded-xl shadow-lg text-sm font-medium transition-all duration-300 transform translate-y-2 opacity-0 flex items-center gap-2 ${bgClass}`;
+            toast.innerHTML = `<span>${type === 'success' ? '✅' : type === 'error' ? '⚠️' : 'ℹ️'}</span> ${message}`;
+            
+            container.appendChild(toast);
+            setTimeout(() => { toast.classList.remove('translate-y-2', 'opacity-0'); }, 10);
+
+            setTimeout(() => {
+                toast.classList.add('translate-y-2', 'opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+
+        function showConfirm(title, message, onConfirm) {
+            const modal = document.getElementById('custom-confirm-modal');
+            document.getElementById('confirm-title').innerText = title;
+            document.getElementById('confirm-message').innerText = message;
+            modal.classList.remove('hidden');
+
+            const okBtn = document.getElementById('confirm-ok-btn');
+            const cancelBtn = document.getElementById('confirm-cancel-btn');
+
+            const newOkBtn = okBtn.cloneNode(true);
+            const newCancelBtn = cancelBtn.cloneNode(true);
+            okBtn.parentNode.replaceChild(newOkBtn, okBtn);
+            cancelBtn.parentNode.replaceChild(newCancelBtn, cancelBtn);
+
+            newOkBtn.onclick = () => {
+                modal.classList.add('hidden');
+                onConfirm();
+            };
+            newCancelBtn.onclick = () => {
+                modal.classList.add('hidden');
+            };
+        }
+
+        // ==========================================
+        // CONFIGURACIÓN DE FIREBASE Y LÓGICA SEGURA
         // ==========================================
         const firebaseConfig = {
             apiKey: "AIzaSyCARYhRZ5b9107wsXiNCxXMUj8JXdsYaA",
@@ -212,8 +327,7 @@
             projectId: "incapacidades-29fb6",
             storageBucket: "incapacidades-29fb6.firebasestorage.app",
             messagingSenderId: "66356112198",
-            appId: "1:66356112198:web:98b2d9a2ffc64f3cd9d347",
-            measurementId: "G-S5228EE421"
+            appId: "1:66356112198:web:98b2d9a2ffc64f3cd9d347"
         };
 
         const ADMIN_SECRET_CODE = "YELLO-ADMIN-2026*";
@@ -225,6 +339,7 @@
 
         let sessionActual = JSON.parse(localStorage.getItem('yello_session')) || null;
         let incapacidadesGlobales = [];
+        let intentosFallidosLogin = 5;
 
         window.onload = function() {
             inicializarAdminPorDefecto();
@@ -242,12 +357,17 @@
 
         async function inicializarAdminPorDefecto() {
             try {
-                const adminDoc = await db.collection('usuarios').doc('admin1').get();
+                const adminPhone = "5500000000";
+                const adminDoc = await db.collection('usuarios').doc(adminPhone).get();
                 if (!adminDoc.exists) {
-                    await db.collection('usuarios').doc('admin1').set({
+                    const hashedPassword = CryptoJS.SHA256("1234567").toString();
+                    await db.collection('usuarios').doc(adminPhone).set({
                         nombre: 'Administrador General',
-                        user: 'admin1',
-                        pass: '1234567',
+                        username: 'admin',
+                        phone: adminPhone,
+                        pass: hashedPassword,
+                        question: 'Sistema',
+                        answer: CryptoJS.SHA256("yello").toString(),
                         role: 'admin'
                     });
                 }
@@ -259,6 +379,7 @@
         function switchView(viewName) {
             document.getElementById('view-login').classList.add('hidden');
             document.getElementById('view-register').classList.add('hidden');
+            document.getElementById('view-recovery').classList.add('hidden');
             document.getElementById('view-employee').classList.add('hidden');
             document.getElementById('view-admin').classList.add('hidden');
 
@@ -266,10 +387,11 @@
                 document.getElementById('view-login').classList.remove('hidden');
             } else if (viewName === 'register') {
                 document.getElementById('view-register').classList.remove('hidden');
+            } else if (viewName === 'recovery') {
+                document.getElementById('view-recovery').classList.remove('hidden');
             } else if (viewName === 'employee') {
                 document.getElementById('view-employee').classList.remove('hidden');
                 document.getElementById('welcome-employee-title').innerText = `Bienvenido, ${sessionActual.nombre}`;
-                // Prellenar el campo con el nombre de la sesión actual
                 document.getElementById('emp-nombre-colaborador').value = sessionActual.nombre;
                 escucharIncapacidadesEmpleado();
             } else if (viewName === 'admin') {
@@ -278,56 +400,96 @@
             }
         }
 
-        function togglePassword() {
-            const passInput = document.getElementById('login-pass');
+        function togglePassword(id) {
+            const passInput = document.getElementById(id);
             passInput.type = passInput.type === 'password' ? 'text' : 'password';
+        }
+
+        function validarContrasenaSegura(pass) {
+            const regex = /^(?=.*[A-Z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/;
+            return regex.test(pass);
         }
 
         async function handleLogin(event) {
             event.preventDefault();
-            const uInput = document.getElementById('login-user').value.trim();
+            if (intentosFallidosLogin <= 0) {
+                showToast('Demasiados intentos fallidos. Sistema bloqueado temporalmente.', 'error');
+                return;
+            }
+
+            const identifier = document.getElementById('login-identifier').value.trim();
             const pInput = document.getElementById('login-pass').value.trim();
+            const hashedInputPass = CryptoJS.SHA256(pInput).toString();
 
             try {
-                const snapshot = await db.collection('usuarios').where('user', '==', uInput).get();
-                if (snapshot.empty) {
-                    alert('Usuario no encontrado.');
+                let userDoc = await db.collection('usuarios').doc(identifier).get();
+                let usuarioEncontrado = null;
+
+                if (userDoc.exists) {
+                    usuarioEncontrado = userDoc.data();
+                } else {
+                    const queryUser = await db.collection('usuarios').where('username', '==', identifier).get();
+                    if (!queryUser.empty) {
+                        usuarioEncontrado = queryUser.docs[0].data();
+                    }
+                }
+
+                if (!usuarioEncontrado) {
+                    intentosFallidosLogin--;
+                    document.getElementById('login-attempts-msg').innerText = `Intentos restantes: ${intentosFallidosLogin}`;
+                    showToast('Usuario o teléfono no registrado.', 'error');
                     return;
                 }
 
-                let usuarioEncontrado = null;
-                snapshot.forEach(doc => {
-                    usuarioEncontrado = doc.data();
-                });
-
-                if (usuarioEncontrado.pass === pInput) {
+                if (usuarioEncontrado.pass === hashedInputPass) {
                     sessionActual = usuarioEncontrado;
                     localStorage.setItem('yello_session', JSON.stringify(sessionActual));
+                    showToast('¡Sesión iniciada con éxito!', 'success');
                     if (sessionActual.role === 'admin') {
                         switchView('admin');
                     } else {
                         switchView('employee');
                     }
                 } else {
-                    alert('Contraseña incorrecta.');
+                    intentosFallidosLogin--;
+                    document.getElementById('login-attempts-msg').innerText = `Intentos restantes: ${intentosFallidosLogin}`;
+                    showToast('Contraseña incorrecta.', 'error');
+                    if(intentosFallidosLogin <= 0) {
+                        document.getElementById('login-btn').disabled = true;
+                        document.getElementById('login-btn').classList.add('opacity-50', 'cursor-not-allowed');
+                    }
                 }
             } catch (error) {
                 console.error("Error al iniciar sesión:", error);
-                alert("Error de conexión con la base de datos en la nube.");
+                showToast("Error de conexión con la base de datos.", 'error');
             }
         }
 
         async function handleRegister(event) {
             event.preventDefault();
             const nombre = document.getElementById('reg-nombre').value.trim();
-            const user = document.getElementById('reg-user').value.trim();
+            const username = document.getElementById('reg-username').value.trim().toLowerCase();
+            const phone = document.getElementById('reg-phone').value.trim();
             const pass = document.getElementById('reg-pass').value.trim();
+            const question = document.getElementById('reg-question').value.trim();
+            const answer = document.getElementById('reg-answer').value.trim().toLowerCase();
             const secretInput = document.getElementById('reg-secret').value.trim();
 
+            if (!validarContrasenaSegura(pass)) {
+                showToast('La contraseña debe tener al menos 8 caracteres, 1 letra mayúscula y 1 número.', 'error');
+                return;
+            }
+
             try {
-                const checkUser = await db.collection('usuarios').doc(user).get();
+                const checkUser = await db.collection('usuarios').doc(phone).get();
                 if (checkUser.exists) {
-                    alert('Este usuario ya está registrado.');
+                    showToast('Este número de teléfono ya está registrado.', 'error');
+                    return;
+                }
+
+                const checkUsername = await db.collection('usuarios').where('username', '==', username).get();
+                if (!checkUsername.empty) {
+                    showToast('Este nombre de usuario ya está ocupado.', 'error');
                     return;
                 }
 
@@ -336,18 +498,89 @@
                     if (secretInput === ADMIN_SECRET_CODE) {
                         role = 'admin';
                     } else {
-                        alert('El código secreto de administrador es incorrecto. La cuenta se creará como usuario normal (empleado).');
+                        showToast('Código de admin incorrecto. Se creará como empleado.', 'info');
                     }
                 }
 
-                const nuevoUsuario = { nombre, user, pass, role };
-                await db.collection('usuarios').doc(user).set(nuevoUsuario);
+                const hashedPassword = CryptoJS.SHA256(pass).toString();
+                const hashedAnswer = CryptoJS.SHA256(answer).toString();
 
-                alert(`¡Cuenta creada con éxito como ${role.toUpperCase()}! Ahora puedes iniciar sesión.`);
+                const nuevoUsuario = { 
+                    nombre, 
+                    username, 
+                    phone, 
+                    pass: hashedPassword, 
+                    question, 
+                    answer: hashedAnswer, 
+                    role 
+                };
+
+                await db.collection('usuarios').doc(phone).set(nuevoUsuario);
+
+                showToast('¡Cuenta segura creada con éxito!', 'success');
                 switchView('login');
             } catch (error) {
                 console.error("Error al registrar:", error);
-                alert("Error al registrar en la nube.");
+                showToast("Error al registrar en la nube.", 'error');
+            }
+        }
+
+        async function fetchSecurityQuestion() {
+            const phone = document.getElementById('rec-phone').value.trim();
+            if (!phone) {
+                showToast('Ingresa tu número de teléfono primero', 'error');
+                return;
+            }
+            try {
+                const doc = await db.collection('usuarios').doc(phone).get();
+                if (doc.exists) {
+                    const data = doc.data();
+                    document.getElementById('rec-question-text').innerText = `Pregunta: "${data.question}"`;
+                    showToast('Pregunta cargada correctamente', 'info');
+                } else {
+                    showToast('Teléfono no encontrado en el sistema', 'error');
+                }
+            } catch (e) {
+                showToast('Error al buscar el usuario', 'error');
+            }
+        }
+
+        async function handleRecovery(event) {
+            event.preventDefault();
+            const phone = document.getElementById('rec-phone').value.trim();
+            const answerInput = document.getElementById('rec-answer').value.trim().toLowerCase();
+            const newPass = document.getElementById('rec-newpass').value.trim();
+
+            if (!validarContrasenaSegura(newPass)) {
+                showToast('La nueva contraseña debe tener mínimo 8 caracteres, 1 mayúscula y 1 número.', 'error');
+                return;
+            }
+
+            try {
+                const userDocRef = db.collection('usuarios').doc(phone);
+                const docSnap = await userDocRef.get();
+
+                if (!docSnap.exists) {
+                    showToast('El número de teléfono no existe en el sistema.', 'error');
+                    return;
+                }
+
+                const userData = docSnap.data();
+                const hashedInputAnswer = CryptoJS.SHA256(answerInput).toString();
+
+                if (userData.answer !== hashedInputAnswer) {
+                    showToast('La respuesta secreta es incorrecta.', 'error');
+                    return;
+                }
+
+                const hashedNewPass = CryptoJS.SHA256(newPass).toString();
+                await userDocRef.update({ pass: hashedNewPass });
+                
+                showToast('¡Contraseña restablecida con éxito!', 'success');
+                switchView('login');
+            } catch (error) {
+                console.error("Error al recuperar contraseña:", error);
+                showToast("Hubo un error al actualizar la contraseña.", 'error');
             }
         }
 
@@ -355,6 +588,15 @@
             sessionActual = null;
             localStorage.removeItem('yello_session');
             switchView('login');
+            showToast('Sesión cerrada correctamente', 'info');
+        }
+
+        function calcularDiasIncapacidad(inicio, fin) {
+            const d1 = new Date(inicio);
+            const d2 = new Date(fin);
+            const diffTime = Math.abs(d2 - d1);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+            return isNaN(diffDays) || diffDays < 0 ? 0 : diffDays;
         }
 
         function saveIncapacidad(event) {
@@ -365,42 +607,49 @@
             const fin = document.getElementById('emp-fin').value;
             const fileInput = document.getElementById('emp-pdf');
 
-            let pdfData = null;
-            if (fileInput.files.length > 0) {
-                const file = fileInput.files[0];
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    pdfData = e.target.result;
-                    subirIncapacidadANube(empleadoNombre, motivo, inicio, fin, pdfData, event.target);
-                };
-                reader.readAsDataURL(file);
-            } else {
-                subirIncapacidadANube(empleadoNombre, motivo, inicio, fin, null, event.target);
+            if (fileInput.files.length === 0) {
+                showToast('Error: Es obligatorio cargar el archivo PDF de la incapacidad.', 'error');
+                return;
             }
+
+            const file = fileInput.files[0];
+            const MAX_SIZE = 10 * 1024 * 1024;
+            if (file.size > MAX_SIZE) {
+                showToast('El archivo PDF excede el límite máximo de 10 MB.', 'error');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const pdfData = e.target.result;
+                subirIncapacidadANube(empleadoNombre, motivo, inicio, fin, pdfData, event.target);
+            };
+            reader.readAsDataURL(file);
         }
 
         async function subirIncapacidadANube(empleadoNombre, motivo, inicio, fin, pdf, formElement) {
             try {
+                const diasCalculados = calcularDiasIncapacidad(inicio, fin);
                 const nueva = {
                     id: Date.now(),
-                    user: sessionActual.user,
+                    phone: sessionActual.phone,
                     empleado: empleadoNombre,
                     motivo,
                     inicio,
                     fin,
+                    dias: diasCalculados,
                     estatus: 'Pendiente',
                     pdf,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 };
 
                 await db.collection('incapacidades').add(nueva);
-                alert('¡Incapacidad solicitada y guardada en la nube con éxito!');
+                showToast('¡Incapacidad solicitada con éxito!', 'success');
                 formElement.reset();
-                // Volver a colocar el nombre del usuario actual tras resetear el formulario
                 document.getElementById('emp-nombre-colaborador').value = sessionActual.nombre;
             } catch (error) {
                 console.error("Error al guardar:", error);
-                alert("Hubo un error al guardar en la nube.");
+                showToast("Hubo un error al guardar en la nube.", 'error');
             }
         }
 
@@ -411,15 +660,20 @@
             input.onchange = e => {
                 const file = e.target.files[0];
                 if (file) {
+                    const MAX_SIZE = 10 * 1024 * 1024;
+                    if (file.size > MAX_SIZE) {
+                        showToast('El archivo excede los 10 MB permitidos.', 'error');
+                        return;
+                    }
                     const reader = new FileReader();
                     reader.onload = async function(event) {
                         const pdfBase64 = event.target.result;
                         try {
                             await db.collection('incapacidades').doc(docId).update({ pdf: pdfBase64 });
-                            alert('¡Archivo PDF final actualizado con éxito!');
+                            showToast('¡Archivo PDF actualizado con éxito!', 'success');
                         } catch (err) {
                             console.error("Error al actualizar PDF:", err);
-                            alert("No se pudo actualizar el archivo.");
+                            showToast("No se pudo actualizar el archivo.", 'error');
                         }
                     };
                     reader.readAsDataURL(file);
@@ -430,33 +684,39 @@
 
         function escucharIncapacidadesEmpleado() {
             db.collection('incapacidades')
-                .where('user', '==', sessionActual.user)
+                .where('phone', '==', sessionActual.phone)
                 .onSnapshot(snapshot => {
                     const tbody = document.getElementById('employee-table-body');
                     tbody.innerHTML = '';
                     
                     if (snapshot.empty) {
                         tbody.innerHTML = `<tr><td colspan="6" class="text-center p-4 text-slate-400">No tienes solicitudes registradas</td></tr>`;
+                        document.getElementById('contador-dias-badge').innerText = `Días de incapacidad usados: 0 / 30`;
                         return;
                     }
 
+                    let totalDiasUsados = 0;
                     snapshot.forEach(doc => {
                         const item = doc.data();
                         item.docId = doc.id;
+                        totalDiasUsados += (item.dias || 0);
+
                         const tr = document.createElement('tr');
                         tr.innerHTML = `
                             <td class="p-3 font-medium text-slate-800">${item.empleado}</td>
                             <td class="p-3">${item.motivo}</td>
-                            <td class="p-3">${item.inicio}</td>
-                            <td class="p-3">${item.fin}</td>
+                            <td class="p-3">${item.inicio} al ${item.fin}</td>
+                            <td class="p-3 font-bold text-slate-700">${item.dias || 0} días</td>
                             <td class="p-3 font-semibold ${item.estatus === 'Aprobado' ? 'text-emerald-600' : item.estatus === 'Rechazado' ? 'text-rose-600' : 'text-amber-600'}">${item.estatus}</td>
                             <td class="p-3 flex items-center gap-2">
                                 ${item.pdf ? `<button onclick="viewPDFFromData('${item.pdf}')" class="bg-sky-100 text-sky-700 px-2.5 py-1 rounded-lg text-xs font-semibold hover:bg-sky-200 transition">Ver</button>` : ''}
-                                <button onclick="uploadFinalPDF('${item.docId}')" class="bg-indigo-100 text-indigo-700 px-2.5 py-1 rounded-lg text-xs font-semibold hover:bg-indigo-200 transition">${item.pdf ? 'Cambiar PDF' : 'Subir PDF'}</button>
+                                <button onclick="uploadFinalPDF('${item.docId}')" class="bg-indigo-100 text-indigo-700 px-2.5 py-1 rounded-lg text-xs font-semibold hover:bg-indigo-200 transition">Cambiar PDF</button>
                             </td>
                         `;
                         tbody.appendChild(tr);
                     });
+
+                    document.getElementById('contador-dias-badge').innerText = `Días usados: ${totalDiasUsados} / 30 límite`;
                 });
         }
 
@@ -491,8 +751,8 @@
                 tr.innerHTML = `
                     <td class="p-3 font-medium text-slate-800">${item.empleado}</td>
                     <td class="p-3">${item.motivo}</td>
-                    <td class="p-3">${item.inicio}</td>
-                    <td class="p-3">${item.fin}</td>
+                    <td class="p-3">${item.inicio} al ${item.fin}</td>
+                    <td class="p-3 font-bold text-slate-700">${item.dias || 0} días</td>
                     <td class="p-3">
                         <select onchange="updateStatus('${item.docId}', this.value)" class="px-2 py-1 border border-slate-200 rounded-lg bg-white text-xs font-medium focus:outline-none focus:ring-1 focus:ring-yellow-400">
                             <option value="Pendiente" ${item.estatus === 'Pendiente' ? 'selected' : ''}>Pendiente</option>
@@ -503,7 +763,7 @@
                     <td class="p-3">
                         <div class="flex items-center gap-2">
                             ${item.pdf ? `<button onclick="viewPDFFromData('${item.pdf}')" class="bg-sky-100 text-sky-700 px-2.5 py-1 rounded-lg text-xs font-semibold hover:bg-sky-200 transition">Ver</button>` : ''}
-                            <button onclick="uploadFinalPDF('${item.docId}')" class="bg-indigo-100 text-indigo-700 px-2.5 py-1 rounded-lg text-xs font-semibold hover:bg-indigo-200 transition">${item.pdf ? 'Cambiar PDF' : 'Subir Final'}</button>
+                            <button onclick="uploadFinalPDF('${item.docId}')" class="bg-indigo-100 text-indigo-700 px-2.5 py-1 rounded-lg text-xs font-semibold hover:bg-indigo-200 transition">Subir PDF</button>
                         </div>
                     </td>
                     <td class="p-3 text-center">
@@ -517,19 +777,23 @@
         async function updateStatus(docId, newStatus) {
             try {
                 await db.collection('incapacidades').doc(docId).update({ estatus: newStatus });
+                showToast('Estatus actualizado correctamente', 'success');
             } catch (error) {
                 console.error("Error al actualizar estatus:", error);
+                showToast("Error al actualizar estatus", 'error');
             }
         }
 
-        async function deleteItem(docId) {
-            if (confirm('¿Estás seguro de eliminar este registro de la nube?')) {
+        function deleteItem(docId) {
+            showConfirm('Eliminar registro', '¿Estás seguro de eliminar este registro de la nube?', async () => {
                 try {
                     await db.collection('incapacidades').doc(docId).delete();
+                    showToast('Registro eliminado con éxito', 'success');
                 } catch (error) {
                     console.error("Error al eliminar:", error);
+                    showToast("Error al eliminar el registro", 'error');
                 }
-            }
+            });
         }
 
         function viewPDFFromData(pdfBase64) {
@@ -538,9 +802,9 @@
         }
 
         function exportCSV() {
-            let csv = 'Empleado,Motivo,Inicio,Fin,Estatus\n';
+            let csv = 'Empleado,Motivo,Inicio,Fin,Dias,Estatus\n';
             incapacidadesGlobales.forEach(i => {
-                csv += `"${i.empleado}","${i.motivo}","${i.inicio}","${i.fin}","${i.estatus}"\n`;
+                csv += `"${i.empleado}","${i.motivo}","${i.inicio}","${i.fin}","${i.dias || 0}","${i.estatus}"\n`;
             });
             const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
             const url = URL.createObjectURL(blob);
@@ -548,6 +812,7 @@
             a.href = url;
             a.download = 'reporte_incapacidades_yello.csv';
             a.click();
+            showToast('Reporte CSV descargado con éxito', 'success');
         }
     </script>
 </body>
