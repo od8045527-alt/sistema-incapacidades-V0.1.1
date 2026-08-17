@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plataforma de Incapacidades - Yello MKT Group</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Firebase App y Firestore CDN (Compat) -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+</head>
+<body class="bg-slate-100 min-h-screen flex items-center justify-center p-2 sm:p-4 md:p-6">
+
+    <div class="w-full max-w-5xl bg-white rounded-2xl shadow-xl overflow-hidden relative border-t-8 border-yellow-400 my-auto">
+        
+        <!-- VISTA 1: LOGIN / ACCESO -->
+        <div id="view-login" class="p-6 sm:p-10 md:p-12 max-w-md mx-auto w-full">
+            <div class="text-center mb-6 sm:mb-8">
+                <div class="flex justify-center mb-4">
+                    <div class="w-24 h-24 sm:w-32 sm:h-32 bg-yellow-400 rounded-full flex items-center justify-center shadow-md relative overflow-hidden p-2 border-4 border-white">
+                        <div class="w-16 h-16 sm:w-24 sm:h-24 bg-white rounded-full flex items-center justify-center shadow-inner">
+                            <span class="font-black text-lg sm:text-xl tracking-tighter text-slate-900">YELLO</span>
+                        </div>
+                    </div>
+                </div>
+                <h1 class="text-lg sm:text-xl font-bold text-slate-700 tracking-tight">INGRESO A LA PLATAFORMA DE INCAPACIDADES (Yello)</h1>
+                <p class="text-xs text-slate-400 mt-1 font-semibold">YELLO MKT GROUP</p>
+            </div>
+
+            <form onsubmit="handleLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-semibold text-slate-600 mb-1">Usuario</label>
+                    <input type="text" id="login-user" placeholder="Ej. admin1 o tu usuario" required class="w-full px-4 py-2.5 bg-blue-50/50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-slate-700 font-medium text-sm sm:text-base">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-slate-600 mb-1">Contraseña</label>
+                    <div class="relative">
+                        <input type="password" id="login-pass" placeholder="••••••••" required class="w-full px-4 py-2.5 bg-blue-50/50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-slate-700 font-medium pr-10 text-sm sm:text-base">
+                        <button type="button" onclick="togglePassword()" class="absolute right-3 top-3 text-slate-400 hover:text-slate-600 text-sm">👁️</button>
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full py-3 bg-lime-500 hover:bg-lime-600 text-white font-bold rounded-xl transition duration-200 shadow-md text-sm sm:text-base">
+                    Ingresar
+                </button>
+
+                <button type="button" onclick="switchView('register')" class="w-full py-3 bg-white border border-slate-300 hover:bg-slate-50 text-slate-600 font-bold rounded-xl transition duration-200 shadow-sm text-center text-sm sm:text-base">
+                    Registrarse
+                </button>
+            </form>
+        </div>
+
+        <!-- VISTA DE NUEVO REGISTRO DE USUARIO -->
+        <div id="view-register" class="p-6 sm:p-10 md:p-12 max-w-md mx-auto w-full hidden">
+            <div class="text-center mb-6 sm:mb-8">
+                <h1 class="text-xl sm:text-2xl font-bold text-slate-800">Crear Cuenta</h1>
+                <p class="text-xs text-slate-500 mt-1">Regístrate para acceder a tu portal</p>
+            </div>
+
+            <form onsubmit="handleRegister(event)" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-semibold text-slate-600 mb-1">Nombre Completo</label>
+                    <input type="text" id="reg-nombre" placeholder="Tu nombre" required class="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm sm:text-base">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-slate-600 mb-1">Usuario único</label>
+                    <input type="text" id="reg-user" placeholder="Ej. SUP001" required class="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm sm:text-base">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-slate-600 mb-1">Contraseña</label>
+                    <input type="password" id="reg-pass" placeholder="••••••••" required class="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm sm:text-base">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-slate-600 mb-1">Código Secreto de Administrador (Opcional)</label>
+                    <input type="password" id="reg-secret" placeholder="Déjalo vacío si eres empleado" class="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm sm:text-base bg-amber-50/50">
+                    <p class="text-[11px] text-slate-400 mt-1">Solo escríbelo si estás autorizado para crear cuenta de Admin.</p>
+                </div>
+
+                <button type="submit" class="w-full py-3 bg-yellow-400 hover:bg-yellow-500 text-slate-900 font-bold rounded-xl transition duration-200 shadow-md text-sm sm:text-base">
+                    Completar Registro
+                </button>
+
+                <div class="text-center pt-2">
+                    <button type="button" onclick="switchView('login')" class="text-sm text-slate-600 hover:text-slate-900 font-medium">
+                        ← Regresar al login
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- VISTA 2: PORTAL DE EMPLEADO -->
+        <div id="view-employee" class="p-4 sm:p-8 md:p-10 hidden">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-3 border-b pb-4">
+                <div>
+                    <h1 class="text-xl sm:text-2xl font-bold text-slate-800" id="welcome-employee-title">Mi Portal</h1>
+                    <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider">Yello MKT Group - Colaborador</p>
+                </div>
+                <button onclick="logout()" class="w-full sm:w-auto bg-slate-100 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold hover:bg-slate-200 transition text-center">
+                    Cerrar Sesión
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
+                <div class="bg-slate-50 p-4 sm:p-6 rounded-2xl border border-slate-200/80">
+                    <h2 class="text-base sm:text-lg font-bold text-slate-800 mb-4">Registrar Nueva Incapacidad</h2>
+                    <form onsubmit="saveIncapacidad(event)" class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Nombre del Colaborador:</label>
+                            <input type="text" id="emp-nombre-colaborador" required class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none bg-white text-sm font-medium text-slate-700">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Motivo:</label>
+                            <select id="emp-motivo" class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none bg-white text-sm">
+                                <option value="Enfermedad general">Enfermedad general</option>
+                                <option value="Maternidad">Maternidad</option>
+                                <option value="Accidente de trabajo">Accidente de trabajo</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Inicio:</label>
+                            <input type="date" id="emp-inicio" required class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Fin:</label>
+                            <input type="date" id="emp-fin" required class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">PDF Incapacidad:</label>
+                            <input type="file" id="emp-pdf" accept=".pdf" class="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-yellow-100 file:text-yellow-800 cursor-pointer">
+                        </div>
+                        <button type="submit" class="w-full py-2.5 bg-yellow-400 hover:bg-yellow-500 text-slate-900 font-bold rounded-xl text-sm transition shadow-sm">
+                            Guardar Solicitud
+                        </button>
+                    </form>
+                </div>
+
+                <div class="lg:col-span-2">
+                    <h2 class="text-base sm:text-lg font-bold text-slate-800 mb-4">Mis Solicitudes Registradas</h2>
+                    <div class="overflow-x-auto rounded-xl border border-slate-100 shadow-sm bg-white">
+                        <table class="w-full text-left border-collapse min-w-[550px]">
+                            <thead>
+                                <tr class="bg-yellow-50/80 text-yellow-900 text-xs font-semibold border-b border-yellow-100">
+                                    <th class="p-3">Colaborador</th>
+                                    <th class="p-3">Motivo</th>
+                                    <th class="p-3">Inicio</th>
+                                    <th class="p-3">Fin</th>
+                                    <th class="p-3">Estatus</th>
+                                    <th class="p-3">PDF / Subir Final</th>
+                                </tr>
+                            </thead>
+                            <tbody id="employee-table-body" class="divide-y divide-slate-100 text-xs text-slate-700">
+                                <!-- Dinámico -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VISTA 3: PANEL DE ADMINISTRACIÓN GENERAL -->
+        <div id="view-admin" class="p-4 sm:p-6 md:p-8 hidden">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-3 border-b pb-4">
+                <div>
+                    <h1 class="text-xl sm:text-2xl md:text-3xl font-bold text-slate-800">Panel de Administración</h1>
+                    <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider">Yello MKT Group - Vista General Cloud</p>
+                </div>
+                <div class="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+                    <button onclick="exportCSV()" class="bg-emerald-100 text-emerald-800 px-4 py-2 rounded-xl text-sm font-semibold hover:bg-emerald-200 transition flex items-center justify-center gap-1 shadow-sm">
+                        📥 Descargar CSV
+                    </button>
+                    <button onclick="logout()" class="bg-slate-100 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold hover:bg-slate-200 transition text-center">
+                        Cerrar Sesión
+                    </button>
+                </div>
+            </div>
+
+            <div class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-3">
+                <input type="text" id="search-input" placeholder="Buscar por empleado..." onkeyup="renderAdminTable()" class="px-4 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none w-full sm:w-72 text-sm">
+            </div>
+
+            <div class="overflow-x-auto rounded-xl border border-slate-100 shadow-sm">
+                <table class="w-full text-left border-collapse min-w-[700px]">
+                    <thead>
+                        <tr class="bg-yellow-50/80 text-yellow-900 text-sm font-semibold border-b border-yellow-100">
+                            <th class="p-3">Empleado</th>
+                            <th class="p-3">Motivo</th>
+                            <th class="p-3">Inicio</th>
+                            <th class="p-3">Fin</th>
+                            <th class="p-3">Estatus</th>
+                            <th class="p-3">PDF / Archivo Final</th>
+                            <th class="p-3 text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-table-body" class="divide-y divide-slate-100 text-sm text-slate-700">
+                        <!-- Dinámico -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // ==========================================
+        // CONFIGURACIÓN DE FIREBASE
+        // ==========================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyCARYhRZ5b9107wsXiNCxXMUj8JXdsYaA",
+            authDomain: "incapacidades-29fb6.firebaseapp.com",
+            projectId: "incapacidades-29fb6",
+            storageBucket: "incapacidades-29fb6.firebasestorage.app",
+            messagingSenderId: "66356112198",
+            appId: "1:66356112198:web:98b2d9a2ffc64f3cd9d347",
+            measurementId: "G-S5228EE421"
+        };
+
+        const ADMIN_SECRET_CODE = "YELLO-ADMIN-2026*";
+
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const db = firebase.firestore();
+
+        let sessionActual = JSON.parse(localStorage.getItem('yello_session')) || null;
+        let incapacidadesGlobales = [];
+
+        window.onload = function() {
+            inicializarAdminPorDefecto();
+
+            if (sessionActual) {
+                if (sessionActual.role === 'admin') {
+                    switchView('admin');
+                } else {
+                    switchView('employee');
+                }
+            } else {
+                switchView('login');
+            }
+        };
+
+        async function inicializarAdminPorDefecto() {
+            try {
+                const adminDoc = await db.collection('usuarios').doc('admin1').get();
+                if (!adminDoc.exists) {
+                    await db.collection('usuarios').doc('admin1').set({
+                        nombre: 'Administrador General',
+                        user: 'admin1',
+                        pass: '1234567',
+                        role: 'admin'
+                    });
+                }
+            } catch (e) {
+                console.error("Error inicializando admin:", e);
+            }
+        }
+
+        function switchView(viewName) {
+            document.getElementById('view-login').classList.add('hidden');
+            document.getElementById('view-register').classList.add('hidden');
+            document.getElementById('view-employee').classList.add('hidden');
+            document.getElementById('view-admin').classList.add('hidden');
+
+            if (viewName === 'login') {
+                document.getElementById('view-login').classList.remove('hidden');
+            } else if (viewName === 'register') {
+                document.getElementById('view-register').classList.remove('hidden');
+            } else if (viewName === 'employee') {
+                document.getElementById('view-employee').classList.remove('hidden');
+                document.getElementById('welcome-employee-title').innerText = `Bienvenido, ${sessionActual.nombre}`;
+                // Prellenar el campo con el nombre de la sesión actual
+                document.getElementById('emp-nombre-colaborador').value = sessionActual.nombre;
+                escucharIncapacidadesEmpleado();
+            } else if (viewName === 'admin') {
+                document.getElementById('view-admin').classList.remove('hidden');
+                escucharIncapacidadesAdmin();
+            }
+        }
+
+        function togglePassword() {
+            const passInput = document.getElementById('login-pass');
+            passInput.type = passInput.type === 'password' ? 'text' : 'password';
+        }
+
+        async function handleLogin(event) {
+            event.preventDefault();
+            const uInput = document.getElementById('login-user').value.trim();
+            const pInput = document.getElementById('login-pass').value.trim();
+
+            try {
+                const snapshot = await db.collection('usuarios').where('user', '==', uInput).get();
+                if (snapshot.empty) {
+                    alert('Usuario no encontrado.');
+                    return;
+                }
+
+                let usuarioEncontrado = null;
+                snapshot.forEach(doc => {
+                    usuarioEncontrado = doc.data();
+                });
+
+                if (usuarioEncontrado.pass === pInput) {
+                    sessionActual = usuarioEncontrado;
+                    localStorage.setItem('yello_session', JSON.stringify(sessionActual));
+                    if (sessionActual.role === 'admin') {
+                        switchView('admin');
+                    } else {
+                        switchView('employee');
+                    }
+                } else {
+                    alert('Contraseña incorrecta.');
+                }
+            } catch (error) {
+                console.error("Error al iniciar sesión:", error);
+                alert("Error de conexión con la base de datos en la nube.");
+            }
+        }
+
+        async function handleRegister(event) {
+            event.preventDefault();
+            const nombre = document.getElementById('reg-nombre').value.trim();
+            const user = document.getElementById('reg-user').value.trim();
+            const pass = document.getElementById('reg-pass').value.trim();
+            const secretInput = document.getElementById('reg-secret').value.trim();
+
+            try {
+                const checkUser = await db.collection('usuarios').doc(user).get();
+                if (checkUser.exists) {
+                    alert('Este usuario ya está registrado.');
+                    return;
+                }
+
+                let role = 'employee';
+                if (secretInput !== "") {
+                    if (secretInput === ADMIN_SECRET_CODE) {
+                        role = 'admin';
+                    } else {
+                        alert('El código secreto de administrador es incorrecto. La cuenta se creará como usuario normal (empleado).');
+                    }
+                }
+
+                const nuevoUsuario = { nombre, user, pass, role };
+                await db.collection('usuarios').doc(user).set(nuevoUsuario);
+
+                alert(`¡Cuenta creada con éxito como ${role.toUpperCase()}! Ahora puedes iniciar sesión.`);
+                switchView('login');
+            } catch (error) {
+                console.error("Error al registrar:", error);
+                alert("Error al registrar en la nube.");
+            }
+        }
+
+        function logout() {
+            sessionActual = null;
+            localStorage.removeItem('yello_session');
+            switchView('login');
+        }
+
+        function saveIncapacidad(event) {
+            event.preventDefault();
+            const empleadoNombre = document.getElementById('emp-nombre-colaborador').value.trim();
+            const motivo = document.getElementById('emp-motivo').value;
+            const inicio = document.getElementById('emp-inicio').value;
+            const fin = document.getElementById('emp-fin').value;
+            const fileInput = document.getElementById('emp-pdf');
+
+            let pdfData = null;
+            if (fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    pdfData = e.target.result;
+                    subirIncapacidadANube(empleadoNombre, motivo, inicio, fin, pdfData, event.target);
+                };
+                reader.readAsDataURL(file);
+            } else {
+                subirIncapacidadANube(empleadoNombre, motivo, inicio, fin, null, event.target);
+            }
+        }
+
+        async function subirIncapacidadANube(empleadoNombre, motivo, inicio, fin, pdf, formElement) {
+            try {
+                const nueva = {
+                    id: Date.now(),
+                    user: sessionActual.user,
+                    empleado: empleadoNombre,
+                    motivo,
+                    inicio,
+                    fin,
+                    estatus: 'Pendiente',
+                    pdf,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                };
+
+                await db.collection('incapacidades').add(nueva);
+                alert('¡Incapacidad solicitada y guardada en la nube con éxito!');
+                formElement.reset();
+                // Volver a colocar el nombre del usuario actual tras resetear el formulario
+                document.getElementById('emp-nombre-colaborador').value = sessionActual.nombre;
+            } catch (error) {
+                console.error("Error al guardar:", error);
+                alert("Hubo un error al guardar en la nube.");
+            }
+        }
+
+        function uploadFinalPDF(docId) {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.pdf';
+            input.onchange = e => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = async function(event) {
+                        const pdfBase64 = event.target.result;
+                        try {
+                            await db.collection('incapacidades').doc(docId).update({ pdf: pdfBase64 });
+                            alert('¡Archivo PDF final actualizado con éxito!');
+                        } catch (err) {
+                            console.error("Error al actualizar PDF:", err);
+                            alert("No se pudo actualizar el archivo.");
+                        }
+                    };
+                    reader.readAsDataURL(file);
+                }
+            };
+            input.click();
+        }
+
+        function escucharIncapacidadesEmpleado() {
+            db.collection('incapacidades')
+                .where('user', '==', sessionActual.user)
+                .onSnapshot(snapshot => {
+                    const tbody = document.getElementById('employee-table-body');
+                    tbody.innerHTML = '';
+                    
+                    if (snapshot.empty) {
+                        tbody.innerHTML = `<tr><td colspan="6" class="text-center p-4 text-slate-400">No tienes solicitudes registradas</td></tr>`;
+                        return;
+                    }
+
+                    snapshot.forEach(doc => {
+                        const item = doc.data();
+                        item.docId = doc.id;
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td class="p-3 font-medium text-slate-800">${item.empleado}</td>
+                            <td class="p-3">${item.motivo}</td>
+                            <td class="p-3">${item.inicio}</td>
+                            <td class="p-3">${item.fin}</td>
+                            <td class="p-3 font-semibold ${item.estatus === 'Aprobado' ? 'text-emerald-600' : item.estatus === 'Rechazado' ? 'text-rose-600' : 'text-amber-600'}">${item.estatus}</td>
+                            <td class="p-3 flex items-center gap-2">
+                                ${item.pdf ? `<button onclick="viewPDFFromData('${item.pdf}')" class="bg-sky-100 text-sky-700 px-2.5 py-1 rounded-lg text-xs font-semibold hover:bg-sky-200 transition">Ver</button>` : ''}
+                                <button onclick="uploadFinalPDF('${item.docId}')" class="bg-indigo-100 text-indigo-700 px-2.5 py-1 rounded-lg text-xs font-semibold hover:bg-indigo-200 transition">${item.pdf ? 'Cambiar PDF' : 'Subir PDF'}</button>
+                            </td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                });
+        }
+
+        function escucharIncapacidadesAdmin() {
+            db.collection('incapacidades')
+                .orderBy('createdAt', 'desc')
+                .onSnapshot(snapshot => {
+                    incapacidadesGlobales = [];
+                    snapshot.forEach(doc => {
+                        let item = doc.data();
+                        item.docId = doc.id;
+                        incapacidadesGlobales.push(item);
+                    });
+                    renderAdminTable();
+                });
+        }
+
+        function renderAdminTable() {
+            const tbody = document.getElementById('admin-table-body');
+            const search = document.getElementById('search-input').value.toLowerCase();
+            tbody.innerHTML = '';
+
+            const filtered = incapacidadesGlobales.filter(item => item.empleado.toLowerCase().includes(search));
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="text-center p-6 text-slate-400">No hay registros encontrados</td></tr>`;
+                return;
+            }
+
+            filtered.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="p-3 font-medium text-slate-800">${item.empleado}</td>
+                    <td class="p-3">${item.motivo}</td>
+                    <td class="p-3">${item.inicio}</td>
+                    <td class="p-3">${item.fin}</td>
+                    <td class="p-3">
+                        <select onchange="updateStatus('${item.docId}', this.value)" class="px-2 py-1 border border-slate-200 rounded-lg bg-white text-xs font-medium focus:outline-none focus:ring-1 focus:ring-yellow-400">
+                            <option value="Pendiente" ${item.estatus === 'Pendiente' ? 'selected' : ''}>Pendiente</option>
+                            <option value="Aprobado" ${item.estatus === 'Aprobado' ? 'selected' : ''}>Aprobado</option>
+                            <option value="Rechazado" ${item.estatus === 'Rechazado' ? 'selected' : ''}>Rechazado</option>
+                        </select>
+                    </td>
+                    <td class="p-3">
+                        <div class="flex items-center gap-2">
+                            ${item.pdf ? `<button onclick="viewPDFFromData('${item.pdf}')" class="bg-sky-100 text-sky-700 px-2.5 py-1 rounded-lg text-xs font-semibold hover:bg-sky-200 transition">Ver</button>` : ''}
+                            <button onclick="uploadFinalPDF('${item.docId}')" class="bg-indigo-100 text-indigo-700 px-2.5 py-1 rounded-lg text-xs font-semibold hover:bg-indigo-200 transition">${item.pdf ? 'Cambiar PDF' : 'Subir Final'}</button>
+                        </div>
+                    </td>
+                    <td class="p-3 text-center">
+                        <button onclick="deleteItem('${item.docId}')" class="bg-rose-100 text-rose-700 px-3 py-1 rounded-lg text-xs font-semibold hover:bg-rose-200 transition">Eliminar</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        async function updateStatus(docId, newStatus) {
+            try {
+                await db.collection('incapacidades').doc(docId).update({ estatus: newStatus });
+            } catch (error) {
+                console.error("Error al actualizar estatus:", error);
+            }
+        }
+
+        async function deleteItem(docId) {
+            if (confirm('¿Estás seguro de eliminar este registro de la nube?')) {
+                try {
+                    await db.collection('incapacidades').doc(docId).delete();
+                } catch (error) {
+                    console.error("Error al eliminar:", error);
+                }
+            }
+        }
+
+        function viewPDFFromData(pdfBase64) {
+            const win = window.open();
+            win.document.write(`<iframe src="${pdfBase64}" frameborder="0" style="width:100%; height:100%;"></iframe>`);
+        }
+
+        function exportCSV() {
+            let csv = 'Empleado,Motivo,Inicio,Fin,Estatus\n';
+            incapacidadesGlobales.forEach(i => {
+                csv += `"${i.empleado}","${i.motivo}","${i.inicio}","${i.fin}","${i.estatus}"\n`;
+            });
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'reporte_incapacidades_yello.csv';
+            a.click();
+        }
+    </script>
+</body>
+</html>
