@@ -164,11 +164,11 @@
                 <div>
                     <h1 class="text-xl sm:text-2xl font-bold text-slate-800" id="welcome-employee-title">Mi Portal</h1>
                     <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider">Yello MKT Group - Colaborador</p>
-                    </div>
-                    <button onclick="logout()" class="bg-slate-100 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold hover:bg-slate-200 transition text-center">
-                        Cerrar Sesión
-                    </button>
+                    <p class="text-xs text-indigo-600 font-bold mt-1" id="contador-dias-badge">Días usados: 0 / 30 límite</p>
                 </div>
+                <button onclick="logout()" class="bg-slate-100 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold hover:bg-slate-200 transition text-center">
+                    Cerrar Sesión
+                </button>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
@@ -691,7 +691,7 @@
                     
                     if (snapshot.empty) {
                         tbody.innerHTML = `<tr><td colspan="6" class="text-center p-4 text-slate-400">No tienes solicitudes registradas</td></tr>`;
-                        document.getElementById('contador-dias-badge').innerText = `Días de incapacidad usados: 0 / 30`;
+                        document.getElementById('contador-dias-badge').innerText = `Días usados: 0 / 30 límite`;
                         return;
                     }
 
@@ -756,7 +756,7 @@
                     <td class="p-3">
                         <select onchange="updateStatus('${item.docId}', this.value)" class="px-2 py-1 border border-slate-200 rounded-lg bg-white text-xs font-medium focus:outline-none focus:ring-1 focus:ring-yellow-400">
                             <option value="Pendiente" ${item.estatus === 'Pendiente' ? 'selected' : ''}>Pendiente</option>
-                            <option value="Aprobado" ${item.estatus === 'Aprobado' ? 'selected' : ''}>Aprobado</option>
+                            <option value="Aprobado" ${item.estual === 'Aprobado' ? 'selected' : ''}>Aprobado</option>
                             <option value="Rechazado" ${item.estatus === 'Rechazado' ? 'selected' : ''}>Rechazado</option>
                         </select>
                     </td>
