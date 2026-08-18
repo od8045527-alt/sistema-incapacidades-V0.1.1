@@ -174,7 +174,6 @@
                 <div>
                     <h1 class="text-xl sm:text-2xl font-bold text-slate-800 dark:text-white" id="welcome-employee-title">Mi Portal</h1>
                     <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider">Yello MKT Group - Colaborador</p>
-                    <p class="text-xs text-indigo-600 dark:text-indigo-400 font-bold mt-1" id="contador-dias-badge">Días usados: 0 / 30 límite</p>
                 </div>
                 <button onclick="logout()" class="bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-4 py-2 rounded-xl text-sm font-semibold hover:bg-slate-200 dark:hover:bg-slate-700 transition text-center">
                     Cerrar Sesión
@@ -821,15 +820,12 @@
                     
                     if (snapshot.empty) {
                         tbody.innerHTML = `<tr><td colspan="6" class="text-center p-4 text-slate-400">No tienes solicitudes registradas</td></tr>`;
-                        document.getElementById('contador-dias-badge').innerText = `Días usados: 0 / 30 límite`;
                         return;
                     }
 
-                    let totalDiasUsados = 0;
                     snapshot.forEach(doc => {
                         const item = doc.data();
                         item.docId = doc.id;
-                        totalDiasUsados += (item.dias || 0);
 
                         const tr = document.createElement('tr');
                         tr.innerHTML = `
@@ -847,8 +843,6 @@
                         `;
                         tbody.appendChild(tr);
                     });
-
-                    document.getElementById('contador-dias-badge').innerText = `Días usados: ${totalDiasUsados} / 30 límite`;
                 });
         }
 
