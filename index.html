@@ -11,64 +11,74 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <!-- CryptoJS para cifrado de contraseñas -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <!-- Chart.js para Estadísticas -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = { darkMode: 'class' }
+    </script>
 </head>
-<body class="bg-slate-100 min-h-screen flex items-center justify-center p-2 sm:p-4 md:p-6 relative">
+<body class="bg-slate-100 dark:bg-slate-950 min-h-screen flex items-center justify-center p-2 sm:p-4 md:p-6 relative transition-colors duration-300">
+
+    <!-- BOTÓN DE MODO OSCURO FLOTANTE -->
+    <button onclick="toggleDarkMode()" class="fixed top-5 left-5 z-[100] bg-white dark:bg-slate-800 text-slate-800 dark:text-yellow-400 p-2.5 rounded-full shadow-lg border border-slate-200 dark:border-slate-700 text-sm transition">
+        🌙 / ☀️
+    </button>
 
     <!-- CONTENEDOR DE NOTIFICACIONES FLOTANTES (TOAST) -->
     <div id="toast-container" class="fixed top-5 right-5 z-[100] flex flex-col gap-2 pointer-events-none"></div>
 
     <!-- MODAL DE CONFIRMACIÓN PERSONALIZADO -->
     <div id="custom-confirm-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[60] hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 border-t-4 border-yellow-400 transform transition-all scale-100">
-            <h3 id="confirm-title" class="text-lg font-bold text-slate-800 mb-2">Confirmación</h3>
-            <p id="confirm-message" class="text-sm text-slate-600 mb-6">¿Estás seguro de realizar esta acción?</p>
+        <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl max-w-sm w-full p-6 border-t-4 border-yellow-400 transform transition-all scale-100">
+            <h3 id="confirm-title" class="text-lg font-bold text-slate-800 dark:text-white mb-2">Confirmación</h3>
+            <p id="confirm-message" class="text-sm text-slate-600 dark:text-slate-300 mb-6">¿Estás seguro de realizar esta acción?</p>
             <div class="flex justify-end gap-3">
-                <button id="confirm-cancel-btn" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl text-sm transition">Cancelar</button>
+                <button id="confirm-cancel-btn" class="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-300 font-semibold rounded-xl text-sm transition">Cancelar</button>
                 <button id="confirm-ok-btn" class="px-4 py-2 bg-yellow-400 hover:bg-yellow-500 text-slate-900 font-bold rounded-xl text-sm transition shadow-sm">Aceptar</button>
             </div>
         </div>
     </div>
 
-    <div class="w-full max-w-5xl bg-white rounded-2xl shadow-xl overflow-hidden relative border-t-8 border-yellow-400 my-auto">
+    <div class="w-full max-w-6xl bg-white dark:bg-slate-900 rounded-2xl shadow-xl overflow-hidden relative border-t-8 border-yellow-400 my-auto transition-colors duration-300">
         
         <!-- VISTA 1: LOGIN / ACCESO SEGURO -->
         <div id="view-login" class="p-6 sm:p-10 md:p-12 max-w-md mx-auto w-full">
             <div class="text-center mb-6 sm:mb-8">
                 <div class="flex justify-center mb-4">
-                    <div class="w-24 h-24 sm:w-32 sm:h-32 bg-yellow-400 rounded-full flex items-center justify-center shadow-md relative overflow-hidden p-2 border-4 border-white">
-                        <div class="w-16 h-16 sm:w-24 sm:h-24 bg-white rounded-full flex items-center justify-center shadow-inner">
-                            <span class="font-black text-lg sm:text-xl tracking-tighter text-slate-900">YELLO</span>
+                    <div class="w-24 h-24 sm:w-32 sm:h-32 bg-yellow-400 rounded-full flex items-center justify-center shadow-md relative overflow-hidden p-2 border-4 border-white dark:border-slate-800">
+                        <div class="w-16 h-16 sm:w-24 sm:h-24 bg-white dark:bg-slate-900 rounded-full flex items-center justify-center shadow-inner">
+                            <span class="font-black text-lg sm:text-xl tracking-tighter text-slate-900 dark:text-white">YELLO</span>
                         </div>
                     </div>
                 </div>
-                <h1 class="text-lg sm:text-xl font-bold text-slate-700 tracking-tight">INGRESO A LA PLATAFORMA</h1>
+                <h1 class="text-lg sm:text-xl font-bold text-slate-700 dark:text-slate-200 tracking-tight">INGRESO A LA PLATAFORMA</h1>
                 <p class="text-xs text-slate-400 mt-1 font-semibold">YELLO MKT GROUP - ACCESO SEGURO</p>
             </div>
 
             <form onsubmit="handleLogin(event)" autocomplete="off" class="space-y-4">
                 <div>
-                    <label class="block text-sm font-semibold text-slate-600 mb-1">Nombre de Usuario o Teléfono</label>
-                    <input type="text" id="login-identifier" autocomplete="off" placeholder="Usuario o Teléfono" required class="w-full px-4 py-2.5 bg-blue-50/50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-slate-700 font-medium text-sm sm:text-base">
+                    <label class="block text-sm font-semibold text-slate-600 dark:text-slate-300 mb-1">Nombre de Usuario o Teléfono</label>
+                    <input type="text" id="login-identifier" autocomplete="off" placeholder="Usuario o Teléfono" required class="w-full px-4 py-2.5 bg-blue-50/50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-slate-700 dark:text-slate-200 font-medium text-sm sm:text-base">
                 </div>
 
                 <div>
-                    <label class="block text-sm font-semibold text-slate-600 mb-1">Contraseña</label>
+                    <label class="block text-sm font-semibold text-slate-600 dark:text-slate-300 mb-1">Contraseña</label>
                     <div class="relative">
-                        <input type="password" id="login-pass" autocomplete="new-password" placeholder="••••••••" required class="w-full px-4 py-2.5 bg-blue-50/50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-slate-700 font-medium pr-10 text-sm sm:text-base">
+                        <input type="password" id="login-pass" autocomplete="new-password" placeholder="••••••••" required class="w-full px-4 py-2.5 bg-blue-50/50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-slate-700 dark:text-slate-200 font-medium pr-10 text-sm sm:text-base">
                         <button type="button" onclick="togglePassword('login-pass')" class="absolute right-3 top-3 text-slate-400 hover:text-slate-600 text-sm">👁️</button>
                     </div>
                 </div>
 
                 <div class="flex justify-between items-center text-xs">
                     <span id="login-attempts-msg" class="text-rose-500 font-semibold"></span>
-                    <button type="button" onclick="switchView('recovery')" class="text-blue-600 hover:underline font-semibold ml-auto">¿Olvidaste tu contraseña o usuario?</button>
+                    <button type="button" onclick="switchView('recovery')" class="text-blue-600 dark:text-blue-400 hover:underline font-semibold ml-auto">¿Olvidaste tu contraseña o usuario?</button>
                 </div>
 
                 <button type="submit" id="login-btn" class="w-full py-3 bg-lime-500 hover:bg-lime-600 text-white font-bold rounded-xl transition duration-200 shadow-md text-sm sm:text-base">
                     Ingresar
                 </button>
 
-                <button type="button" onclick="switchView('register')" class="w-full py-3 bg-white border border-slate-300 hover:bg-slate-50 text-slate-600 font-bold rounded-xl transition duration-200 shadow-sm text-center text-sm sm:text-base">
+                <button type="button" onclick="switchView('register')" class="w-full py-3 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 font-bold rounded-xl transition duration-200 shadow-sm text-center text-sm sm:text-base">
                     Registrarse
                 </button>
             </form>
@@ -77,24 +87,24 @@
         <!-- VISTA DE RECUPERACIÓN AVANZADA -->
         <div id="view-recovery" class="p-6 sm:p-10 md:p-12 max-w-md mx-auto w-full hidden">
             <div class="text-center mb-6 sm:mb-8">
-                <h1 class="text-xl sm:text-2xl font-bold text-slate-800">Recuperación de Cuenta</h1>
+                <h1 class="text-xl sm:text-2xl font-bold text-slate-800 dark:text-white">Recuperación de Cuenta</h1>
                 <p class="text-xs text-slate-500 mt-1">Verifica tu identidad mediante tu Teléfono y Pregunta Secreta</p>
             </div>
 
             <form onsubmit="handleRecovery(event)" autocomplete="off" class="space-y-4">
                 <div>
-                    <label class="block text-sm font-semibold text-slate-600 mb-1">Número de Teléfono</label>
-                    <input type="tel" id="rec-phone" autocomplete="off" placeholder="Ej. 5512345678" required class="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm sm:text-base">
+                    <label class="block text-sm font-semibold text-slate-600 dark:text-slate-300 mb-1">Número de Teléfono</label>
+                    <input type="tel" id="rec-phone" autocomplete="off" placeholder="Ej. 5512345678" required class="w-full px-4 py-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-white rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm sm:text-base">
                 </div>
                 <div>
-                    <label class="block text-sm font-semibold text-slate-600 mb-1">Pregunta de Seguridad</label>
-                    <p class="text-xs text-slate-500 mb-1 bg-slate-100 p-2 rounded-lg" id="rec-question-text">Ingresa tu teléfono primero para cargar tu pregunta...</p>
-                    <input type="text" id="rec-answer" autocomplete="off" placeholder="Respuesta secreta" required class="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm sm:text-base">
-                    <button type="button" onclick="fetchSecurityQuestion()" class="mt-1 text-xs text-blue-600 font-semibold hover:underline">Cargar mi pregunta secreta</button>
+                    <label class="block text-sm font-semibold text-slate-600 dark:text-slate-300 mb-1">Pregunta de Seguridad</label>
+                    <p class="text-xs text-slate-500 mb-1 bg-slate-100 dark:bg-slate-800 p-2 rounded-lg dark:text-slate-300" id="rec-question-text">Ingresa tu teléfono primero para cargar tu pregunta...</p>
+                    <input type="text" id="rec-answer" autocomplete="off" placeholder="Respuesta secreta" required class="w-full px-4 py-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-white rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm sm:text-base">
+                    <button type="button" onclick="fetchSecurityQuestion()" class="mt-1 text-xs text-blue-600 dark:text-blue-400 font-semibold hover:underline">Cargar mi pregunta secreta</button>
                 </div>
                 <div>
-                    <label class="block text-sm font-semibold text-slate-600 mb-1">Nueva Contraseña</label>
-                    <input type="password" id="rec-newpass" autocomplete="new-password" placeholder="Mínimo 8 caracteres, Mayúscula, Número" required class="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm sm:text-base">
+                    <label class="block text-sm font-semibold text-slate-600 dark:text-slate-300 mb-1">Nueva Contraseña</label>
+                    <input type="password" id="rec-newpass" autocomplete="new-password" placeholder="Mínimo 8 caracteres, Mayúscula, Número" required class="w-full px-4 py-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-white rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm sm:text-base">
                 </div>
 
                 <button type="submit" class="w-full py-3 bg-yellow-400 hover:bg-yellow-500 text-slate-900 font-bold rounded-xl transition duration-200 shadow-md text-sm sm:text-base">
@@ -102,7 +112,7 @@
                 </button>
 
                 <div class="text-center pt-2">
-                    <button type="button" onclick="switchView('login')" class="text-sm text-slate-600 hover:text-slate-900 font-medium">
+                    <button type="button" onclick="switchView('login')" class="text-sm text-slate-600 dark:text-slate-400 hover:text-slate-900 font-medium">
                         ← Regresar al login
                     </button>
                 </div>
@@ -112,46 +122,46 @@
         <!-- VISTA DE NUEVO REGISTRO SEGURO -->
         <div id="view-register" class="p-6 sm:p-10 md:p-12 max-w-md mx-auto w-full hidden">
             <div class="text-center mb-6 sm:mb-8">
-                <h1 class="text-xl sm:text-2xl font-bold text-slate-800">Crear Cuenta</h1>
+                <h1 class="text-xl sm:text-2xl font-bold text-slate-800 dark:text-white">Crear Cuenta</h1>
                 <p class="text-xs text-slate-500 mt-1">Configura usuario, teléfono y medidas de seguridad</p>
             </div>
 
             <form onsubmit="handleRegister(event)" autocomplete="off" class="space-y-3">
                 <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Nombre Completo</label>
-                    <input type="text" id="reg-nombre" autocomplete="off" placeholder="Nombre completo" required class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm">
+                    <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Nombre Completo</label>
+                    <input type="text" id="reg-nombre" autocomplete="off" placeholder="Nombre completo" required class="w-full px-3 py-2 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-white rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm">
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Nombre de Usuario Único</label>
-                    <input type="text" id="reg-username" autocomplete="off" placeholder="Ej. angel_delgado" required class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm">
+                    <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Nombre de Usuario Único</label>
+                    <input type="text" id="reg-username" autocomplete="off" placeholder="Ej. angel_delgado" required class="w-full px-3 py-2 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-white rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm">
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Número de Teléfono (10 dígitos)</label>
-                    <input type="tel" id="reg-phone" autocomplete="off" placeholder="Ej. 5512345678" required class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm">
+                    <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Número de Teléfono (10 dígitos)</label>
+                    <input type="tel" id="reg-phone" autocomplete="off" placeholder="Ej. 5512345678" required class="w-full px-3 py-2 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-white rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm">
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Contraseña Segura</label>
-                    <input type="password" id="reg-pass" autocomplete="new-password" placeholder="Mínimo 8 caracteres, 1 mayúscula, 1 número" required class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm">
+                    <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Contraseña Segura</label>
+                    <input type="password" id="reg-pass" autocomplete="new-password" placeholder="Mínimo 8 caracteres, 1 mayúscula, 1 número" required class="w-full px-3 py-2 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-white rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm">
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Pregunta de Recuperación (Ej. ¿Nombre de tu mascota?)</label>
-                    <input type="text" id="reg-question" autocomplete="off" placeholder="Escribe tu pregunta secreta" required class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm">
+                    <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Pregunta de Recuperación</label>
+                    <input type="text" id="reg-question" autocomplete="off" placeholder="Escribe tu pregunta secreta" required class="w-full px-3 py-2 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-white rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm">
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Respuesta Secreta</label>
-                    <input type="text" id="reg-answer" autocomplete="off" placeholder="Respuesta a tu pregunta" required class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm">
+                    <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Respuesta Secreta</label>
+                    <input type="text" id="reg-answer" autocomplete="off" placeholder="Respuesta a tu pregunta" required class="w-full px-3 py-2 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-white rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm">
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Código Secreto Admin (Opcional)</label>
-                    <input type="password" id="reg-secret" autocomplete="new-password" placeholder="Solo administradores" class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm bg-amber-50/50">
+                    <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Código Secreto Admin (Opcional)</label>
+                    <input type="password" id="reg-secret" autocomplete="new-password" placeholder="Solo administradores" class="w-full px-3 py-2 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm bg-amber-50/50 dark:bg-slate-800 dark:text-white">
                 </div>
 
-                <button type="submit" class="w-full py-2.5 bg-yellow-400 hover:bg-yellow-500 text-slate-900 font-bold rounded-xl transition duration-200 shadow-md text-sm">
+                <button type="submit" id="reg-submit-btn" class="w-full py-2.5 bg-yellow-400 hover:bg-yellow-500 text-slate-900 font-bold rounded-xl transition duration-200 shadow-md text-sm">
                     Completar Registro
                 </button>
 
                 <div class="text-center pt-1">
-                    <button type="button" onclick="switchView('login')" class="text-xs text-slate-600 hover:text-slate-900 font-medium">
+                    <button type="button" onclick="switchView('login')" class="text-xs text-slate-600 dark:text-slate-400 hover:text-slate-900 font-medium">
                         ← Regresar al login
                     </button>
                 </div>
@@ -160,58 +170,62 @@
 
         <!-- VISTA 2: PORTAL DE EMPLEADO -->
         <div id="view-employee" class="p-4 sm:p-8 md:p-10 hidden">
-            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-3 border-b pb-4">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-3 border-b dark:border-slate-800 pb-4">
                 <div>
-                    <h1 class="text-xl sm:text-2xl font-bold text-slate-800" id="welcome-employee-title">Mi Portal</h1>
+                    <h1 class="text-xl sm:text-2xl font-bold text-slate-800 dark:text-white" id="welcome-employee-title">Mi Portal</h1>
                     <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider">Yello MKT Group - Colaborador</p>
-                    <p class="text-xs text-indigo-600 font-bold mt-1" id="contador-dias-badge">Días usados: 0 / 30 límite</p>
+                    <p class="text-xs text-indigo-600 dark:text-indigo-400 font-bold mt-1" id="contador-dias-badge">Días usados: 0 / 30 límite</p>
                 </div>
-                <button onclick="logout()" class="bg-slate-100 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold hover:bg-slate-200 transition text-center">
+                <button onclick="logout()" class="bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-4 py-2 rounded-xl text-sm font-semibold hover:bg-slate-200 dark:hover:bg-slate-700 transition text-center">
                     Cerrar Sesión
                 </button>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
-                <div class="bg-slate-50 p-4 sm:p-6 rounded-2xl border border-slate-200/80">
-                    <h2 class="text-base sm:text-lg font-bold text-slate-800 mb-4">Registrar Nueva Incapacidad</h2>
+                <div class="bg-slate-50 dark:bg-slate-800/50 p-4 sm:p-6 rounded-2xl border border-slate-200/80 dark:border-slate-800">
+                    <h2 class="text-base sm:text-lg font-bold text-slate-800 dark:text-white mb-4">Registrar Nueva Incapacidad</h2>
                     <form onsubmit="saveIncapacidad(event)" autocomplete="off" class="space-y-4">
                         <div>
-                            <label class="block text-xs font-semibold text-slate-600 mb-1">Nombre del Colaborador:</label>
-                            <input type="text" id="emp-nombre-colaborador" required class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none bg-white text-sm font-medium text-slate-700">
+                            <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Nombre del Colaborador:</label>
+                            <input type="text" id="emp-nombre-colaborador" required class="w-full px-3 py-2 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none bg-white dark:bg-slate-800 text-sm font-medium text-slate-700 dark:text-white">
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-slate-600 mb-1">Motivo:</label>
-                            <select id="emp-motivo" class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none bg-white text-sm">
+                            <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Folio de la Incapacidad:</label>
+                            <input type="text" id="emp-folio" placeholder="Ej. A-12345678" required class="w-full px-3 py-2 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none bg-white dark:bg-slate-800 text-sm font-medium text-slate-700 dark:text-white">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Motivo:</label>
+                            <select id="emp-motivo" class="w-full px-3 py-2 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none bg-white dark:bg-slate-800 text-sm dark:text-white">
                                 <option value="Enfermedad general">Enfermedad general</option>
                                 <option value="Maternidad">Maternidad</option>
                                 <option value="Accidente de trabajo">Accidente de trabajo</option>
                             </select>
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-slate-600 mb-1">Inicio:</label>
-                            <input type="date" id="emp-inicio" required class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm">
+                            <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Inicio:</label>
+                            <input type="date" id="emp-inicio" required class="w-full px-3 py-2 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm bg-white dark:bg-slate-800 dark:text-white">
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-slate-600 mb-1">Fin:</label>
-                            <input type="date" id="emp-fin" required class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm">
+                            <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Fin:</label>
+                            <input type="date" id="emp-fin" required class="w-full px-3 py-2 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm bg-white dark:bg-slate-800 dark:text-white">
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-slate-600 mb-1">PDF Incapacidad <span class="text-rose-500">*Obligatorio (Máx 10 MB)</span>:</label>
-                            <input type="file" id="emp-pdf" accept=".pdf" required class="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-yellow-100 file:text-yellow-800 cursor-pointer">
+                            <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">PDF Incapacidad <span class="text-rose-500">*Obligatorio</span>:</label>
+                            <input type="file" id="emp-pdf" accept=".pdf" required class="w-full text-xs text-slate-500 dark:text-slate-400 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-yellow-100 file:text-yellow-800 cursor-pointer">
                         </div>
-                        <button type="submit" class="w-full py-2.5 bg-yellow-400 hover:bg-yellow-500 text-slate-900 font-bold rounded-xl text-sm transition shadow-sm">
+                        <button type="submit" id="emp-submit-btn" class="w-full py-2.5 bg-yellow-400 hover:bg-yellow-500 text-slate-900 font-bold rounded-xl text-sm transition shadow-sm">
                             Guardar Solicitud
                         </button>
                     </form>
                 </div>
 
                 <div class="lg:col-span-2">
-                    <h2 class="text-base sm:text-lg font-bold text-slate-800 mb-4">Mis Solicitudes Registradas</h2>
-                    <div class="overflow-x-auto rounded-xl border border-slate-100 shadow-sm bg-white">
+                    <h2 class="text-base sm:text-lg font-bold text-slate-800 dark:text-white mb-4">Mis Solicitudes Registradas</h2>
+                    <div class="overflow-x-auto rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm bg-white dark:bg-slate-900">
                         <table class="w-full text-left border-collapse min-w-[550px]">
                             <thead>
-                                <tr class="bg-yellow-50/80 text-yellow-900 text-xs font-semibold border-b border-yellow-100">
-                                    <th class="p-3">Colaborador</th>
+                                <tr class="bg-yellow-50/80 dark:bg-slate-800 text-yellow-900 dark:text-yellow-400 text-xs font-semibold border-b border-yellow-100 dark:border-slate-700">
+                                    <th class="p-3">Colaborador / Folio</th>
                                     <th class="p-3">Motivo</th>
                                     <th class="p-3">Fechas</th>
                                     <th class="p-3">Días</th>
@@ -219,7 +233,7 @@
                                     <th class="p-3">PDF / Actualizar</th>
                                 </tr>
                             </thead>
-                            <tbody id="employee-table-body" class="divide-y divide-slate-100 text-xs text-slate-700">
+                            <tbody id="employee-table-body" class="divide-y divide-slate-100 dark:divide-slate-800 text-xs text-slate-700 dark:text-slate-300">
                                 <!-- Dinámico -->
                             </tbody>
                         </table>
@@ -230,38 +244,49 @@
 
         <!-- VISTA 3: PANEL DE ADMINISTRACIÓN GENERAL -->
         <div id="view-admin" class="p-4 sm:p-6 md:p-8 hidden">
-            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-3 border-b pb-4">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-3 border-b dark:border-slate-800 pb-4">
                 <div>
-                    <h1 class="text-xl sm:text-2xl md:text-3xl font-bold text-slate-800">Panel de Administración</h1>
+                    <h1 class="text-xl sm:text-2xl md:text-3xl font-bold text-slate-800 dark:text-white">Panel de Administración</h1>
                     <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider">Yello MKT Group - Vista General Cloud</p>
                 </div>
                 <div class="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
-                    <button onclick="exportCSV()" class="bg-emerald-100 text-emerald-800 px-4 py-2 rounded-xl text-sm font-semibold hover:bg-emerald-200 transition flex items-center justify-center gap-1 shadow-sm">
+                    <button onclick="exportCSV()" class="bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300 px-4 py-2 rounded-xl text-sm font-semibold hover:bg-emerald-200 transition flex items-center justify-center gap-1 shadow-sm">
                         📥 Descargar CSV
                     </button>
-                    <button onclick="logout()" class="bg-slate-100 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold hover:bg-slate-200 transition text-center">
+                    <button onclick="logout()" class="bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-4 py-2 rounded-xl text-sm font-semibold hover:bg-slate-200 transition text-center">
                         Cerrar Sesión
                     </button>
                 </div>
             </div>
 
             <!-- PESTAÑAS DEL ADMINISTRADOR -->
-            <div class="flex border-b border-slate-200 mb-6">
+            <div class="flex border-b border-slate-200 dark:border-slate-800 mb-6">
                 <button onclick="switchAdminTab('incapacidades')" id="tab-btn-incapacidades" class="px-6 py-2.5 font-bold text-sm text-yellow-600 border-b-2 border-yellow-400 transition">Incapacidades</button>
-                <button onclick="switchAdminTab('usuarios')" id="tab-btn-usuarios" class="px-6 py-2.5 font-bold text-sm text-slate-400 hover:text-slate-600 transition">Usuarios Registrados</button>
+                <button onclick="switchAdminTab('usuarios')" id="tab-btn-usuarios" class="px-6 py-2.5 font-bold text-sm text-slate-400 hover:text-slate-600 transition">Usuarios y Límites</button>
+                <button onclick="switchAdminTab('estadisticas')" id="tab-btn-estadisticas" class="px-6 py-2.5 font-bold text-sm text-slate-400 hover:text-slate-600 transition">Estadísticas</button>
             </div>
 
             <!-- SECCIÓN 1: INCAPACIDADES -->
             <div id="admin-section-incapacidades">
-                <div class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-3">
-                    <input type="text" id="search-input" placeholder="Buscar por empleado..." onkeyup="renderAdminTable()" class="px-4 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none w-full sm:w-72 text-sm">
+                <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-3">
+                    <input type="text" id="search-input" placeholder="Buscar por empleado o folio..." onkeyup="renderAdminTable()" class="px-4 py-2 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-white rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none w-full md:w-64 text-sm">
+                    
+                    <div class="flex flex-wrap gap-2 w-full md:w-auto">
+                        <select id="filter-estatus" onchange="renderAdminTable()" class="px-3 py-2 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-white rounded-xl text-sm focus:outline-none">
+                            <option value="">Todos los Estatus</option>
+                            <option value="Pendiente">Pendiente</option>
+                            <option value="Aprobado">Aprobado</option>
+                            <option value="Rechazado">Rechazado</option>
+                        </select>
+                        <input type="date" id="filter-fecha-inicio" onchange="renderAdminTable()" class="px-3 py-2 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-white rounded-xl text-sm">
+                    </div>
                 </div>
 
-                <div class="overflow-x-auto rounded-xl border border-slate-100 shadow-sm">
-                    <table class="w-full text-left border-collapse min-w-[700px]">
+                <div class="overflow-x-auto rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm">
+                    <table class="w-full text-left border-collapse min-w-[750px]">
                         <thead>
-                            <tr class="bg-yellow-50/80 text-yellow-900 text-sm font-semibold border-b border-yellow-100">
-                                <th class="p-3">Empleado</th>
+                            <tr class="bg-yellow-50/80 dark:bg-slate-800 text-yellow-900 dark:text-yellow-400 text-sm font-semibold border-b border-yellow-100 dark:border-slate-700">
+                                <th class="p-3">Empleado / Folio</th>
                                 <th class="p-3">Motivo</th>
                                 <th class="p-3">Fechas</th>
                                 <th class="p-3">Días</th>
@@ -270,7 +295,7 @@
                                 <th class="p-3 text-center">Acciones</th>
                             </tr>
                         </thead>
-                        <tbody id="admin-table-body" class="divide-y divide-slate-100 text-sm text-slate-700">
+                        <tbody id="admin-table-body" class="divide-y divide-slate-100 dark:divide-slate-800 text-sm text-slate-700 dark:text-slate-300">
                             <!-- Dinámico -->
                         </tbody>
                     </table>
@@ -280,24 +305,39 @@
             <!-- SECCIÓN 2: USUARIOS REGISTRADOS -->
             <div id="admin-section-usuarios" class="hidden">
                 <div class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-3">
-                    <input type="text" id="search-user-input" placeholder="Buscar usuario o teléfono..." onkeyup="renderUsersTable()" class="px-4 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none w-full sm:w-72 text-sm">
+                    <input type="text" id="search-user-input" placeholder="Buscar usuario o teléfono..." onkeyup="renderUsersTable()" class="px-4 py-2 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-white rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none w-full sm:w-72 text-sm">
                 </div>
 
-                <div class="overflow-x-auto rounded-xl border border-slate-100 shadow-sm">
-                    <table class="w-full text-left border-collapse min-w-[600px]">
+                <div class="overflow-x-auto rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm">
+                    <table class="w-full text-left border-collapse min-w-[550px]">
                         <thead>
-                            <tr class="bg-yellow-50/80 text-yellow-900 text-sm font-semibold border-b border-yellow-100">
+                            <tr class="bg-yellow-50/80 dark:bg-slate-800 text-yellow-900 dark:text-yellow-400 text-sm font-semibold border-b border-yellow-100 dark:border-slate-700">
                                 <th class="p-3">Nombre Completo</th>
-                                <th class="p-3">Usuario</th>
-                                <th class="p-3">Teléfono</th>
+                                <th class="p-3">Usuario / Teléfono</th>
                                 <th class="p-3">Rol</th>
                                 <th class="p-3 text-center">Acciones</th>
                             </tr>
                         </thead>
-                        <tbody id="admin-users-table-body" class="divide-y divide-slate-100 text-sm text-slate-700">
+                        <tbody id="admin-users-table-body" class="divide-y divide-slate-100 dark:divide-slate-800 text-sm text-slate-700 dark:text-slate-300">
                             <!-- Dinámico -->
                         </tbody>
                     </table>
+                </div>
+            </div>
+
+            <!-- SECCIÓN 3: ESTADÍSTICAS Y GRÁFICAS -->
+            <div id="admin-section-estadisticas" class="hidden grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-200 dark:border-slate-800">
+                    <h3 class="font-bold text-slate-700 dark:text-white mb-4 text-center">Incapacidad por Motivo</h3>
+                    <div class="w-full h-64 flex justify-center items-center">
+                        <canvas id="chartMotivos"></canvas>
+                    </div>
+                </div>
+                <div class="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-200 dark:border-slate-800">
+                    <h3 class="font-bold text-slate-700 dark:text-white mb-4 text-center">Estatus General de Solicitudes</h3>
+                    <div class="w-full h-64 flex justify-center items-center">
+                        <canvas id="chartEstatus"></canvas>
+                    </div>
                 </div>
             </div>
 
@@ -306,6 +346,23 @@
     </div>
 
     <script>
+        // ==========================================
+        // MODO OSCURO GLOBAL
+        // ==========================================
+        function toggleDarkMode() {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('yello_theme', 'light');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('yello_theme', 'dark');
+            }
+        }
+
+        if (localStorage.getItem('yello_theme') === 'dark') {
+            document.documentElement.classList.add('dark');
+        }
+
         // ==========================================
         // SISTEMA DE NOTIFICACIONES Y MODAL CENTRADO
         // ==========================================
@@ -365,6 +422,7 @@
         };
 
         const ADMIN_SECRET_CODE = "YELLO-ADMIN-2026*";
+        const ADMIN_PHONE = "5212222099376"; // Número configurado para WhatsApp
 
         if (!firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
@@ -375,6 +433,8 @@
         let incapacidadesGlobales = [];
         let usuariosGlobales = [];
         let intentosFallidosLogin = 5;
+        let chartMotivoInstance = null;
+        let chartEstatusInstance = null;
 
         window.onload = function() {
             inicializarAdminPorDefecto();
@@ -400,7 +460,7 @@
 
         async function inicializarAdminPorDefecto() {
             try {
-                const adminPhone = "5500000000";
+                const adminPhone = ADMIN_PHONE;
                 const adminDoc = await db.collection('usuarios').doc(adminPhone).get();
                 if (!adminDoc.exists) {
                     const hashedPassword = CryptoJS.SHA256("1234567").toString();
@@ -447,19 +507,30 @@
         function switchAdminTab(tabName) {
             const secInc = document.getElementById('admin-section-incapacidades');
             const secUsr = document.getElementById('admin-section-usuarios');
+            const secEst = document.getElementById('admin-section-estadisticas');
+            
             const btnInc = document.getElementById('tab-btn-incapacidades');
             const btnUsr = document.getElementById('tab-btn-usuarios');
+            const btnEst = document.getElementById('tab-btn-estadisticas');
+
+            secInc.classList.add('hidden');
+            secUsr.classList.add('hidden');
+            secEst.classList.add('hidden');
+            
+            btnInc.className = "px-6 py-2.5 font-bold text-sm text-slate-400 hover:text-slate-600 transition";
+            btnUsr.className = "px-6 py-2.5 font-bold text-sm text-slate-400 hover:text-slate-600 transition";
+            btnEst.className = "px-6 py-2.5 font-bold text-sm text-slate-400 hover:text-slate-600 transition";
 
             if (tabName === 'incapacidades') {
                 secInc.classList.remove('hidden');
-                secUsr.classList.add('hidden');
                 btnInc.className = "px-6 py-2.5 font-bold text-sm text-yellow-600 border-b-2 border-yellow-400 transition";
-                btnUsr.className = "px-6 py-2.5 font-bold text-sm text-slate-400 hover:text-slate-600 transition";
-            } else {
-                secInc.classList.add('hidden');
+            } else if (tabName === 'usuarios') {
                 secUsr.classList.remove('hidden');
                 btnUsr.className = "px-6 py-2.5 font-bold text-sm text-yellow-600 border-b-2 border-yellow-400 transition";
-                btnInc.className = "px-6 py-2.5 font-bold text-sm text-slate-400 hover:text-slate-600 transition";
+            } else if (tabName === 'estadisticas') {
+                secEst.classList.remove('hidden');
+                btnEst.className = "px-6 py-2.5 font-bold text-sm text-yellow-600 border-b-2 border-yellow-400 transition";
+                renderizarGraficas();
             }
         }
 
@@ -517,10 +588,6 @@
                     intentosFallidosLogin--;
                     document.getElementById('login-attempts-msg').innerText = `Intentos restantes: ${intentosFallidosLogin}`;
                     showToast('Contraseña incorrecta.', 'error');
-                    if(intentosFallidosLogin <= 0) {
-                        document.getElementById('login-btn').disabled = true;
-                        document.getElementById('login-btn').classList.add('opacity-50', 'cursor-not-allowed');
-                    }
                 }
             } catch (error) {
                 console.error("Error al iniciar sesión:", error);
@@ -530,6 +597,10 @@
 
         async function handleRegister(event) {
             event.preventDefault();
+            const submitBtn = document.getElementById('reg-submit-btn');
+            submitBtn.disabled = true;
+            submitBtn.innerText = "Registrando...";
+
             const nombre = document.getElementById('reg-nombre').value.trim();
             const username = document.getElementById('reg-username').value.trim().toLowerCase();
             const phone = document.getElementById('reg-phone').value.trim();
@@ -539,7 +610,9 @@
             const secretInput = document.getElementById('reg-secret').value.trim();
 
             if (!validarContrasenaSegura(pass)) {
-                showToast('La contraseña debe tener al menos 8 caracteres, 1 letra mayúscula y 1 número.', 'error');
+                showToast('La contraseña debe tener al menos 8 caracteres, 1 mayúscula y 1 número.', 'error');
+                submitBtn.disabled = false;
+                submitBtn.innerText = "Completar Registro";
                 return;
             }
 
@@ -547,12 +620,8 @@
                 const checkUser = await db.collection('usuarios').doc(phone).get();
                 if (checkUser.exists) {
                     showToast('Este número de teléfono ya está registrado.', 'error');
-                    return;
-                }
-
-                const checkUsername = await db.collection('usuarios').where('username', '==', username).get();
-                if (!checkUsername.empty) {
-                    showToast('Este nombre de usuario ya está ocupado.', 'error');
+                    submitBtn.disabled = false;
+                    submitBtn.innerText = "Completar Registro";
                     return;
                 }
 
@@ -560,31 +629,23 @@
                 if (secretInput !== "") {
                     if (secretInput === ADMIN_SECRET_CODE) {
                         role = 'admin';
-                    } else {
-                        showToast('Código de admin incorrecto. Se creará como empleado.', 'info');
                     }
                 }
 
                 const hashedPassword = CryptoJS.SHA256(pass).toString();
                 const hashedAnswer = CryptoJS.SHA256(answer).toString();
 
-                const nuevoUsuario = { 
-                    nombre, 
-                    username, 
-                    phone, 
-                    pass: hashedPassword, 
-                    question, 
-                    answer: hashedAnswer, 
-                    role 
-                };
-
-                await db.collection('usuarios').doc(phone).set(nuevoUsuario);
+                await db.collection('usuarios').doc(phone).set({ 
+                    nombre, username, phone, pass: hashedPassword, question, answer: hashedAnswer, role 
+                });
 
                 showToast('¡Cuenta segura creada con éxito!', 'success');
                 switchView('login');
             } catch (error) {
-                console.error("Error al registrar:", error);
                 showToast("Error al registrar en la nube.", 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerText = "Completar Registro";
             }
         }
 
@@ -597,8 +658,7 @@
             try {
                 const doc = await db.collection('usuarios').doc(phone).get();
                 if (doc.exists) {
-                    const data = doc.data();
-                    document.getElementById('rec-question-text').innerText = `Pregunta: "${data.question}"`;
+                    document.getElementById('rec-question-text').innerText = `Pregunta: "${doc.data().question}"`;
                     showToast('Pregunta cargada correctamente', 'info');
                 } else {
                     showToast('Teléfono no encontrado en el sistema', 'error');
@@ -629,20 +689,15 @@
                 }
 
                 const userData = docSnap.data();
-                const hashedInputAnswer = CryptoJS.SHA256(answerInput).toString();
-
-                if (userData.answer !== hashedInputAnswer) {
+                if (userData.answer !== CryptoJS.SHA256(answerInput).toString()) {
                     showToast('La respuesta secreta es incorrecta.', 'error');
                     return;
                 }
 
-                const hashedNewPass = CryptoJS.SHA256(newPass).toString();
-                await userDocRef.update({ pass: hashedNewPass });
-                
+                await userDocRef.update({ pass: CryptoJS.SHA256(newPass).toString() });
                 showToast('¡Contraseña restablecida con éxito!', 'success');
                 switchView('login');
             } catch (error) {
-                console.error("Error al recuperar contraseña:", error);
                 showToast("Hubo un error al actualizar la contraseña.", 'error');
             }
         }
@@ -664,55 +719,70 @@
 
         function saveIncapacidad(event) {
             event.preventDefault();
+            const submitBtn = document.getElementById('emp-submit-btn');
+            submitBtn.disabled = true;
+            submitBtn.innerText = "Guardando solicitud...";
+
             const empleadoNombre = document.getElementById('emp-nombre-colaborador').value.trim();
+            const folio = document.getElementById('emp-folio').value.trim();
             const motivo = document.getElementById('emp-motivo').value;
             const inicio = document.getElementById('emp-inicio').value;
             const fin = document.getElementById('emp-fin').value;
             const fileInput = document.getElementById('emp-pdf');
 
             if (fileInput.files.length === 0) {
-                showToast('Error: Es obligatorio cargar el archivo PDF de la incapacidad.', 'error');
+                showToast('Error: Es obligatorio cargar el archivo PDF.', 'error');
+                submitBtn.disabled = false;
+                submitBtn.innerText = "Guardar Solicitud";
                 return;
             }
 
             const file = fileInput.files[0];
-            const MAX_SIZE = 10 * 1024 * 1024;
-            if (file.size > MAX_SIZE) {
+            if (file.size > 10 * 1024 * 1024) {
                 showToast('El archivo PDF excede el límite máximo de 10 MB.', 'error');
+                submitBtn.disabled = false;
+                submitBtn.innerText = "Guardar Solicitud";
                 return;
             }
 
             const reader = new FileReader();
             reader.onload = function(e) {
-                const pdfData = e.target.result;
-                subirIncapacidadANube(empleadoNombre, motivo, inicio, fin, pdfData, event.target);
+                subirIncapacidadANube(empleadoNombre, folio, motivo, inicio, fin, e.target.result, event.target, submitBtn);
             };
             reader.readAsDataURL(file);
         }
 
-        async function subirIncapacidadANube(empleadoNombre, motivo, inicio, fin, pdf, formElement) {
+        async function subirIncapacidadANube(empleadoNombre, folio, motivo, inicio, fin, pdf, formElement, submitBtn) {
             try {
                 const diasCalculados = calcularDiasIncapacidad(inicio, fin);
-                const nueva = {
-                    id: Date.now(),
+                await db.collection('incapacidades').add({
                     phone: sessionActual.phone,
                     empleado: empleadoNombre,
+                    folio,
                     motivo,
                     inicio,
                     fin,
                     dias: diasCalculados,
                     estatus: 'Pendiente',
+                    observacion: 'Sin observaciones',
                     pdf,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                };
-
-                await db.collection('incapacidades').add(nueva);
+                });
+                
                 showToast('¡Incapacidad solicitada con éxito!', 'success');
+                
+                // NOTIFICACIÓN AUTOMÁTICA POR WHATSAPP AL ADMIN
+                let mensaje = `🚨 *Nueva Solicitud de Incapacidad*\n\n*Colaborador:* ${empleadoNombre}\n*Folio:* ${folio}\n*Motivo:* ${motivo}\n*Del:* ${inicio} *al:* ${fin}\n*Total:* ${diasCalculados} días\n\nPor favor revise la plataforma de Yello MKT Group.`;
+                let url = `https://api.whatsapp.com/send?phone=${ADMIN_PHONE}&text=${encodeURIComponent(mensaje)}`;
+                window.open(url, '_blank');
+
                 formElement.reset();
                 document.getElementById('emp-nombre-colaborador').value = sessionActual.nombre;
             } catch (error) {
-                console.error("Error al guardar:", error);
                 showToast("Hubo un error al guardar en la nube.", 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerText = "Guardar Solicitud";
             }
         }
 
@@ -723,19 +793,16 @@
             input.onchange = e => {
                 const file = e.target.files[0];
                 if (file) {
-                    const MAX_SIZE = 10 * 1024 * 1024;
-                    if (file.size > MAX_SIZE) {
+                    if (file.size > 10 * 1024 * 1024) {
                         showToast('El archivo excede los 10 MB permitidos.', 'error');
                         return;
                     }
                     const reader = new FileReader();
                     reader.onload = async function(event) {
-                        const pdfBase64 = event.target.result;
                         try {
-                            await db.collection('incapacidades').doc(docId).update({ pdf: pdfBase64 });
+                            await db.collection('incapacidades').doc(docId).update({ pdf: event.target.result });
                             showToast('¡Archivo PDF actualizado con éxito!', 'success');
                         } catch (err) {
-                            console.error("Error al actualizar PDF:", err);
                             showToast("No se pudo actualizar el archivo.", 'error');
                         }
                     };
@@ -766,14 +833,16 @@
 
                         const tr = document.createElement('tr');
                         tr.innerHTML = `
-                            <td class="p-3 font-medium text-slate-800">${item.empleado}</td>
+                            <td class="p-3 font-medium text-slate-800 dark:text-slate-200">${item.empleado}<br><span class="text-[10px] text-yellow-600 dark:text-yellow-400 font-semibold">Folio: ${item.folio || 'N/D'}</span></td>
                             <td class="p-3">${item.motivo}</td>
                             <td class="p-3">${item.inicio} al ${item.fin}</td>
-                            <td class="p-3 font-bold text-slate-700">${item.dias || 0} días</td>
-                            <td class="p-3 font-semibold ${item.estatus === 'Aprobado' ? 'text-emerald-600' : item.estatus === 'Rechazado' ? 'text-rose-600' : 'text-amber-600'}">${item.estatus}</td>
+                            <td class="p-3 font-bold">${item.dias || 0} días</td>
+                            <td class="p-3 font-semibold ${item.estatus === 'Aprobado' ? 'text-emerald-600' : item.estatus === 'Rechazado' ? 'text-rose-600' : 'text-amber-600'}">
+                                ${item.estatus}<br><span class="text-[10px] text-slate-400 font-normal">Nota: ${item.observacion || 'Ninguna'}</span>
+                            </td>
                             <td class="p-3 flex items-center gap-2">
-                                ${item.pdf ? `<button onclick="viewPDFFromData('${item.pdf}')" class="bg-sky-100 text-sky-700 px-2.5 py-1 rounded-lg text-xs font-semibold hover:bg-sky-200 transition">Ver</button>` : ''}
-                                <button onclick="uploadFinalPDF('${item.docId}')" class="bg-indigo-100 text-indigo-700 px-2.5 py-1 rounded-lg text-xs font-semibold hover:bg-indigo-200 transition">Cambiar PDF</button>
+                                ${item.pdf ? `<button onclick="viewPDFFromData('${item.pdf}')" class="bg-sky-100 text-sky-700 dark:bg-sky-900/50 dark:text-sky-300 px-2.5 py-1 rounded-lg text-xs font-semibold hover:bg-sky-200 transition">Ver</button>` : ''}
+                                <button onclick="uploadFinalPDF('${item.docId}')" class="bg-indigo-100 text-indigo-700 dark:bg-indigo-900/50 dark:text-indigo-300 px-2.5 py-1 rounded-lg text-xs font-semibold hover:bg-indigo-200 transition">PDF</button>
                             </td>
                         `;
                         tbody.appendChild(tr);
@@ -803,7 +872,7 @@
                     usuariosGlobales = [];
                     snapshot.forEach(doc => {
                         let item = doc.data();
-                        item.docId = doc.id; // Guardamos el ID real de Firestore
+                        item.docId = doc.id;
                         usuariosGlobales.push(item);
                     });
                     renderUsersTable();
@@ -813,9 +882,16 @@
         function renderAdminTable() {
             const tbody = document.getElementById('admin-table-body');
             const search = document.getElementById('search-input').value.toLowerCase();
+            const filterEst = document.getElementById('filter-estatus').value;
+            const filterFecha = document.getElementById('filter-fecha-inicio').value;
             tbody.innerHTML = '';
 
-            const filtered = incapacidadesGlobales.filter(item => item.empleado.toLowerCase().includes(search));
+            const filtered = incapacidadesGlobales.filter(item => {
+                const matchSearch = item.empleado.toLowerCase().includes(search) || (item.folio && item.folio.toLowerCase().includes(search));
+                const matchEst = filterEst === "" || item.estatus === filterEst;
+                const matchFecha = filterFecha === "" || item.inicio >= filterFecha;
+                return matchSearch && matchEst && matchFecha;
+            });
 
             if (filtered.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="7" class="text-center p-6 text-slate-400">No hay registros encontrados</td></tr>`;
@@ -825,12 +901,12 @@
             filtered.forEach(item => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td class="p-3 font-medium text-slate-800">${item.empleado}</td>
+                    <td class="p-3 font-medium text-slate-800 dark:text-slate-200">${item.empleado}<br><span class="text-xs text-yellow-600 dark:text-yellow-400 font-semibold">Folio: ${item.folio || 'N/D'}</span></td>
                     <td class="p-3">${item.motivo}</td>
                     <td class="p-3">${item.inicio} al ${item.fin}</td>
-                    <td class="p-3 font-bold text-slate-700">${item.dias || 0} días</td>
+                    <td class="p-3 font-bold">${item.dias || 0} días</td>
                     <td class="p-3">
-                        <select onchange="updateStatus('${item.docId}', this.value)" class="px-2 py-1 border border-slate-200 rounded-lg bg-white text-xs font-medium focus:outline-none focus:ring-1 focus:ring-yellow-400">
+                        <select onchange="updateStatusAndObservation('${item.docId}', this.value, '${item.empleado}')" class="px-2 py-1 border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-xs font-medium focus:outline-none">
                             <option value="Pendiente" ${item.estatus === 'Pendiente' ? 'selected' : ''}>Pendiente</option>
                             <option value="Aprobado" ${item.estatus === 'Aprobado' ? 'selected' : ''}>Aprobado</option>
                             <option value="Rechazado" ${item.estatus === 'Rechazado' ? 'selected' : ''}>Rechazado</option>
@@ -838,16 +914,31 @@
                     </td>
                     <td class="p-3">
                         <div class="flex items-center gap-2">
-                            ${item.pdf ? `<button onclick="viewPDFFromData('${item.pdf}')" class="bg-sky-100 text-sky-700 px-2.5 py-1 rounded-lg text-xs font-semibold hover:bg-sky-200 transition">Ver</button>` : ''}
-                            <button onclick="uploadFinalPDF('${item.docId}')" class="bg-indigo-100 text-indigo-700 px-2.5 py-1 rounded-lg text-xs font-semibold hover:bg-indigo-200 transition">Subir PDF</button>
+                            ${item.pdf ? `<button onclick="viewPDFFromData('${item.pdf}')" class="bg-sky-100 text-sky-700 dark:bg-sky-900/50 dark:text-sky-300 px-2.5 py-1 rounded-lg text-xs font-semibold">Ver</button>` : ''}
                         </div>
                     </td>
-                    <td class="p-3 text-center">
-                        <button onclick="deleteItem('${item.docId}')" class="bg-rose-100 text-rose-700 px-3 py-1 rounded-lg text-xs font-semibold hover:bg-rose-200 transition">Eliminar</button>
+                    <td class="p-3 text-center flex items-center justify-center gap-1">
+                        <button onclick="notificarAdminWhatsApp('${item.empleado}', '${item.folio || 'N/D'}', '${item.motivo}', '${item.inicio}', '${item.fin}', '${item.dias || 0}')" class="bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300 px-2.5 py-1 rounded-lg text-xs font-semibold">💬 Wats</button>
+                        <button onclick="deleteItem('${item.docId}')" class="bg-rose-100 text-rose-700 dark:bg-rose-900/50 dark:text-rose-300 px-2.5 py-1 rounded-lg text-xs font-semibold">X</button>
                     </td>
                 `;
                 tbody.appendChild(tr);
             });
+        }
+
+        async function updateStatusAndObservation(docId, newStatus, empleadoNombre) {
+            let observacion = prompt("Ingresa una observación o motivo para este estatus (Opcional):", "Aprobado con goce de sueldo");
+            if (observacion === null) return;
+
+            try {
+                await db.collection('incapacidades').doc(docId).update({ 
+                    estatus: newStatus,
+                    observacion: observacion || "Sin comentarios"
+                });
+                showToast('Estatus actualizado correctamente', 'success');
+            } catch (error) {
+                showToast("Error al actualizar estatus", 'error');
+            }
         }
 
         function renderUsersTable() {
@@ -857,64 +948,56 @@
 
             const filtered = usuariosGlobales.filter(u => 
                 (u.nombre && u.nombre.toLowerCase().includes(search)) || 
-                (u.username && u.username.toLowerCase().includes(search)) || 
                 (u.phone && u.phone.includes(search))
             );
 
             if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="text-center p-6 text-slate-400">No hay usuarios encontrados</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="4" class="text-center p-6 text-slate-400">No hay usuarios encontrados</td></tr>`;
                 return;
             }
 
             filtered.forEach(u => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td class="p-3 font-medium text-slate-800">${u.nombre || 'N/D'}</td>
-                    <td class="p-3 text-slate-600">${u.username || 'N/D'}</td>
-                    <td class="p-3 text-slate-600">${u.phone || 'N/D'}</td>
+                    <td class="p-3 font-medium text-slate-800 dark:text-slate-200">${u.nombre || 'N/D'}</td>
+                    <td class="p-3 text-slate-600 dark:text-slate-400">${u.phone || 'N/D'}</td>
                     <td class="p-3">
                         <span class="px-2 py-1 rounded-lg text-xs font-bold ${u.role === 'admin' ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 text-slate-700'}">
                             ${u.role || 'employee'}
                         </span>
                     </td>
                     <td class="p-3 text-center">
-                        ${u.phone === sessionActual.phone ? '<span class="text-xs text-slate-400 italic">Sesión actual</span>' : `<button onclick="deleteUser('${u.docId}')" class="bg-rose-100 text-rose-700 px-3 py-1 rounded-lg text-xs font-semibold hover:bg-rose-200 transition">Eliminar</button>`}
+                        ${u.phone === sessionActual.phone ? '<span class="text-xs text-slate-400 italic">Actual</span>' : `<button onclick="deleteUser('${u.docId}')" class="bg-rose-100 text-rose-700 px-3 py-1 rounded-lg text-xs font-semibold">Eliminar</button>`}
                     </td>
                 `;
                 tbody.appendChild(tr);
             });
         }
 
-        async function updateStatus(docId, newStatus) {
-            try {
-                await db.collection('incapacidades').doc(docId).update({ estatus: newStatus });
-                showToast('Estatus actualizado correctamente', 'success');
-            } catch (error) {
-                console.error("Error al actualizar estatus:", error);
-                showToast("Error al actualizar estatus", 'error');
-            }
+        function notificarAdminWhatsApp(empleado, folio, motivo, inicio, fin, dias) {
+            let mensaje = `🚨 *Nueva Solicitud de Incapacidad*\n\n*Colaborador:* ${empleado}\n*Folio:* ${folio}\n*Motivo:* ${motivo}\n*Del:* ${inicio} *al:* ${fin}\n*Total:* ${dias} días\n\nPor favor revise la plataforma de Yello MKT Group.`;
+            let url = `https://api.whatsapp.com/send?phone=${ADMIN_PHONE}&text=${encodeURIComponent(mensaje)}`;
+            window.open(url, '_blank');
         }
 
         function deleteItem(docId) {
-            showConfirm('Eliminar registro', '¿Estás seguro de eliminar este registro de la nube?', async () => {
+            showConfirm('Eliminar registro', '¿Estás seguro de eliminar este registro?', async () => {
                 try {
                     await db.collection('incapacidades').doc(docId).delete();
                     showToast('Registro eliminado con éxito', 'success');
                 } catch (error) {
-                    console.error("Error al eliminar:", error);
-                    showToast("Error al eliminar el registro", 'error');
+                    showToast("Error al eliminar", 'error');
                 }
             });
         }
 
         function deleteUser(docId) {
-            showConfirm('Eliminar usuario', '¿Estás seguro de eliminar este usuario del sistema?', async () => {
+            showConfirm('Eliminar usuario', '¿Estás seguro de eliminar este usuario?', async () => {
                 try {
                     await db.collection('usuarios').doc(docId).delete();
                     showToast('Usuario eliminado con éxito', 'success');
                 } catch (error) {
-                    console.error("Error al eliminar usuario:", error);
-                    showToast("Error al eliminar el usuario", 'error');
+                    showToast("Error al eliminar usuario", 'error');
                 }
             });
         }
@@ -925,9 +1008,9 @@
         }
 
         function exportCSV() {
-            let csv = 'Empleado,Motivo,Inicio,Fin,Dias,Estatus\n';
+            let csv = 'Empleado,Folio,Motivo,Inicio,Fin,Dias,Estatus\n';
             incapacidadesGlobales.forEach(i => {
-                csv += `"${i.empleado}","${i.motivo}","${i.inicio}","${i.fin}","${i.dias || 0}","${i.estatus}"\n`;
+                csv += `"${i.empleado}","${i.folio || 'N/D'}","${i.motivo}","${i.inicio}","${i.fin}","${i.dias || 0}","${i.estatus}"\n`;
             });
             const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
             const url = URL.createObjectURL(blob);
@@ -936,6 +1019,46 @@
             a.download = 'reporte_incapacidades_yello.csv';
             a.click();
             showToast('Reporte CSV descargado con éxito', 'success');
+        }
+
+        function renderizarGraficas() {
+            let motivosCount = {};
+            let estatusCount = { Pendiente: 0, Aprobado: 0, Rechazado: 0 };
+
+            incapacidadesGlobales.forEach(i => {
+                motivosCount[i.motivo] = (motivosCount[i.motivo] || 0) + 1;
+                if(estatusCount[i.estatus] !== undefined) {
+                    estatusCount[i.estatus]++;
+                }
+            });
+
+            const ctxMotivo = document.getElementById('chartMotivos').getContext('2d');
+            if(chartMotivoInstance) chartMotivoInstance.destroy();
+            chartMotivoInstance = new Chart(ctxMotivo, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(motivosCount),
+                    datasets: [{
+                        data: Object.values(motivosCount),
+                        backgroundColor: ['#fbbf24', '#38bdf8', '#34d399', '#f43f5e']
+                    }]
+                }
+            });
+
+            const ctxEstatus = document.getElementById('chartEstatus').getContext('2d');
+            if(chartEstatusInstance) chartEstatusInstance.destroy();
+            chartEstatusInstance = new Chart(ctxEstatus, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(estatusCount),
+                    datasets: [{
+                        label: 'Solicitudes',
+                        data: Object.values(estatusCount),
+                        backgroundColor: ['#fbbf24', '#34d399', '#f43f5e']
+                    }]
+                },
+                options: { scales: { y: { beginAtZero: true } } }
+            });
         }
     </script>
 </body>
