@@ -39,6 +39,21 @@
         </div>
     </div>
 
+    <!-- MODAL PERSONALIZADO PARA OBSERVACIÓN DE ESTATUS -->
+    <div id="custom-observation-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[60] hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl max-w-md w-full p-6 border-t-4 border-yellow-400 transform transition-all">
+            <h3 class="text-lg font-bold text-slate-800 dark:text-white mb-1">Actualizar Estatus</h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">Ingresa una observación o motivo opcional para este cambio.</p>
+            <div class="mb-4">
+                <input type="text" id="obs-input-field" placeholder="Ej. Aprobado con goce de sueldo" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm text-slate-700 dark:text-slate-200 font-medium">
+            </div>
+            <div class="flex justify-end gap-3">
+                <button id="obs-cancel-btn" class="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-300 font-semibold rounded-xl text-sm transition">Cancelar</button>
+                <button id="obs-ok-btn" class="px-4 py-2 bg-yellow-400 hover:bg-yellow-500 text-slate-900 font-bold rounded-xl text-sm transition shadow-sm">Guardar Estatus</button>
+            </div>
+        </div>
+    </div>
+
     <div class="w-full max-w-6xl bg-white dark:bg-slate-900 rounded-2xl shadow-xl overflow-hidden relative border-t-8 border-yellow-400 my-auto transition-colors duration-300">
         
         <!-- VISTA 1: LOGIN / ACCESO SEGURO -->
@@ -408,6 +423,31 @@
             };
         }
 
+        // MODAL PERSONALIZADO PARA OBSERVACIÓN DE ESTATUS
+        function showObservationModal(currentObservation, onSave) {
+            const modal = document.getElementById('custom-observation-modal');
+            const inputField = document.getElementById('obs-input-field');
+            const okBtn = document.getElementById('obs-ok-btn');
+            const cancelBtn = document.getElementById('obs-cancel-btn');
+
+            inputField.value = currentObservation && currentObservation !== 'Sin observaciones' && currentObservation !== 'Ninguna' ? currentObservation : 'Aprobado con goce de sueldo';
+            modal.classList.remove('hidden');
+            inputField.focus();
+
+            const newOkBtn = okBtn.cloneNode(true);
+            const newCancelBtn = cancelBtn.cloneNode(true);
+            okBtn.parentNode.replaceChild(newOkBtn, okBtn);
+            cancelBtn.parentNode.replaceChild(newCancelBtn, cancelBtn);
+
+            newOkBtn.onclick = () => {
+                modal.classList.add('hidden');
+                onSave(inputField.value.trim());
+            };
+            newCancelBtn.onclick = () => {
+                modal.classList.add('hidden');
+            };
+        }
+
         // ==========================================
         // CONFIGURACIÓN DE FIREBASE Y LÓGICA SEGURA
         // ==========================================
@@ -421,7 +461,7 @@
         };
 
         const ADMIN_SECRET_CODE = "YELLO-ADMIN-2026*";
-        const ADMIN_PHONE = "5212222099376"; // Número configurado para WhatsApp
+        const ADMIN_PHONE = "5212222099376";
 
         if (!firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
@@ -770,7 +810,6 @@
                 
                 showToast('¡Incapacidad solicitada con éxito!', 'success');
                 
-                // NOTIFICACIÓN AUTOMÁTICA POR WHATSAPP AL ADMIN
                 let mensaje = `🚨 *Nueva Solicitud de Incapacidad*\n\n*Colaborador:* ${empleadoNombre}\n*Folio:* ${folio}\n*Motivo:* ${motivo}\n*Del:* ${inicio} *al:* ${fin}\n*Total:* ${diasCalculados} días\n\nPor favor revise la plataforma de Yello MKT Group.`;
                 let url = `https://api.whatsapp.com/send?phone=${ADMIN_PHONE}&text=${encodeURIComponent(mensaje)}`;
                 window.open(url, '_blank');
@@ -900,11 +939,12 @@
                     <td class="p-3">${item.inicio} al ${item.fin}</td>
                     <td class="p-3 font-bold">${item.dias || 0} días</td>
                     <td class="p-3">
-                        <select onchange="updateStatusAndObservation('${item.docId}', this.value, '${item.empleado}')" class="px-2 py-1 border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-xs font-medium focus:outline-none">
+                        <select onchange="updateStatusAndObservation('${item.docId}', this.value, '${item.observacion || ''}')" class="px-2 py-1 border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-xs font-medium focus:outline-none">
                             <option value="Pendiente" ${item.estatus === 'Pendiente' ? 'selected' : ''}>Pendiente</option>
                             <option value="Aprobado" ${item.estatus === 'Aprobado' ? 'selected' : ''}>Aprobado</option>
                             <option value="Rechazado" ${item.estatus === 'Rechazado' ? 'selected' : ''}>Rechazado</option>
                         </select>
+                        <br><span class="text-[10px] text-slate-400 mt-1 block">Obs: ${item.observacion || 'Ninguna'}</span>
                     </td>
                     <td class="p-3">
                         <div class="flex items-center gap-2">
@@ -920,19 +960,18 @@
             });
         }
 
-        async function updateStatusAndObservation(docId, newStatus, empleadoNombre) {
-            let observacion = prompt("Ingresa una observación o motivo para este estatus (Opcional):", "Aprobado con goce de sueldo");
-            if (observacion === null) return;
-
-            try {
-                await db.collection('incapacidades').doc(docId).update({ 
-                    estatus: newStatus,
-                    observacion: observacion || "Sin comentarios"
-                });
-                showToast('Estatus actualizado correctamente', 'success');
-            } catch (error) {
-                showToast("Error al actualizar estatus", 'error');
-            }
+        function updateStatusAndObservation(docId, newStatus, currentObs) {
+            showObservationModal(currentObs, async (observacion) => {
+                try {
+                    await db.collection('incapacidades').doc(docId).update({ 
+                        estatus: newStatus,
+                        observacion: observacion || "Sin comentarios"
+                    });
+                    showToast('Estatus actualizado correctamente', 'success');
+                } catch (error) {
+                    showToast("Error al actualizar estatus", 'error');
+                }
+            });
         }
 
         function renderUsersTable() {
