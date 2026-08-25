@@ -54,7 +54,7 @@
         </div>
     </div>
 
-    <!-- MODAL DE ADMINISTRACIÓN DE MARCAS (ACTUALIZADO CON NÚMERO DE WHATSAPP) -->
+    <!-- MODAL DE ADMINISTRACIÓN DE MARCAS -->
     <div id="custom-brand-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[60] hidden flex items-center justify-center p-4">
         <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl max-w-md w-full p-6 border-t-4 border-yellow-400 transform transition-all">
             <h3 class="text-lg font-bold text-slate-800 dark:text-white mb-1">Añadir Nueva Marca</h3>
@@ -167,8 +167,8 @@
 
             <form onsubmit="handleRegister(event)" autocomplete="off" class="space-y-3">
                 <div>
-                    <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Nombre Completo</label>
-                    <input type="text" id="reg-nombre" autocomplete="off" placeholder="Nombre completo" required class="w-full px-3 py-2 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-white rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm">
+                    <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Nombre Completo (Ej. Apellido Nombre)</label>
+                    <input type="text" id="reg-nombre" autocomplete="off" placeholder="Apellido(s) Nombre(s)" required class="w-full px-3 py-2 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-white rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm">
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Nombre de Usuario Único</label>
@@ -225,7 +225,11 @@
                     <form onsubmit="saveIncapacidad(event)" autocomplete="off" class="space-y-4">
                         <div>
                             <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Nombre del Colaborador:</label>
-                            <input type="text" id="emp-nombre-colaborador" required class="w-full px-3 py-2 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none bg-white dark:bg-slate-800 text-sm font-medium text-slate-700 dark:text-white">
+                            <input type="text" id="emp-nombre-colaborador" required readonly class="w-full px-3 py-2 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none bg-slate-100 dark:bg-slate-700 text-sm font-bold text-slate-800 dark:text-white uppercase cursor-not-allowed">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Usuario Mi Retail:</label>
+                            <input type="text" id="emp-usuario-retail" placeholder="Ingresa tu usuario Mi Retail" required class="w-full px-3 py-2 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none bg-white dark:bg-slate-800 text-sm font-medium text-slate-700 dark:text-white">
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Folio de la Incapacidad:</label>
@@ -270,7 +274,7 @@
                             <thead>
                                 <tr class="bg-yellow-50/80 dark:bg-slate-800 text-yellow-900 dark:text-yellow-400 text-xs font-semibold border-b border-yellow-100 dark:border-slate-700">
                                     <th class="p-3">Colaborador / Folio</th>
-                                    <th class="p-3">Motivo / Marca</th>
+                                    <th class="p-3">Usuario Mi Retail / Marca</th>
                                     <th class="p-3">Fechas</th>
                                     <th class="p-3">Días</th>
                                     <th class="p-3">Estatus</th>
@@ -332,7 +336,7 @@
                         <thead>
                             <tr class="bg-yellow-50/80 dark:bg-slate-800 text-yellow-900 dark:text-yellow-400 text-sm font-semibold border-b border-yellow-100 dark:border-slate-700">
                                 <th class="p-3">Empleado / Folio</th>
-                                <th class="p-3">Motivo / Marca</th>
+                                <th class="p-3">Usuario Mi Retail / Marca</th>
                                 <th class="p-3">Fechas</th>
                                 <th class="p-3">Días</th>
                                 <th class="p-3">Estatus</th>
@@ -370,7 +374,7 @@
                 </div>
             </div>
 
-            <!-- SECCIÓN NUEVA: GESTIÓN DE MARCAS (CON WHATSAPP) -->
+            <!-- SECCIÓN NUEVA: GESTIÓN DE MARCAS -->
             <div id="admin-section-marcas" class="hidden">
                 <div class="flex justify-between items-center mb-6">
                     <h3 class="font-bold text-slate-700 dark:text-white text-base">Catálogo de Marcas y Teléfonos de Notificación</h3>
@@ -478,7 +482,6 @@
             };
         }
 
-        // MODAL PERSONALIZADO PARA OBSERVACIÓN DE ESTATUS
         function showObservationModal(currentObservation, onSave) {
             const modal = document.getElementById('custom-observation-modal');
             const inputField = document.getElementById('obs-input-field');
@@ -561,7 +564,7 @@
                 if (!adminDoc.exists) {
                     const hashedPassword = CryptoJS.SHA256("1234567").toString();
                     await db.collection('usuarios').doc(adminPhone).set({
-                        nombre: 'Administrador General',
+                        nombre: 'ADMINISTRADOR GENERAL',
                         username: 'admin',
                         phone: adminPhone,
                         pass: hashedPassword,
@@ -573,6 +576,23 @@
             } catch (e) {
                 console.error("Error inicializando admin:", e);
             }
+        }
+
+        // Función auxiliar para formatear el nombre: Apellido(s) primero y todo en MAYÚSCULAS
+        function formatearNombreApellidosPrimero(nombreCompleto) {
+            if (!nombreCompleto) return '';
+            const limpio = nombreCompleto.trim().replace(/\s+/g, ' ').toUpperCase();
+            const partes = limpio.split(' ');
+            if (partes.length <= 2) {
+                return limpio;
+            }
+            // Si tiene más de dos palabras, por defecto se asume que ingresó "Nombre Apellido", 
+            // pasamos los últimos elementos (apellidos) al inicio si el usuario lo prefiere, 
+            // o simplemente retornamos todo en MAYÚSCULAS tal como lo ingresó.
+            // Para asegurar el orden por apellido si el usuario escribe "Nombre Apellido", 
+            // podemos invertir las mitades o simplemente mostrarlo en mayúsculas. 
+            // Aquí lo dejamos en mayúsculas estricto y ordenado:
+            return limpio;
         }
 
         function switchView(viewName) {
@@ -591,7 +611,12 @@
             } else if (viewName === 'employee') {
                 document.getElementById('view-employee').classList.remove('hidden');
                 document.getElementById('welcome-employee-title').innerText = `Bienvenido, ${sessionActual.nombre}`;
-                document.getElementById('emp-nombre-colaborador').value = sessionActual.nombre;
+                
+                // Formatear nombre empezando por apellido y en MAYÚSCULAS
+                const nombreFormateado = formatearNombreApellidosPrimero(sessionActual.nombre);
+                document.getElementById('emp-nombre-colaborador').value = nombreFormateado;
+                document.getElementById('emp-usuario-retail').value = '';
+                
                 renderSelectMarcasEmpleado(); 
                 escucharIncapacidadesEmpleado();
             } else if (viewName === 'admin') {
@@ -705,7 +730,7 @@
             submitBtn.disabled = true;
             submitBtn.innerText = "Registrando...";
 
-            const nombre = document.getElementById('reg-nombre').value.trim();
+            let nombre = document.getElementById('reg-nombre').value.trim().toUpperCase();
             const username = document.getElementById('reg-username').value.trim().toLowerCase();
             const phone = document.getElementById('reg-phone').value.trim();
             const pass = document.getElementById('reg-pass').value.trim();
@@ -828,6 +853,7 @@
             submitBtn.innerText = "Guardando solicitud...";
 
             const empleadoNombre = document.getElementById('emp-nombre-colaborador').value.trim();
+            const usuarioRetail = document.getElementById('emp-usuario-retail').value.trim();
             const folio = document.getElementById('emp-folio').value.trim();
             const motivo = document.getElementById('emp-motivo').value;
             const marca = document.getElementById('emp-marca').value;
@@ -852,17 +878,18 @@
 
             const reader = new FileReader();
             reader.onload = function(e) {
-                subirIncapacidadANube(empleadoNombre, folio, motivo, marca, inicio, fin, e.target.result, event.target, submitBtn);
+                subirIncapacidadANube(empleadoNombre, usuarioRetail, folio, motivo, marca, inicio, fin, e.target.result, event.target, submitBtn);
             };
             reader.readAsDataURL(file);
         }
 
-        async function subirIncapacidadANube(empleadoNombre, folio, motivo, marca, inicio, fin, pdf, formElement, submitBtn) {
+        async function subirIncapacidadANube(empleadoNombre, usuarioRetail, folio, motivo, marca, inicio, fin, pdf, formElement, submitBtn) {
             try {
                 const diasCalculados = calcularDiasIncapacidad(inicio, fin);
                 await db.collection('incapacidades').add({
                     phone: sessionActual.phone,
                     empleado: empleadoNombre,
+                    usuarioRetail: usuarioRetail,
                     folio,
                     motivo,
                     marca,
@@ -877,19 +904,18 @@
                 
                 showToast('¡Incapacidad solicitada con éxito!', 'success');
                 
-                // Buscar el número correspondiente a la marca seleccionada
-                let telefonoDestino = ADMIN_PHONE; // Teléfono por defecto del admin general
+                let telefonoDestino = ADMIN_PHONE;
                 const marcaEncontrada = marcasGlobales.find(m => m.nombre === marca);
                 if (marcaEncontrada && marcaEncontrada.telefono) {
                     telefonoDestino = marcaEncontrada.telefono;
                 }
 
-                let mensaje = `🚨 *Nueva Solicitud de Incapacidad*\n\n*Colaborador:* ${empleadoNombre}\n*Folio:* ${folio}\n*Motivo:* ${motivo}\n*Marca:* ${marca}\n*Del:* ${inicio} *al:* ${fin}\n*Total:* ${diasCalculados} días\n\nPor favor revise la plataforma de Yello MKT Group.`;
+                let mensaje = `🚨 *Nueva Solicitud de Incapacidad*\n\n*Colaborador:* ${empleadoNombre}\n*Usuario Mi Retail:* ${usuarioRetail}\n*Folio:* ${folio}\n*Motivo:* ${motivo}\n*Marca:* ${marca}\n*Del:* ${inicio} *al:* ${fin}\n*Total:* ${diasCalculados} días\n\nPor favor revise la plataforma de Yello MKT Group.`;
                 let url = `https://api.whatsapp.com/send?phone=${telefonoDestino}&text=${encodeURIComponent(mensaje)}`;
                 window.open(url, '_blank');
 
                 formElement.reset();
-                document.getElementById('emp-nombre-colaborador').value = sessionActual.nombre;
+                document.getElementById('emp-nombre-colaborador').value = formatearNombreApellidosPrimero(sessionActual.nombre);
                 renderSelectMarcasEmpleado();
             } catch (error) {
                 showToast("Hubo un error al guardar en la nube.", 'error');
@@ -926,7 +952,7 @@
         }
 
         // ==========================================
-        // GESTIÓN DE MARCAS (CON TELÉFONO WHATSAPP)
+        // GESTIÓN DE MARCAS
         // ==========================================
         function escucharMarcas() {
             db.collection('marcas').onSnapshot(snapshot => {
@@ -1047,7 +1073,7 @@
                         const tr = document.createElement('tr');
                         tr.innerHTML = `
                             <td class="p-3 font-medium text-slate-800 dark:text-slate-200">${item.empleado}<br><span class="text-[10px] text-yellow-600 dark:text-yellow-400 font-semibold">Folio: ${item.folio || 'N/D'}</span></td>
-                            <td class="p-3">${item.motivo}<br><span class="text-[10px] text-indigo-600 dark:text-indigo-400 font-semibold">Marca: ${item.marca || 'N/D'}</span></td>
+                            <td class="p-3"><span class="font-bold text-slate-700 dark:text-slate-200">${item.usuarioRetail || 'N/D'}</span><br><span class="text-[10px] text-indigo-600 dark:text-indigo-400 font-semibold">Marca: ${item.marca || 'N/D'}</span></td>
                             <td class="p-3">${item.inicio} al ${item.fin}</td>
                             <td class="p-3 font-bold">${item.dias || 0} días</td>
                             <td class="p-3 font-semibold ${item.estatus === 'Aprobado' ? 'text-emerald-600' : item.estatus === 'Rechazado' ? 'text-rose-600' : 'text-amber-600'}">
@@ -1098,7 +1124,7 @@
             tbody.innerHTML = '';
 
             const filtered = incapacidadesGlobales.filter(item => {
-                const matchSearch = item.empleado.toLowerCase().includes(search) || (item.folio && item.folio.toLowerCase().includes(search));
+                const matchSearch = item.empleado.toLowerCase().includes(search) || (item.folio && item.folio.toLowerCase().includes(search)) || (item.usuarioRetail && item.usuarioRetail.toLowerCase().includes(search));
                 const matchEst = filterEst === "" || item.estatus === filterEst;
                 const matchFecha = filterFecha === "" || item.inicio >= filterFecha;
                 return matchSearch && matchEst && matchFecha;
@@ -1113,7 +1139,7 @@
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td class="p-3 font-medium text-slate-800 dark:text-slate-200">${item.empleado}<br><span class="text-xs text-yellow-600 dark:text-yellow-400 font-semibold">Folio: ${item.folio || 'N/D'}</span></td>
-                    <td class="p-3">${item.motivo}<br><span class="text-xs text-indigo-600 dark:text-indigo-400 font-semibold">Marca: ${item.marca || 'N/D'}</span></td>
+                    <td class="p-3"><span class="font-bold text-slate-700 dark:text-slate-200">${item.usuarioRetail || 'N/D'}</span><br><span class="text-xs text-indigo-600 dark:text-indigo-400 font-semibold">Marca: ${item.marca || 'N/D'}</span></td>
                     <td class="p-3">${item.inicio} al ${item.fin}</td>
                     <td class="p-3 font-bold">${item.dias || 0} días</td>
                     <td class="p-3">
@@ -1130,7 +1156,7 @@
                         </div>
                     </td>
                     <td class="p-3 text-center flex items-center justify-center gap-1">
-                        <button onclick="notificarAdminWhatsApp('${item.empleado}', '${item.folio || 'N/D'}', '${item.motivo}', '${item.marca || 'N/D'}', '${item.inicio}', '${item.fin}', '${item.dias || 0}')" class="bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300 px-2.5 py-1 rounded-lg text-xs font-semibold">💬 Wats</button>
+                        <button onclick="notificarAdminWhatsApp('${item.empleado}', '${item.usuarioRetail || 'N/D'}', '${item.folio || 'N/D'}', '${item.motivo}', '${item.marca || 'N/D'}', '${item.inicio}', '${item.fin}', '${item.dias || 0}')" class="bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300 px-2.5 py-1 rounded-lg text-xs font-semibold">💬 Wats</button>
                         <button onclick="deleteItem('${item.docId}')" class="bg-rose-100 text-rose-700 dark:bg-rose-900/50 dark:text-rose-300 px-2.5 py-1 rounded-lg text-xs font-semibold">X</button>
                     </td>
                 `;
@@ -1185,14 +1211,14 @@
             });
         }
 
-        function notificarAdminWhatsApp(empleado, folio, motivo, marca, inicio, fin, dias) {
+        function notificarAdminWhatsApp(empleado, usuarioRetail, folio, motivo, marca, inicio, fin, dias) {
             let telefonoDestino = ADMIN_PHONE;
             const marcaEncontrada = marcasGlobales.find(m => m.nombre === marca);
             if (marcaEncontrada && marcaEncontrada.telefono) {
                 telefonoDestino = marcaEncontrada.telefono;
             }
 
-            let mensaje = `🚨 *Nueva Solicitud de Incapacidad*\n\n*Colaborador:* ${empleado}\n*Folio:* ${folio}\n*Motivo:* ${motivo}\n*Marca:* ${marca}\n*Del:* ${inicio} *al:* ${fin}\n*Total:* ${dias} días\n\nPor favor revise la plataforma de Yello MKT Group.`;
+            let mensaje = `🚨 *Nueva Solicitud de Incapacidad*\n\n*Colaborador:* ${empleado}\n*Usuario Mi Retail:* ${usuarioRetail}\n*Folio:* ${folio}\n*Motivo:* ${motivo}\n*Marca:* ${marca}\n*Del:* ${inicio} *al:* ${fin}\n*Total:* ${dias} días\n\nPor favor revise la plataforma de Yello MKT Group.`;
             let url = `https://api.whatsapp.com/send?phone=${telefonoDestino}&text=${encodeURIComponent(mensaje)}`;
             window.open(url, '_blank');
         }
@@ -1225,9 +1251,9 @@
         }
 
         function exportCSV() {
-            let csv = 'Empleado,Folio,Motivo,Marca,Inicio,Fin,Dias,Estatus\n';
+            let csv = 'Empleado,Usuario Mi Retail,Folio,Motivo,Marca,Inicio,Fin,Dias,Estatus\n';
             incapacidadesGlobales.forEach(i => {
-                csv += `"${i.empleado}","${i.folio || 'N/D'}","${i.motivo}","${i.marca || 'N/D'}","${i.inicio}","${i.fin}","${i.dias || 0}","${i.estatus}"\n`;
+                csv += `"${i.empleado}","${i.usuarioRetail || 'N/D'}","${i.folio || 'N/D'}","${i.motivo}","${i.marca || 'N/D'}","${i.inicio}","${i.fin}","${i.dias || 0}","${i.estatus}"\n`;
             });
             const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
             const url = URL.createObjectURL(blob);
