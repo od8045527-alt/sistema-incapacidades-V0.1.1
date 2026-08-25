@@ -582,6 +582,7 @@
                 document.getElementById('view-employee').classList.remove('hidden');
                 document.getElementById('welcome-employee-title').innerText = `Bienvenido, ${sessionActual.nombre}`;
                 document.getElementById('emp-nombre-colaborador').value = sessionActual.nombre;
+                renderSelectMarcasEmpleado(); // <- Asegura que carguen las marcas al entrar al perfil empleado
                 escucharIncapacidadesEmpleado();
             } else if (viewName === 'admin') {
                 document.getElementById('view-admin').classList.remove('hidden');
@@ -872,6 +873,7 @@
 
                 formElement.reset();
                 document.getElementById('emp-nombre-colaborador').value = sessionActual.nombre;
+                renderSelectMarcasEmpleado();
             } catch (error) {
                 showToast("Hubo un error al guardar en la nube.", 'error');
             } finally {
