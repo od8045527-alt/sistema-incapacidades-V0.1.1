@@ -323,8 +323,16 @@
                                 <input type="date" id="receta-fecha" required class="w-full px-3 py-2 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm bg-white dark:bg-slate-800 dark:text-white">
                             </div>
                             <div>
-                                <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Médico Tratante e Institución:</label>
-                                <input type="text" id="receta-medico" placeholder="Ej. Dr. Pérez / IMSS o Particular" required class="w-full px-3 py-2 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none bg-white dark:bg-slate-800 text-sm font-medium text-slate-700 dark:text-white">
+                                <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Médico Tratante (Nombre / Referencia):</label>
+                                <input type="text" id="receta-medico" placeholder="Ej. Dr. Pérez" required class="w-full px-3 py-2 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none bg-white dark:bg-slate-800 text-sm font-medium text-slate-700 dark:text-white">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Institución:</label>
+                                <select id="receta-institucion" required class="w-full px-3 py-2 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none bg-white dark:bg-slate-800 text-sm dark:text-white">
+                                    <option value="IMSS">IMSS</option>
+                                    <option value="ISSSTE">ISSSTE</option>
+                                    <option value="Particular">Particular</option>
+                                </select>
                             </div>
                             <div>
                                 <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">PDF Receta Médica <span class="text-rose-500">*Obligatorio</span>:</label>
@@ -342,7 +350,7 @@
                             <table class="w-full text-left border-collapse min-w-[550px]">
                                 <thead>
                                     <tr class="bg-yellow-50/80 dark:bg-slate-800 text-yellow-900 dark:text-yellow-400 text-xs font-semibold border-b border-yellow-100 dark:border-slate-700">
-                                        <th class="p-3">Colaborador / Médico</th>
+                                        <th class="p-3">Colaborador / Médico / Institución</th>
                                         <th class="p-3">Usuario Mi Retail / Marca</th>
                                         <th class="p-3">Fecha</th>
                                         <th class="p-3">Estatus</th>
@@ -442,7 +450,7 @@
                     <table class="w-full text-left border-collapse min-w-[750px]">
                         <thead>
                             <tr class="bg-yellow-50/80 dark:bg-slate-800 text-yellow-900 dark:text-yellow-400 text-sm font-semibold border-b border-yellow-100 dark:border-slate-700">
-                                <th class="p-3">Colaborador / Médico</th>
+                                <th class="p-3">Colaborador / Médico / Institución</th>
                                 <th class="p-3">Usuario Mi Retail / Marca</th>
                                 <th class="p-3">Fecha de Consulta</th>
                                 <th class="p-3">Estatus</th>
@@ -707,6 +715,7 @@
                 document.getElementById('emp-usuario-retail').value = '';
                 document.getElementById('receta-nombre-colaborador').value = '';
                 document.getElementById('receta-usuario-retail').value = '';
+                document.getElementById('receta-medico').value = '';
                 
                 renderSelectMarcasEmpleado(); 
                 escucharIncapacidadesEmpleado();
@@ -1061,6 +1070,7 @@
             const marca = document.getElementById('receta-marca').value;
             const fecha = document.getElementById('receta-fecha').value;
             const medico = document.getElementById('receta-medico').value.trim();
+            const institucion = document.getElementById('receta-institucion').value;
             const fileInput = document.getElementById('receta-pdf');
 
             if (fileInput.files.length === 0) {
@@ -1080,12 +1090,12 @@
 
             const reader = new FileReader();
             reader.onload = function(e) {
-                subirRecetaANube(empleadoNombre, usuarioRetail, marca, fecha, medico, e.target.result, event.target, submitBtn);
+                subirRecetaANube(empleadoNombre, usuarioRetail, marca, fecha, medico, institucion, e.target.result, event.target, submitBtn);
             };
             reader.readAsDataURL(file);
         }
 
-        async function subirRecetaANube(empleadoNombre, usuarioRetail, marca, fecha, medico, pdf, formElement, submitBtn) {
+        async function subirRecetaANube(empleadoNombre, usuarioRetail, marca, fecha, medico, institucion, pdf, formElement, submitBtn) {
             try {
                 await db.collection('recetas').add({
                     phone: sessionActual.phone,
@@ -1094,6 +1104,7 @@
                     marca,
                     fecha,
                     medico,
+                    institucion,
                     estatus: 'Pendiente',
                     observacion: 'Sin observaciones',
                     pdf,
@@ -1108,7 +1119,7 @@
                     telefonoDestino = marcaEncontrada.telefono;
                 }
 
-                let mensaje = `📋 *Nueva Receta Médica Registrada*\n\n*Colaborador:* ${empleadoNombre}\n*Usuario Mi Retail:* ${usuarioRetail}\n*Marca:* ${marca}\n*Fecha Consulta:* ${fecha}\n*Médico / Inst:* ${medico}\n\nPor favor revise la plataforma de Yello MKT Group.`;
+                let mensaje = `📋 *Nueva Receta Médica Registrada*\n\n*Colaborador:* ${empleadoNombre}\n*Usuario Mi Retail:* ${usuarioRetail}\n*Marca:* ${marca}\n*Fecha Consulta:* ${fecha}\n*Médico:* ${medico}\n*Institución:* ${institucion}\n\nPor favor revise la plataforma de Yello MKT Group.`;
                 let url = `https://api.whatsapp.com/send?phone=${telefonoDestino}&text=${encodeURIComponent(mensaje)}`;
                 window.open(url, '_blank');
 
@@ -1339,7 +1350,7 @@
 
                         const tr = document.createElement('tr');
                         tr.innerHTML = `
-                            <td class="p-3 font-medium text-slate-800 dark:text-slate-200">${item.empleado}<br><span class="text-[10px] text-yellow-600 dark:text-yellow-400 font-semibold">Médico: ${item.medico || 'N/D'}</span></td>
+                            <td class="p-3 font-medium text-slate-800 dark:text-slate-200">${item.empleado}<br><span class="text-[10px] text-yellow-600 dark:text-yellow-400 font-semibold">Médico: ${item.medico || 'N/D'} (${item.institucion || 'Particular'})</span></td>
                             <td class="p-3"><span class="font-bold text-slate-700 dark:text-slate-200">${item.usuarioRetail || 'N/D'}</span><br><span class="text-[10px] text-teal-600 dark:text-teal-400 font-semibold">Marca: ${item.marca || 'N/D'}</span></td>
                             <td class="p-3">${item.fecha}</td>
                             <td class="p-3 font-semibold ${item.estatus === 'Revisado' ? 'text-teal-600' : 'text-amber-600'}">
@@ -1466,7 +1477,7 @@
             filtered.forEach(item => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td class="p-3 font-medium text-slate-800 dark:text-slate-200">${item.empleado}<br><span class="text-xs text-yellow-600 dark:text-yellow-400 font-semibold">Médico: ${item.medico || 'N/D'}</span></td>
+                    <td class="p-3 font-medium text-slate-800 dark:text-slate-200">${item.empleado}<br><span class="text-xs text-yellow-600 dark:text-yellow-400 font-semibold">Médico: ${item.medico || 'N/D'} (${item.institucion || 'Particular'})</span></td>
                     <td class="p-3"><span class="font-bold text-slate-700 dark:text-slate-200">${item.usuarioRetail || 'N/D'}</span><br><span class="text-xs text-teal-600 dark:text-teal-400 font-semibold">Marca: ${item.marca || 'N/D'}</span></td>
                     <td class="p-3">${item.fecha}</td>
                     <td class="p-3">
@@ -1616,9 +1627,9 @@
         }
 
         function exportRecetasCSV() {
-            let csv = 'Colaborador,Usuario Mi Retail,Marca,Fecha Consulta,Medico,Estatus\n';
+            let csv = 'Colaborador,Usuario Mi Retail,Marca,Fecha Consulta,Medico,Institucion,Estatus\n';
             recetasGlobales.forEach(r => {
-                csv += `"${r.empleado}","${r.usuarioRetail || 'N/D'}","${r.marca || 'N/D'}","${r.fecha}","${r.medico || 'N/D'}","${r.estatus}"\n`;
+                csv += `"${r.empleado}","${r.usuarioRetail || 'N/D'}","${r.marca || 'N/D'}","${r.fecha}","${r.medico || 'N/D'}","${r.institucion || 'Particular'}","${r.estatus}"\n`;
             });
             const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
             const url = URL.createObjectURL(blob);
