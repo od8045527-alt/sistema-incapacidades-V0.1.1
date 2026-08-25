@@ -54,6 +54,21 @@
         </div>
     </div>
 
+    <!-- MODAL DE ADMINISTRACIÓN DE MARCAS -->
+    <div id="custom-brand-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[60] hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl max-w-md w-full p-6 border-t-4 border-yellow-400 transform transition-all">
+            <h3 class="text-lg font-bold text-slate-800 dark:text-white mb-1">Añadir Nueva Marca</h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">Ingresa el nombre de la nueva marca para el catálogo.</p>
+            <div class="mb-4">
+                <input type="text" id="new-brand-input" placeholder="Ej. Yello Fashion, S.A." class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm text-slate-700 dark:text-slate-200 font-medium">
+            </div>
+            <div class="flex justify-end gap-3">
+                <button onclick="cerrarModalMarca()" class="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-300 font-semibold rounded-xl text-sm transition">Cancelar</button>
+                <button onclick="guardarNuevaMarca()" class="px-4 py-2 bg-yellow-400 hover:bg-yellow-500 text-slate-900 font-bold rounded-xl text-sm transition shadow-sm">Guardar Marca</button>
+            </div>
+        </div>
+    </div>
+
     <div class="w-full max-w-6xl bg-white dark:bg-slate-900 rounded-2xl shadow-xl overflow-hidden relative border-t-8 border-yellow-400 my-auto transition-colors duration-300">
         
         <!-- VISTA 1: LOGIN / ACCESO SEGURO -->
@@ -216,6 +231,12 @@
                             </select>
                         </div>
                         <div>
+                            <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Marca:</label>
+                            <select id="emp-marca" required class="w-full px-3 py-2 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none bg-white dark:bg-slate-800 text-sm dark:text-white">
+                                <!-- Las opciones se cargarán dinámicamente desde Firebase -->
+                            </select>
+                        </div>
+                        <div>
                             <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Inicio:</label>
                             <input type="date" id="emp-inicio" required class="w-full px-3 py-2 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm bg-white dark:bg-slate-800 dark:text-white">
                         </div>
@@ -240,7 +261,7 @@
                             <thead>
                                 <tr class="bg-yellow-50/80 dark:bg-slate-800 text-yellow-900 dark:text-yellow-400 text-xs font-semibold border-b border-yellow-100 dark:border-slate-700">
                                     <th class="p-3">Colaborador / Folio</th>
-                                    <th class="p-3">Motivo</th>
+                                    <th class="p-3">Motivo / Marca</th>
                                     <th class="p-3">Fechas</th>
                                     <th class="p-3">Días</th>
                                     <th class="p-3">Estatus</th>
@@ -274,10 +295,11 @@
             </div>
 
             <!-- PESTAÑAS DEL ADMINISTRADOR -->
-            <div class="flex border-b border-slate-200 dark:border-slate-800 mb-6">
-                <button onclick="switchAdminTab('incapacidades')" id="tab-btn-incapacidades" class="px-6 py-2.5 font-bold text-sm text-yellow-600 border-b-2 border-yellow-400 transition">Incapacidades</button>
-                <button onclick="switchAdminTab('usuarios')" id="tab-btn-usuarios" class="px-6 py-2.5 font-bold text-sm text-slate-400 hover:text-slate-600 transition">Usuarios y Límites</button>
-                <button onclick="switchAdminTab('estadisticas')" id="tab-btn-estadisticas" class="px-6 py-2.5 font-bold text-sm text-slate-400 hover:text-slate-600 transition">Estadísticas</button>
+            <div class="flex border-b border-slate-200 dark:border-slate-800 mb-6 overflow-x-auto">
+                <button onclick="switchAdminTab('incapacidades')" id="tab-btn-incapacidades" class="px-6 py-2.5 font-bold text-sm text-yellow-600 border-b-2 border-yellow-400 transition whitespace-nowrap">Incapacidades</button>
+                <button onclick="switchAdminTab('usuarios')" id="tab-btn-usuarios" class="px-6 py-2.5 font-bold text-sm text-slate-400 hover:text-slate-600 transition whitespace-nowrap">Usuarios y Límites</button>
+                <button onclick="switchAdminTab('marcas')" id="tab-btn-marcas" class="px-6 py-2.5 font-bold text-sm text-slate-400 hover:text-slate-600 transition whitespace-nowrap">Marcas</button>
+                <button onclick="switchAdminTab('estadisticas')" id="tab-btn-estadisticas" class="px-6 py-2.5 font-bold text-sm text-slate-400 hover:text-slate-600 transition whitespace-nowrap">Estadísticas</button>
             </div>
 
             <!-- SECCIÓN 1: INCAPACIDADES -->
@@ -301,7 +323,7 @@
                         <thead>
                             <tr class="bg-yellow-50/80 dark:bg-slate-800 text-yellow-900 dark:text-yellow-400 text-sm font-semibold border-b border-yellow-100 dark:border-slate-700">
                                 <th class="p-3">Empleado / Folio</th>
-                                <th class="p-3">Motivo</th>
+                                <th class="p-3">Motivo / Marca</th>
                                 <th class="p-3">Fechas</th>
                                 <th class="p-3">Días</th>
                                 <th class="p-3">Estatus</th>
@@ -333,6 +355,29 @@
                             </tr>
                         </thead>
                         <tbody id="admin-users-table-body" class="divide-y divide-slate-100 dark:divide-slate-800 text-sm text-slate-700 dark:text-slate-300">
+                            <!-- Dinámico -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- SECCIÓN NUEVA: GESTIÓN DE MARCAS -->
+            <div id="admin-section-marcas" class="hidden">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="font-bold text-slate-700 dark:text-white text-base">Catálogo de Marcas Registradas</h3>
+                    <button onclick="abrirModalNuevaMarca()" class="bg-yellow-400 hover:bg-yellow-500 text-slate-900 px-4 py-2 rounded-xl text-sm font-bold transition shadow-sm">
+                        + Añadir Marca
+                    </button>
+                </div>
+                <div class="overflow-x-auto rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm">
+                    <table class="w-full text-left border-collapse min-w-[400px]">
+                        <thead>
+                            <tr class="bg-yellow-50/80 dark:bg-slate-800 text-yellow-900 dark:text-yellow-400 text-sm font-semibold border-b border-yellow-100 dark:border-slate-700">
+                                <th class="p-3">Nombre de la Marca</th>
+                                <th class="p-3 text-center">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-brands-table-body" class="divide-y divide-slate-100 dark:divide-slate-800 text-sm text-slate-700 dark:text-slate-300">
                             <!-- Dinámico -->
                         </tbody>
                     </table>
@@ -471,12 +516,14 @@
         let sessionActual = JSON.parse(localStorage.getItem('yello_session')) || null;
         let incapacidadesGlobales = [];
         let usuariosGlobales = [];
+        let marcasGlobales = [];
         let intentosFallidosLogin = 5;
         let chartMotivoInstance = null;
         let chartEstatusInstance = null;
 
         window.onload = function() {
             inicializarAdminPorDefecto();
+            escucharMarcas();
 
             setTimeout(() => {
                 document.querySelectorAll('input').forEach(input => {
@@ -546,29 +593,36 @@
         function switchAdminTab(tabName) {
             const secInc = document.getElementById('admin-section-incapacidades');
             const secUsr = document.getElementById('admin-section-usuarios');
+            const secMar = document.getElementById('admin-section-marcas');
             const secEst = document.getElementById('admin-section-estadisticas');
             
             const btnInc = document.getElementById('tab-btn-incapacidades');
             const btnUsr = document.getElementById('tab-btn-usuarios');
+            const btnMar = document.getElementById('tab-btn-marcas');
             const btnEst = document.getElementById('tab-btn-estadisticas');
 
             secInc.classList.add('hidden');
             secUsr.classList.add('hidden');
+            secMar.classList.add('hidden');
             secEst.classList.add('hidden');
             
-            btnInc.className = "px-6 py-2.5 font-bold text-sm text-slate-400 hover:text-slate-600 transition";
-            btnUsr.className = "px-6 py-2.5 font-bold text-sm text-slate-400 hover:text-slate-600 transition";
-            btnEst.className = "px-6 py-2.5 font-bold text-sm text-slate-400 hover:text-slate-600 transition";
+            btnInc.className = "px-6 py-2.5 font-bold text-sm text-slate-400 hover:text-slate-600 transition whitespace-nowrap";
+            btnUsr.className = "px-6 py-2.5 font-bold text-sm text-slate-400 hover:text-slate-600 transition whitespace-nowrap";
+            btnMar.className = "px-6 py-2.5 font-bold text-sm text-slate-400 hover:text-slate-600 transition whitespace-nowrap";
+            btnEst.className = "px-6 py-2.5 font-bold text-sm text-slate-400 hover:text-slate-600 transition whitespace-nowrap";
 
             if (tabName === 'incapacidades') {
                 secInc.classList.remove('hidden');
-                btnInc.className = "px-6 py-2.5 font-bold text-sm text-yellow-600 border-b-2 border-yellow-400 transition";
+                btnInc.className = "px-6 py-2.5 font-bold text-sm text-yellow-600 border-b-2 border-yellow-400 transition whitespace-nowrap";
             } else if (tabName === 'usuarios') {
                 secUsr.classList.remove('hidden');
-                btnUsr.className = "px-6 py-2.5 font-bold text-sm text-yellow-600 border-b-2 border-yellow-400 transition";
+                btnUsr.className = "px-6 py-2.5 font-bold text-sm text-yellow-600 border-b-2 border-yellow-400 transition whitespace-nowrap";
+            } else if (tabName === 'marcas') {
+                secMar.classList.remove('hidden');
+                btnMar.className = "px-6 py-2.5 font-bold text-sm text-yellow-600 border-b-2 border-yellow-400 transition whitespace-nowrap";
             } else if (tabName === 'estadisticas') {
                 secEst.classList.remove('hidden');
-                btnEst.className = "px-6 py-2.5 font-bold text-sm text-yellow-600 border-b-2 border-yellow-400 transition";
+                btnEst.className = "px-6 py-2.5 font-bold text-sm text-yellow-600 border-b-2 border-yellow-400 transition whitespace-nowrap";
                 renderizarGraficas();
             }
         }
@@ -765,6 +819,7 @@
             const empleadoNombre = document.getElementById('emp-nombre-colaborador').value.trim();
             const folio = document.getElementById('emp-folio').value.trim();
             const motivo = document.getElementById('emp-motivo').value;
+            const marca = document.getElementById('emp-marca').value;
             const inicio = document.getElementById('emp-inicio').value;
             const fin = document.getElementById('emp-fin').value;
             const fileInput = document.getElementById('emp-pdf');
@@ -777,8 +832,8 @@
             }
 
             const file = fileInput.files[0];
-            if (file.size > 10 * 1024 * 1024) {
-                showToast('El archivo PDF excede el límite máximo de 10 MB.', 'error');
+            if (file.size > 20 * 1024 * 1024) {
+                showToast('El archivo PDF excede el límite máximo de 20 MB.', 'error');
                 submitBtn.disabled = false;
                 submitBtn.innerText = "Guardar Solicitud";
                 return;
@@ -786,12 +841,12 @@
 
             const reader = new FileReader();
             reader.onload = function(e) {
-                subirIncapacidadANube(empleadoNombre, folio, motivo, inicio, fin, e.target.result, event.target, submitBtn);
+                subirIncapacidadANube(empleadoNombre, folio, motivo, marca, inicio, fin, e.target.result, event.target, submitBtn);
             };
             reader.readAsDataURL(file);
         }
 
-        async function subirIncapacidadANube(empleadoNombre, folio, motivo, inicio, fin, pdf, formElement, submitBtn) {
+        async function subirIncapacidadANube(empleadoNombre, folio, motivo, marca, inicio, fin, pdf, formElement, submitBtn) {
             try {
                 const diasCalculados = calcularDiasIncapacidad(inicio, fin);
                 await db.collection('incapacidades').add({
@@ -799,6 +854,7 @@
                     empleado: empleadoNombre,
                     folio,
                     motivo,
+                    marca,
                     inicio,
                     fin,
                     dias: diasCalculados,
@@ -810,7 +866,7 @@
                 
                 showToast('¡Incapacidad solicitada con éxito!', 'success');
                 
-                let mensaje = `🚨 *Nueva Solicitud de Incapacidad*\n\n*Colaborador:* ${empleadoNombre}\n*Folio:* ${folio}\n*Motivo:* ${motivo}\n*Del:* ${inicio} *al:* ${fin}\n*Total:* ${diasCalculados} días\n\nPor favor revise la plataforma de Yello MKT Group.`;
+                let mensaje = `🚨 *Nueva Solicitud de Incapacidad*\n\n*Colaborador:* ${empleadoNombre}\n*Folio:* ${folio}\n*Motivo:* ${motivo}\n*Marca:* ${marca}\n*Del:* ${inicio} *al:* ${fin}\n*Total:* ${diasCalculados} días\n\nPor favor revise la plataforma de Yello MKT Group.`;
                 let url = `https://api.whatsapp.com/send?phone=${ADMIN_PHONE}&text=${encodeURIComponent(mensaje)}`;
                 window.open(url, '_blank');
 
@@ -831,8 +887,8 @@
             input.onchange = e => {
                 const file = e.target.files[0];
                 if (file) {
-                    if (file.size > 50 * 1024 * 1024) {
-                        showToast('El archivo excede los 50 MB permitidos.', 'error');
+                    if (file.size > 20 * 1024 * 1024) {
+                        showToast('El archivo excede los 20 MB permitidos.', 'error');
                         return;
                     }
                     const reader = new FileReader();
@@ -848,6 +904,100 @@
                 }
             };
             input.click();
+        }
+
+        // ==========================================
+        // GESTIÓN DE MARCAS
+        // ==========================================
+        function escucharMarcas() {
+            db.collection('marcas').onSnapshot(snapshot => {
+                marcasGlobales = [];
+                snapshot.forEach(doc => {
+                    marcasGlobales.push({ id: doc.id, ...doc.data() });
+                });
+                renderSelectMarcasEmpleado();
+                renderAdminBrandsTable();
+            });
+        }
+
+        function renderSelectMarcasEmpleado() {
+            const select = document.getElementById('emp-marca');
+            if (!select) return;
+            select.innerHTML = '';
+            
+            if (marcasGlobales.length === 0) {
+                select.innerHTML = `<option value="Sin marca">Sin marcas registradas</option>`;
+                return;
+            }
+
+            marcasGlobales.forEach(m => {
+                const option = document.createElement('option');
+                option.value = m.nombre;
+                option.innerText = m.nombre;
+                select.appendChild(option);
+            });
+        }
+
+        function abrirModalNuevaMarca() {
+            document.getElementById('new-brand-input').value = '';
+            document.getElementById('custom-brand-modal').classList.remove('hidden');
+            document.getElementById('new-brand-input').focus();
+        }
+
+        function cerrarModalMarca() {
+            document.getElementById('custom-brand-modal').classList.add('hidden');
+        }
+
+        async function guardarNuevaMarca() {
+            const nombreMarca = document.getElementById('new-brand-input').value.trim();
+            if (!nombreMarca) {
+                showToast('Escribe el nombre de la marca', 'error');
+                return;
+            }
+
+            try {
+                await db.collection('marcas').add({
+                    nombre: nombreMarca,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                showToast('Marca agregada con éxito', 'success');
+                cerrarModalMarca();
+            } catch (e) {
+                showToast('Error al guardar la marca', 'error');
+            }
+        }
+
+        function renderAdminBrandsTable() {
+            const tbody = document.getElementById('admin-brands-table-body');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            if (marcasGlobales.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="2" class="text-center p-6 text-slate-400">No hay marcas registradas</td></tr>`;
+                return;
+            }
+
+            marcasGlobales.forEach(m => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="p-3 font-medium text-slate-800 dark:text-slate-200">${m.nombre}</td>
+                    <td class="p-3 text-center">
+                        <button onclick="eliminarMarca('${m.id}')" class="bg-rose-100 text-rose-700 hover:bg-rose-200 px-3 py-1 rounded-lg text-xs font-semibold transition">Eliminar</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function eliminarMarca(docId) {
+            showConfirm('Eliminar Marca', '¿Estás seguro de eliminar esta marca del sistema?', async () => {
+                try {
+                    await db.collection('marcas').doc(docId).delete();
+                    showToast('Marca eliminada correctamente', 'success');
+                } catch (e) {
+                    showToast('Error al eliminar la marca', 'error');
+                }
+            });
         }
 
         function escucharIncapacidadesEmpleado() {
@@ -869,7 +1019,7 @@
                         const tr = document.createElement('tr');
                         tr.innerHTML = `
                             <td class="p-3 font-medium text-slate-800 dark:text-slate-200">${item.empleado}<br><span class="text-[10px] text-yellow-600 dark:text-yellow-400 font-semibold">Folio: ${item.folio || 'N/D'}</span></td>
-                            <td class="p-3">${item.motivo}</td>
+                            <td class="p-3">${item.motivo}<br><span class="text-[10px] text-indigo-600 dark:text-indigo-400 font-semibold">Marca: ${item.marca || 'N/D'}</span></td>
                             <td class="p-3">${item.inicio} al ${item.fin}</td>
                             <td class="p-3 font-bold">${item.dias || 0} días</td>
                             <td class="p-3 font-semibold ${item.estatus === 'Aprobado' ? 'text-emerald-600' : item.estatus === 'Rechazado' ? 'text-rose-600' : 'text-amber-600'}">
@@ -935,7 +1085,7 @@
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td class="p-3 font-medium text-slate-800 dark:text-slate-200">${item.empleado}<br><span class="text-xs text-yellow-600 dark:text-yellow-400 font-semibold">Folio: ${item.folio || 'N/D'}</span></td>
-                    <td class="p-3">${item.motivo}</td>
+                    <td class="p-3">${item.motivo}<br><span class="text-xs text-indigo-600 dark:text-indigo-400 font-semibold">Marca: ${item.marca || 'N/D'}</span></td>
                     <td class="p-3">${item.inicio} al ${item.fin}</td>
                     <td class="p-3 font-bold">${item.dias || 0} días</td>
                     <td class="p-3">
@@ -952,7 +1102,7 @@
                         </div>
                     </td>
                     <td class="p-3 text-center flex items-center justify-center gap-1">
-                        <button onclick="notificarAdminWhatsApp('${item.empleado}', '${item.folio || 'N/D'}', '${item.motivo}', '${item.inicio}', '${item.fin}', '${item.dias || 0}')" class="bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300 px-2.5 py-1 rounded-lg text-xs font-semibold">💬 Wats</button>
+                        <button onclick="notificarAdminWhatsApp('${item.empleado}', '${item.folio || 'N/D'}', '${item.motivo}', '${item.marca || 'N/D'}', '${item.inicio}', '${item.fin}', '${item.dias || 0}')" class="bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300 px-2.5 py-1 rounded-lg text-xs font-semibold">💬 Wats</button>
                         <button onclick="deleteItem('${item.docId}')" class="bg-rose-100 text-rose-700 dark:bg-rose-900/50 dark:text-rose-300 px-2.5 py-1 rounded-lg text-xs font-semibold">X</button>
                     </td>
                 `;
@@ -1007,8 +1157,8 @@
             });
         }
 
-        function notificarAdminWhatsApp(empleado, folio, motivo, inicio, fin, dias) {
-            let mensaje = `🚨 *Nueva Solicitud de Incapacidad*\n\n*Colaborador:* ${empleado}\n*Folio:* ${folio}\n*Motivo:* ${motivo}\n*Del:* ${inicio} *al:* ${fin}\n*Total:* ${dias} días\n\nPor favor revise la plataforma de Yello MKT Group.`;
+        function notificarAdminWhatsApp(empleado, folio, motivo, marca, inicio, fin, dias) {
+            let mensaje = `🚨 *Nueva Solicitud de Incapacidad*\n\n*Colaborador:* ${empleado}\n*Folio:* ${folio}\n*Motivo:* ${motivo}\n*Marca:* ${marca}\n*Del:* ${inicio} *al:* ${fin}\n*Total:* ${dias} días\n\nPor favor revise la plataforma de Yello MKT Group.`;
             let url = `https://api.whatsapp.com/send?phone=${ADMIN_PHONE}&text=${encodeURIComponent(mensaje)}`;
             window.open(url, '_blank');
         }
@@ -1041,9 +1191,9 @@
         }
 
         function exportCSV() {
-            let csv = 'Empleado,Folio,Motivo,Inicio,Fin,Dias,Estatus\n';
+            let csv = 'Empleado,Folio,Motivo,Marca,Inicio,Fin,Dias,Estatus\n';
             incapacidadesGlobales.forEach(i => {
-                csv += `"${i.empleado}","${i.folio || 'N/D'}","${i.motivo}","${i.inicio}","${i.fin}","${i.dias || 0}","${i.estatus}"\n`;
+                csv += `"${i.empleado}","${i.folio || 'N/D'}","${i.motivo}","${i.marca || 'N/D'}","${i.inicio}","${i.fin}","${i.dias || 0}","${i.estatus}"\n`;
             });
             const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
             const url = URL.createObjectURL(blob);
