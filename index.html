@@ -54,14 +54,23 @@
         </div>
     </div>
 
-    <!-- MODAL DE ADMINISTRACIÓN DE MARCAS -->
+    <!-- MODAL DE ADMINISTRACIÓN DE MARCAS (ACTUALIZADO CON NÚMERO DE WHATSAPP) -->
     <div id="custom-brand-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[60] hidden flex items-center justify-center p-4">
         <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl max-w-md w-full p-6 border-t-4 border-yellow-400 transform transition-all">
             <h3 class="text-lg font-bold text-slate-800 dark:text-white mb-1">Añadir Nueva Marca</h3>
-            <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">Ingresa el nombre de la nueva marca para el catálogo.</p>
-            <div class="mb-4">
-                <input type="text" id="new-brand-input" placeholder="Ej. Yello Fashion, S.A." class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm text-slate-700 dark:text-slate-200 font-medium">
+            <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">Ingresa el nombre de la marca y el número de WhatsApp para notificaciones.</p>
+            
+            <div class="space-y-3 mb-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Nombre de la Marca</label>
+                    <input type="text" id="new-brand-input" placeholder="Ej. Yello Fashion, S.A." class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm text-slate-700 dark:text-slate-200 font-medium">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Número de WhatsApp (con código de país, ej. 521...)</label>
+                    <input type="tel" id="new-brand-phone" placeholder="Ej. 5212222099376" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm text-slate-700 dark:text-slate-200 font-medium">
+                </div>
             </div>
+
             <div class="flex justify-end gap-3">
                 <button onclick="cerrarModalMarca()" class="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-300 font-semibold rounded-xl text-sm transition">Cancelar</button>
                 <button onclick="guardarNuevaMarca()" class="px-4 py-2 bg-yellow-400 hover:bg-yellow-500 text-slate-900 font-bold rounded-xl text-sm transition shadow-sm">Guardar Marca</button>
@@ -361,19 +370,20 @@
                 </div>
             </div>
 
-            <!-- SECCIÓN NUEVA: GESTIÓN DE MARCAS -->
+            <!-- SECCIÓN NUEVA: GESTIÓN DE MARCAS (CON WHATSAPP) -->
             <div id="admin-section-marcas" class="hidden">
                 <div class="flex justify-between items-center mb-6">
-                    <h3 class="font-bold text-slate-700 dark:text-white text-base">Catálogo de Marcas Registradas</h3>
+                    <h3 class="font-bold text-slate-700 dark:text-white text-base">Catálogo de Marcas y Teléfonos de Notificación</h3>
                     <button onclick="abrirModalNuevaMarca()" class="bg-yellow-400 hover:bg-yellow-500 text-slate-900 px-4 py-2 rounded-xl text-sm font-bold transition shadow-sm">
                         + Añadir Marca
                     </button>
                 </div>
                 <div class="overflow-x-auto rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm">
-                    <table class="w-full text-left border-collapse min-w-[400px]">
+                    <table class="w-full text-left border-collapse min-w-[500px]">
                         <thead>
                             <tr class="bg-yellow-50/80 dark:bg-slate-800 text-yellow-900 dark:text-yellow-400 text-sm font-semibold border-b border-yellow-100 dark:border-slate-700">
                                 <th class="p-3">Nombre de la Marca</th>
+                                <th class="p-3">Teléfono WhatsApp Destino</th>
                                 <th class="p-3 text-center">Acciones</th>
                             </tr>
                         </thead>
@@ -582,7 +592,7 @@
                 document.getElementById('view-employee').classList.remove('hidden');
                 document.getElementById('welcome-employee-title').innerText = `Bienvenido, ${sessionActual.nombre}`;
                 document.getElementById('emp-nombre-colaborador').value = sessionActual.nombre;
-                renderSelectMarcasEmpleado(); // <- Asegura que carguen las marcas al entrar al perfil empleado
+                renderSelectMarcasEmpleado(); 
                 escucharIncapacidadesEmpleado();
             } else if (viewName === 'admin') {
                 document.getElementById('view-admin').classList.remove('hidden');
@@ -867,8 +877,15 @@
                 
                 showToast('¡Incapacidad solicitada con éxito!', 'success');
                 
+                // Buscar el número correspondiente a la marca seleccionada
+                let telefonoDestino = ADMIN_PHONE; // Teléfono por defecto del admin general
+                const marcaEncontrada = marcasGlobales.find(m => m.nombre === marca);
+                if (marcaEncontrada && marcaEncontrada.telefono) {
+                    telefonoDestino = marcaEncontrada.telefono;
+                }
+
                 let mensaje = `🚨 *Nueva Solicitud de Incapacidad*\n\n*Colaborador:* ${empleadoNombre}\n*Folio:* ${folio}\n*Motivo:* ${motivo}\n*Marca:* ${marca}\n*Del:* ${inicio} *al:* ${fin}\n*Total:* ${diasCalculados} días\n\nPor favor revise la plataforma de Yello MKT Group.`;
-                let url = `https://api.whatsapp.com/send?phone=${ADMIN_PHONE}&text=${encodeURIComponent(mensaje)}`;
+                let url = `https://api.whatsapp.com/send?phone=${telefonoDestino}&text=${encodeURIComponent(mensaje)}`;
                 window.open(url, '_blank');
 
                 formElement.reset();
@@ -909,7 +926,7 @@
         }
 
         // ==========================================
-        // GESTIÓN DE MARCAS
+        // GESTIÓN DE MARCAS (CON TELÉFONO WHATSAPP)
         // ==========================================
         function escucharMarcas() {
             db.collection('marcas').onSnapshot(snapshot => {
@@ -942,6 +959,7 @@
 
         function abrirModalNuevaMarca() {
             document.getElementById('new-brand-input').value = '';
+            document.getElementById('new-brand-phone').value = '';
             document.getElementById('custom-brand-modal').classList.remove('hidden');
             document.getElementById('new-brand-input').focus();
         }
@@ -952,14 +970,21 @@
 
         async function guardarNuevaMarca() {
             const nombreMarca = document.getElementById('new-brand-input').value.trim();
+            const telefonoMarca = document.getElementById('new-brand-phone').value.trim();
+
             if (!nombreMarca) {
                 showToast('Escribe el nombre de la marca', 'error');
+                return;
+            }
+            if (!telefonoMarca) {
+                showToast('Escribe el número de WhatsApp para la marca', 'error');
                 return;
             }
 
             try {
                 await db.collection('marcas').add({
                     nombre: nombreMarca,
+                    telefono: telefonoMarca,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
                 showToast('Marca agregada con éxito', 'success');
@@ -975,7 +1000,7 @@
             tbody.innerHTML = '';
 
             if (marcasGlobales.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="2" class="text-center p-6 text-slate-400">No hay marcas registradas</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="3" class="text-center p-6 text-slate-400">No hay marcas registradas</td></tr>`;
                 return;
             }
 
@@ -983,6 +1008,7 @@
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td class="p-3 font-medium text-slate-800 dark:text-slate-200">${m.nombre}</td>
+                    <td class="p-3 text-slate-600 dark:text-slate-400 font-mono text-xs">${m.telefono || 'Sin número'}</td>
                     <td class="p-3 text-center">
                         <button onclick="eliminarMarca('${m.id}')" class="bg-rose-100 text-rose-700 hover:bg-rose-200 px-3 py-1 rounded-lg text-xs font-semibold transition">Eliminar</button>
                     </td>
@@ -1160,8 +1186,14 @@
         }
 
         function notificarAdminWhatsApp(empleado, folio, motivo, marca, inicio, fin, dias) {
+            let telefonoDestino = ADMIN_PHONE;
+            const marcaEncontrada = marcasGlobales.find(m => m.nombre === marca);
+            if (marcaEncontrada && marcaEncontrada.telefono) {
+                telefonoDestino = marcaEncontrada.telefono;
+            }
+
             let mensaje = `🚨 *Nueva Solicitud de Incapacidad*\n\n*Colaborador:* ${empleado}\n*Folio:* ${folio}\n*Motivo:* ${motivo}\n*Marca:* ${marca}\n*Del:* ${inicio} *al:* ${fin}\n*Total:* ${dias} días\n\nPor favor revise la plataforma de Yello MKT Group.`;
-            let url = `https://api.whatsapp.com/send?phone=${ADMIN_PHONE}&text=${encodeURIComponent(mensaje)}`;
+            let url = `https://api.whatsapp.com/send?phone=${telefonoDestino}&text=${encodeURIComponent(mensaje)}`;
             window.open(url, '_blank');
         }
 
