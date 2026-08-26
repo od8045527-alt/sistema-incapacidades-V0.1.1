@@ -78,6 +78,26 @@
         </div>
     </div>
 
+    <!-- MODAL DE ADMINISTRACIÓN DE PUESTOS -->
+    <div id="custom-puesto-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[60] hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl max-w-md w-full p-6 border-t-4 border-yellow-400 transform transition-all">
+            <h3 class="text-lg font-bold text-slate-800 dark:text-white mb-1">Añadir Nuevo Puesto</h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">Ingresa el nombre del puesto para el registro de colaboradores.</p>
+            
+            <div class="space-y-3 mb-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Nombre del Puesto</label>
+                    <input type="text" id="new-puesto-input" placeholder="Ej. Supervisor, Promotor, etc." class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm text-slate-700 dark:text-slate-200 font-medium">
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-3">
+                <button onclick="cerrarModalPuesto()" class="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-300 font-semibold rounded-xl text-sm transition">Cancelar</button>
+                <button onclick="guardarNuevoPuesto()" class="px-4 py-2 bg-yellow-400 hover:bg-yellow-500 text-slate-900 font-bold rounded-xl text-sm transition shadow-sm">Guardar Puesto</button>
+            </div>
+        </div>
+    </div>
+
     <div class="w-full max-w-6xl bg-white dark:bg-slate-900 rounded-2xl shadow-xl overflow-hidden relative border-t-8 border-yellow-400 my-auto transition-colors duration-300">
         
         <!-- VISTA 1: LOGIN / ACCESO SEGURO -->
@@ -162,7 +182,7 @@
         <div id="view-register" class="p-6 sm:p-10 md:p-12 max-w-md mx-auto w-full hidden">
             <div class="text-center mb-6 sm:mb-8">
                 <h1 class="text-xl sm:text-2xl font-bold text-slate-800 dark:text-white">Crear Cuenta</h1>
-                <p class="text-xs text-slate-500 mt-1">Configura usuario, teléfono y medidas de seguridad</p>
+                <p class="text-xs text-slate-500 mt-1">Configura usuario, teléfono, puesto y medidas de seguridad</p>
             </div>
 
             <form onsubmit="handleRegister(event)" autocomplete="off" class="space-y-3">
@@ -173,6 +193,12 @@
                 <div>
                     <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Nombre de Usuario Único</label>
                     <input type="text" id="reg-username" autocomplete="off" placeholder="Ej. angel_delgado" required class="w-full px-3 py-2 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-white rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Selecciona tu puesto</label>
+                    <select id="reg-puesto" required class="w-full px-3 py-2 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-white rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm">
+                        <!-- Dinámico -->
+                    </select>
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Número de Teléfono (10 dígitos)</label>
@@ -389,6 +415,7 @@
                 <button onclick="switchAdminTab('recetas')" id="tab-btn-recetas" class="px-6 py-2.5 font-bold text-sm text-slate-400 hover:text-slate-600 transition whitespace-nowrap">Recetas Médicas</button>
                 <button onclick="switchAdminTab('usuarios')" id="tab-btn-usuarios" class="px-6 py-2.5 font-bold text-sm text-slate-400 hover:text-slate-600 transition whitespace-nowrap">Usuarios y Límites</button>
                 <button onclick="switchAdminTab('marcas')" id="tab-btn-marcas" class="px-6 py-2.5 font-bold text-sm text-slate-400 hover:text-slate-600 transition whitespace-nowrap">Marcas</button>
+                <button onclick="switchAdminTab('puestos')" id="tab-btn-puestos" class="px-6 py-2.5 font-bold text-sm text-slate-400 hover:text-slate-600 transition whitespace-nowrap">Puestos</button>
                 <button onclick="switchAdminTab('estadisticas')" id="tab-btn-estadisticas" class="px-6 py-2.5 font-bold text-sm text-slate-400 hover:text-slate-600 transition whitespace-nowrap">Estadísticas</button>
             </div>
 
@@ -471,7 +498,7 @@
                     <table class="w-full text-left border-collapse min-w-[550px]">
                         <thead>
                             <tr class="bg-yellow-50/80 dark:bg-slate-800 text-yellow-900 dark:text-yellow-400 text-sm font-semibold border-b border-yellow-100 dark:border-slate-700">
-                                <th class="p-3">Nombre Completo</th>
+                                <th class="p-3">Nombre Completo y Puesto</th>
                                 <th class="p-3">Usuario / Teléfono</th>
                                 <th class="p-3">Rol</th>
                                 <th class="p-3 text-center">Acciones</th>
@@ -502,6 +529,29 @@
                             </tr>
                         </thead>
                         <tbody id="admin-brands-table-body" class="divide-y divide-slate-100 dark:divide-slate-800 text-sm text-slate-700 dark:text-slate-300">
+                            <!-- Dinámico -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- SECCIÓN 4.5: GESTIÓN DE PUESTOS -->
+            <div id="admin-section-puestos" class="hidden">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="font-bold text-slate-700 dark:text-white text-base">Catálogo de Puestos de Trabajo</h3>
+                    <button onclick="abrirModalNuevoPuesto()" class="bg-yellow-400 hover:bg-yellow-500 text-slate-900 px-4 py-2 rounded-xl text-sm font-bold transition shadow-sm">
+                        + Añadir Puesto
+                    </button>
+                </div>
+                <div class="overflow-x-auto rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm">
+                    <table class="w-full text-left border-collapse min-w-[400px]">
+                        <thead>
+                            <tr class="bg-yellow-50/80 dark:bg-slate-800 text-yellow-900 dark:text-yellow-400 text-sm font-semibold border-b border-yellow-100 dark:border-slate-700">
+                                <th class="p-3">Nombre del Puesto</th>
+                                <th class="p-3 text-center">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-puestos-table-body" class="divide-y divide-slate-100 dark:divide-slate-800 text-sm text-slate-700 dark:text-slate-300">
                             <!-- Dinámico -->
                         </tbody>
                     </table>
@@ -641,6 +691,7 @@
         let recetasGlobales = [];
         let usuariosGlobales = [];
         let marcasGlobales = [];
+        let puestosGlobales = [];
         let intentosFallidosLogin = 5;
         let chartMotivoInstance = null;
         let chartEstatusInstance = null;
@@ -648,6 +699,7 @@
         window.onload = function() {
             inicializarAdminPorDefecto();
             escucharMarcas();
+            escucharPuestos();
 
             setTimeout(() => {
                 document.querySelectorAll('input').forEach(input => {
@@ -678,6 +730,7 @@
                         nombre: 'ADMINISTRADOR GENERAL',
                         username: 'admin',
                         phone: adminPhone,
+                        puesto: 'Administrador',
                         pass: hashedPassword,
                         question: 'Sistema',
                         answer: CryptoJS.SHA256("yello").toString(),
@@ -700,13 +753,13 @@
                 document.getElementById('view-login').classList.remove('hidden');
             } else if (viewName === 'register') {
                 document.getElementById('view-register').classList.remove('hidden');
+                renderSelectPuestosRegistro();
             } else if (viewName === 'recovery') {
                 document.getElementById('view-recovery').classList.remove('hidden');
             } else if (viewName === 'employee') {
                 document.getElementById('view-employee').classList.remove('hidden');
                 document.getElementById('welcome-employee-title').innerText = `Bienvenido, ${sessionActual.nombre}`;
                 
-                // Limpiar campos
                 document.getElementById('emp-nombre-colaborador').value = '';
                 document.getElementById('emp-usuario-retail').value = '';
                 document.getElementById('receta-nombre-colaborador').value = '';
@@ -748,24 +801,28 @@
             const secRec = document.getElementById('admin-section-recetas');
             const secUsr = document.getElementById('admin-section-usuarios');
             const secMar = document.getElementById('admin-section-marcas');
+            const secPue = document.getElementById('admin-section-puestos');
             const secEst = document.getElementById('admin-section-estadisticas');
             
             const btnInc = document.getElementById('tab-btn-incapacidades');
             const btnRec = document.getElementById('tab-btn-recetas');
             const btnUsr = document.getElementById('tab-btn-usuarios');
             const btnMar = document.getElementById('tab-btn-marcas');
+            const btnPue = document.getElementById('tab-btn-puestos');
             const btnEst = document.getElementById('tab-btn-estadisticas');
 
             secInc.classList.add('hidden');
             secRec.classList.add('hidden');
             secUsr.classList.add('hidden');
             secMar.classList.add('hidden');
+            secPue.classList.add('hidden');
             secEst.classList.add('hidden');
             
             btnInc.className = "px-6 py-2.5 font-bold text-sm text-slate-400 hover:text-slate-600 transition whitespace-nowrap";
             btnRec.className = "px-6 py-2.5 font-bold text-sm text-slate-400 hover:text-slate-600 transition whitespace-nowrap";
             btnUsr.className = "px-6 py-2.5 font-bold text-sm text-slate-400 hover:text-slate-600 transition whitespace-nowrap";
             btnMar.className = "px-6 py-2.5 font-bold text-sm text-slate-400 hover:text-slate-600 transition whitespace-nowrap";
+            btnPue.className = "px-6 py-2.5 font-bold text-sm text-slate-400 hover:text-slate-600 transition whitespace-nowrap";
             btnEst.className = "px-6 py-2.5 font-bold text-sm text-slate-400 hover:text-slate-600 transition whitespace-nowrap";
 
             if (tabName === 'incapacidades') {
@@ -780,6 +837,9 @@
             } else if (tabName === 'marcas') {
                 secMar.classList.remove('hidden');
                 btnMar.className = "px-6 py-2.5 font-bold text-sm text-yellow-600 border-b-2 border-yellow-400 transition whitespace-nowrap";
+            } else if (tabName === 'puestos') {
+                secPue.classList.remove('hidden');
+                btnPue.className = "px-6 py-2.5 font-bold text-sm text-yellow-600 border-b-2 border-yellow-400 transition whitespace-nowrap";
             } else if (tabName === 'estadisticas') {
                 secEst.classList.remove('hidden');
                 btnEst.className = "px-6 py-2.5 font-bold text-sm text-yellow-600 border-b-2 border-yellow-400 transition whitespace-nowrap";
@@ -856,6 +916,7 @@
 
             let nombre = document.getElementById('reg-nombre').value.trim().toUpperCase();
             const username = document.getElementById('reg-username').value.trim().toLowerCase();
+            const puesto = document.getElementById('reg-puesto').value;
             const phone = document.getElementById('reg-phone').value.trim();
             const pass = document.getElementById('reg-pass').value.trim();
             const question = document.getElementById('reg-question').value.trim();
@@ -889,7 +950,7 @@
                 const hashedAnswer = CryptoJS.SHA256(answer).toString();
 
                 await db.collection('usuarios').doc(phone).set({ 
-                    nombre, username, phone, pass: hashedPassword, question, answer: hashedAnswer, role 
+                    nombre, username, puesto, phone, pass: hashedPassword, question, answer: hashedAnswer, role 
                 });
 
                 showToast('¡Cuenta segura creada con éxito!', 'success');
@@ -968,6 +1029,111 @@
             const diffTime = Math.abs(d2 - d1);
             const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
             return isNaN(diffDays) || diffDays < 0 ? 0 : diffDays;
+        }
+
+        // ==========================================
+        // GESTIÓN DE PUESTOS
+        // ==========================================
+        function escucharPuestos() {
+            db.collection('puestos').onSnapshot(snapshot => {
+                puestosGlobales = [];
+                snapshot.forEach(doc => {
+                    puestosGlobales.push({ id: doc.id, ...doc.data() });
+                });
+                renderSelectPuestosRegistro();
+                renderAdminPuestosTable();
+                renderUsersTable();
+            });
+        }
+
+        function renderSelectPuestosRegistro() {
+            const select = document.getElementById('reg-puesto');
+            if (!select) return;
+            select.innerHTML = '';
+            
+            if (puestosGlobales.length === 0) {
+                select.innerHTML = `<option value="Sin puesto">Sin puestos registrados</option>`;
+                return;
+            }
+
+            puestosGlobales.forEach(p => {
+                const option = document.createElement('option');
+                option.value = p.nombre;
+                option.innerText = p.nombre;
+                select.appendChild(option);
+            });
+        }
+
+        function abrirModalNuevoPuesto() {
+            document.getElementById('new-puesto-input').value = '';
+            document.getElementById('custom-puesto-modal').classList.remove('hidden');
+            document.getElementById('new-puesto-input').focus();
+        }
+
+        function cerrarModalPuesto() {
+            document.getElementById('custom-puesto-modal').classList.add('hidden');
+        }
+
+        async function guardarNuevoPuesto() {
+            const nombrePuesto = document.getElementById('new-puesto-input').value.trim();
+
+            if (!nombrePuesto) {
+                showToast('Escribe el nombre del puesto', 'error');
+                return;
+            }
+
+            try {
+                await db.collection('puestos').add({
+                    nombre: nombrePuesto,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                showToast('Puesto agregado con éxito', 'success');
+                cerrarModalPuesto();
+            } catch (e) {
+                showToast('Error al guardar el puesto', 'error');
+            }
+        }
+
+        function renderAdminPuestosTable() {
+            const tbody = document.getElementById('admin-puestos-table-body');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            if (puestosGlobales.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="2" class="text-center p-6 text-slate-400">No hay puestos registrados</td></tr>`;
+                return;
+            }
+
+            puestosGlobales.forEach(p => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="p-3 font-medium text-slate-800 dark:text-slate-200">${p.nombre}</td>
+                    <td class="p-3 text-center">
+                        <button onclick="eliminarPuesto('${p.id}')" class="bg-rose-100 text-rose-700 hover:bg-rose-200 px-3 py-1 rounded-lg text-xs font-semibold transition">Eliminar</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function eliminarPuesto(docId) {
+            showConfirm('Eliminar Puesto', '¿Estás seguro de eliminar este puesto del sistema?', async () => {
+                try {
+                    await db.collection('puestos').doc(docId).delete();
+                    showToast('Puesto eliminado correctamente', 'success');
+                } catch (e) {
+                    showToast('Error al eliminar el puesto', 'error');
+                }
+            });
+        }
+
+        async function actualizarPuestoUsuario(docId, nuevoPuesto) {
+            try {
+                await db.collection('usuarios').doc(docId).update({ puesto: nuevoPuesto });
+                showToast('Puesto de usuario actualizado con éxito', 'success');
+            } catch (error) {
+                showToast('Error al actualizar el puesto', 'error');
+            }
         }
 
         // ==========================================
@@ -1538,9 +1704,22 @@
             }
 
             filtered.forEach(u => {
+                let opcionesPuestosHtml = '';
+                puestosGlobales.forEach(p => {
+                    opcionesPuestosHtml += `<option value="${p.nombre}" ${u.puesto === p.nombre ? 'selected' : ''}>${p.nombre}</option>`;
+                });
+
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td class="p-3 font-medium text-slate-800 dark:text-slate-200">${u.nombre || 'N/D'}</td>
+                    <td class="p-3 font-medium text-slate-800 dark:text-slate-200">
+                        <div class="flex flex-col sm:flex-row sm:items-center gap-2">
+                            <span>${u.nombre || 'N/D'}</span>
+                            <select onchange="actualizarPuestoUsuario('${u.docId}', this.value)" class="px-2 py-1 border border-slate-200 dark:border-slate-700 rounded-lg bg-slate-50 dark:bg-slate-800 text-xs font-semibold text-yellow-700 dark:text-yellow-400 focus:outline-none">
+                                <option value="Sin puesto" ${!u.puesto ? 'selected' : ''}>Sin puesto</option>
+                                ${opcionesPuestosHtml}
+                            </select>
+                        </div>
+                    </td>
                     <td class="p-3 text-slate-600 dark:text-slate-400">${u.phone || 'N/D'}</td>
                     <td class="p-3">
                         <span class="px-2 py-1 rounded-lg text-xs font-bold ${u.role === 'admin' ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 text-slate-700'}">
