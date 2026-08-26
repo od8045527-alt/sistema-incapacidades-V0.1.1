@@ -27,6 +27,33 @@
     <!-- CONTENEDOR DE NOTIFICACIONES FLOTANTES (TOAST) -->
     <div id="toast-container" class="fixed top-5 right-5 z-[100] flex flex-col gap-2 pointer-events-none"></div>
 
+    <!-- MODAL DE FILTRO Y EXPORTACIÓN AVANZADA CSV -->
+    <div id="custom-export-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[60] hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl max-w-lg w-full p-6 border-t-4 border-yellow-400 transform transition-all">
+            <h3 id="export-modal-title" class="text-lg font-bold text-slate-800 dark:text-white mb-1">Filtrar y Descargar CSV</h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">Selecciona uno o varios colaboradores/usuarios para personalizar tu reporte.</p>
+            
+            <div class="space-y-4 mb-6">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-2">Filtrar por Colaboradores / Usuarios (Selección Múltiple):</label>
+                    <div id="export-user-checkboxes" class="max-h-48 overflow-y-auto space-y-1.5 p-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl">
+                        <!-- Dinámico -->
+                    </div>
+                    <div class="flex gap-2 mt-2">
+                        <button type="button" onclick="seleccionarTodosFiltroExport(true)" class="text-xs text-blue-600 dark:text-blue-400 font-semibold hover:underline">Seleccionar todos</button>
+                        <span class="text-slate-300 dark:text-slate-600">|</span>
+                        <button type="button" onclick="seleccionarTodosFiltroExport(false)" class="text-xs text-slate-500 hover:underline">Deseleccionar todos</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-3">
+                <button onclick="cerrarModalExport()" class="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-300 font-semibold rounded-xl text-sm transition">Cancelar</button>
+                <button id="export-confirm-btn" onclick="ejecutarDescargaCSV()" class="px-4 py-2 bg-yellow-400 hover:bg-yellow-500 text-slate-900 font-bold rounded-xl text-sm transition shadow-sm">📥 Descargar CSV</button>
+            </div>
+        </div>
+    </div>
+
     <!-- MODAL DE CONFIRMACIÓN PERSONALIZADO -->
     <div id="custom-confirm-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[60] hidden flex items-center justify-center p-4">
         <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl max-w-sm w-full p-6 border-t-4 border-yellow-400 transform transition-all scale-100">
@@ -279,7 +306,7 @@
                                     <tr class="bg-yellow-50/80 dark:bg-slate-800 text-yellow-900 dark:text-yellow-400 text-xs font-semibold border-b border-yellow-100 dark:border-slate-700">
                                         <th class="p-3">Colaborador / Folio</th>
                                         <th class="p-3">Usuario Mi Retail</th>
-                                        <th class="p-3">Fechas</th>
+                                        <th class="p-3">Fechas / Días</th>
                                         <th class="p-3">Estatus</th>
                                         <th class="p-3">PDF / Actualizar</th>
                                     </tr>
@@ -360,10 +387,10 @@
                     <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider">Yello MKT Group - Vista General Cloud</p>
                 </div>
                 <div class="flex flex-wrap gap-2 w-full sm:w-auto">
-                    <button onclick="exportCSV()" class="bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300 px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold hover:bg-emerald-200 transition flex items-center justify-center gap-1 shadow-sm">
+                    <button onclick="abrirModalExport('incapacidades')" class="bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300 px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold hover:bg-emerald-200 transition flex items-center justify-center gap-1 shadow-sm">
                         📥 CSV Incapacidades
                     </button>
-                    <button onclick="exportRecetasCSV()" class="bg-teal-100 text-teal-800 dark:bg-teal-900/40 dark:text-teal-300 px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold hover:bg-teal-200 transition flex items-center justify-center gap-1 shadow-sm">
+                    <button onclick="abrirModalExport('recetas')" class="bg-teal-100 text-teal-800 dark:bg-teal-900/40 dark:text-teal-300 px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold hover:bg-teal-200 transition flex items-center justify-center gap-1 shadow-sm">
                         📥 CSV Recetas
                     </button>
                     <button onclick="logout()" class="bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold hover:bg-slate-200 transition text-center shadow-sm">
@@ -403,7 +430,7 @@
                             <tr class="bg-yellow-50/80 dark:bg-slate-800 text-yellow-900 dark:text-yellow-400 text-sm font-semibold border-b border-yellow-100 dark:border-slate-700">
                                 <th class="p-3">Empleado / Folio</th>
                                 <th class="p-3">Usuario Mi Retail</th>
-                                <th class="p-3">Fechas</th>
+                                <th class="p-3">Fechas / Días</th>
                                 <th class="p-3">Estatus</th>
                                 <th class="p-3">PDF / Archivo</th>
                                 <th class="p-3 text-center">Acciones</th>
@@ -503,7 +530,7 @@
                 </div>
             </div>
 
-            <!-- SECCIÓN 5: ESTADÍSTICAS Y GRÁFICAS (DISEÑO MEJORADO) -->
+            <!-- SECCIÓN 5: ESTADÍSTICAS Y GRÁFICAS -->
             <div id="admin-section-estadisticas" class="hidden space-y-6">
                 <!-- TARJETAS DE RESUMEN RÁPIDO (KPIs) -->
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -580,7 +607,7 @@
         }
 
         // ==========================================
-        // SISTEMA DE NOTIFICACIONES Y MODAL CENTRADO
+        // SISTEMA DE NOTIFICACIONES Y MODALES
         // ==========================================
         function showToast(message, type = 'success') {
             const container = document.getElementById('toast-container');
@@ -650,6 +677,19 @@
         }
 
         // ==========================================
+        // CÁLCULO DE DÍAS DE INCAPACIDAD
+        // ==========================================
+        function calcularDiasIncapacidad(inicio, fin) {
+            if (!inicio || !fin) return 0;
+            const fechaInicio = new Date(inicio + 'T00:00:00');
+            const fechaFin = new Date(fin + 'T00:00:00');
+            const diferenciaTiempo = fechaFin - fechaInicio;
+            if (diferenciaTiempo < 0) return 0;
+            const dias = Math.round(diferenciaTiempo / (1000 * 60 * 60 * 24)) + 1;
+            return dias;
+        }
+
+        // ==========================================
         // CONFIGURACIÓN DE FIREBASE Y LÓGICA SEGURA
         // ==========================================
         const firebaseConfig = {
@@ -677,6 +717,7 @@
         let intentosFallidosLogin = 5;
         let chartMotivoInstance = null;
         let chartEstatusInstance = null;
+        let tipoExportActual = 'incapacidades';
 
         window.onload = function() {
             inicializarAdminPorDefecto();
@@ -1308,12 +1349,13 @@
                     snapshot.forEach(doc => {
                         const item = doc.data();
                         item.docId = doc.id;
+                        const totalDias = calcularDiasIncapacidad(item.inicio, item.fin);
 
                         const tr = document.createElement('tr');
                         tr.innerHTML = `
                             <td class="p-3 font-medium text-slate-800 dark:text-slate-200">${item.empleado}<br><span class="text-[10px] text-yellow-600 dark:text-yellow-400 font-semibold">Folio: ${item.folio || 'N/D'}</span></td>
                             <td class="p-3"><span class="font-bold text-slate-700 dark:text-slate-200">${item.usuarioRetail || 'N/D'}</span></td>
-                            <td class="p-3">${item.inicio} al ${item.fin}</td>
+                            <td class="p-3">${item.inicio} al ${item.fin}<br><span class="inline-block mt-1 px-2 py-0.5 bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 font-bold rounded text-[10px]">⏱️ ${totalDias} ${totalDias === 1 ? 'día' : 'días'}</span></td>
                             <td class="p-3 font-semibold ${item.estatus === 'Aprobado' ? 'text-emerald-600' : item.estatus === 'Rechazado' ? 'text-rose-600' : 'text-amber-600'}">
                                 ${item.estatus}<br><span class="text-[10px] text-slate-400 font-normal">Nota: ${item.observacion || 'Ninguna'}</span>
                             </td>
@@ -1424,11 +1466,12 @@
             }
 
             filtered.forEach(item => {
+                const totalDias = calcularDiasIncapacidad(item.inicio, item.fin);
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td class="p-3 font-medium text-slate-800 dark:text-slate-200">${item.empleado}<br><span class="text-xs text-yellow-600 dark:text-yellow-400 font-semibold">Folio: ${item.folio || 'N/D'}</span></td>
                     <td class="p-3"><span class="font-bold text-slate-700 dark:text-slate-200">${item.usuarioRetail || 'N/D'}</span></td>
-                    <td class="p-3">${item.inicio} al ${item.fin}</td>
+                    <td class="p-3">${item.inicio} al ${item.fin}<br><span class="inline-block mt-1 px-2 py-0.5 bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 font-bold rounded text-xs">⏱️ ${totalDias} ${totalDias === 1 ? 'día' : 'días'}</span></td>
                     <td class="p-3">
                         <select onchange="updateStatusAndObservation('${item.docId}', this.value, '${item.observacion || ''}')" class="px-2 py-1 border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-xs font-medium focus:outline-none">
                             <option value="Pendiente" ${item.estatus === 'Pendiente' ? 'selected' : ''}>Pendiente</option>
@@ -1621,40 +1664,99 @@
             win.document.write(`<iframe src="${base64Data}" frameborder="0" style="border:0; top:0; left:0; bottom:0; right:0; width:100%; height:100%;" allowfullscreen></iframe>`);
         }
 
-        function exportCSV() {
-            if (incapacidadesGlobales.length === 0) {
-                showToast('No hay datos de incapacidades para exportar', 'error');
-                return;
+        // ==========================================
+        // FILTROS Y DESCARGAS CSV AVANZADAS
+        // ==========================================
+        function abrirModalExport(tipo) {
+            tipoExportActual = tipo;
+            const container = document.getElementById('export-user-checkboxes');
+            const title = document.getElementById('export-modal-title');
+            container.innerHTML = '';
+
+            title.innerText = tipo === 'incapacidades' ? 'Filtrar y Descargar CSV de Incapacidades' : 'Filtrar y Descargar CSV de Recetas Médicas';
+
+            // Extraer lista única de colaboradores de la fuente activa
+            let fuenteDatos = tipo === 'incapacidades' ? incapacidadesGlobales : recetasGlobales;
+            let nombresUnicos = [...new Set(fuenteDatos.map(item => item.empleado))].sort();
+
+            if (nombresUnicos.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-400 text-center py-2">No hay registros disponibles para filtrar</p>`;
+            } else {
+                nombresUnicos.forEach((nombre, index) => {
+                    const div = document.createElement('div');
+                    div.className = "flex items-center gap-2";
+                    div.innerHTML = `
+                        <input type="checkbox" id="chk-exp-${index}" value="${nombre}" checked class="w-4 h-4 text-yellow-500 rounded border-slate-300 focus:ring-yellow-400 dark:bg-slate-700 dark:border-slate-600 export-collab-chk">
+                        <label for="chk-exp-${index}" class="text-xs font-medium text-slate-700 dark:text-slate-300 cursor-pointer">${nombre}</label>
+                    `;
+                    container.appendChild(div);
+                });
             }
-            let csvContent = "data:text/csv;charset=utf-8,Colaborador,Usuario Mi Retail,Folio,Motivo,Inicio,Fin,Estatus,Observacion\n";
-            incapacidadesGlobales.forEach(item => {
-                csvContent += `"${item.empleado}","${item.usuarioRetail || ''}","${item.folio || ''}","${item.motivo}","${item.inicio}","${item.fin}","${item.estatus}","${item.observacion || ''}"\n`;
-            });
-            const encodedUri = encodeURI(csvContent);
-            const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", "reporte_incapacidades_yello.csv");
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+
+            document.getElementById('custom-export-modal').classList.remove('hidden');
         }
 
-        function exportRecetasCSV() {
-            if (recetasGlobales.length === 0) {
-                showToast('No hay datos de recetas para exportar', 'error');
+        function cerrarModalExport() {
+            document.getElementById('custom-export-modal').classList.add('hidden');
+        }
+
+        function seleccionarTodosFiltroExport(estado) {
+            const checkboxes = document.querySelectorAll('.export-collab-chk');
+            checkboxes.forEach(chk => chk.checked = estado);
+        }
+
+        function ejecutarDescargaCSV() {
+            const checkboxes = document.querySelectorAll('.export-collab-chk:checked');
+            let colaboradoresSeleccionados = Array.from(checkboxes).map(chk => chk.value);
+
+            if (colaboradoresSeleccionados.length === 0) {
+                showToast('Selecciona al menos un colaborador para exportar', 'error');
                 return;
             }
-            let csvContent = "data:text/csv;charset=utf-8,Colaborador,Usuario Mi Retail,Fecha Consulta,Institucion,Estatus,Observacion\n";
-            recetasGlobales.forEach(item => {
-                csvContent += `"${item.empleado}","${item.usuarioRetail || ''}","${item.fecha}","${item.institucion}","${item.estatus}","${item.observacion || ''}"\n`;
-            });
-            const encodedUri = encodeURI(csvContent);
-            const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", "reporte_recetas_yello.csv");
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+
+            if (tipoExportActual === 'incapacidades') {
+                let datosFiltrados = incapacidadesGlobales.filter(item => colaboradoresSeleccionados.includes(item.empleado));
+                if (datosFiltrados.length === 0) {
+                    showToast('No hay datos con los filtros seleccionados', 'error');
+                    return;
+                }
+
+                let csvContent = "data:text/csv;charset=utf-8,Colaborador,Usuario Mi Retail,Folio,Motivo,Inicio,Fin,Dias,Estatus,Observacion\n";
+                datosFiltrados.forEach(item => {
+                    const totalDias = calcularDiasIncapacidad(item.inicio, item.fin);
+                    csvContent += `"${item.empleado}","${item.usuarioRetail || ''}","${item.folio || ''}","${item.motivo}","${item.inicio}","${item.fin}","${totalDias}","${item.estatus}","${item.observacion || ''}"\n`;
+                });
+
+                const encodedUri = encodeURI(csvContent);
+                const link = document.createElement("a");
+                link.setAttribute("href", encodedUri);
+                link.setAttribute("download", "reporte_incapacidades_yello.csv");
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            } else {
+                let datosFiltrados = recetasGlobales.filter(item => colaboradoresSeleccionados.includes(item.empleado));
+                if (datosFiltrados.length === 0) {
+                    showToast('No hay datos con los filtros seleccionados', 'error');
+                    return;
+                }
+
+                let csvContent = "data:text/csv;charset=utf-8,Colaborador,Usuario Mi Retail,Fecha Consulta,Institucion,Estatus,Observacion\n";
+                datosFiltrados.forEach(item => {
+                    csvContent += `"${item.empleado}","${item.usuarioRetail || ''}","${item.fecha}","${item.institucion}","${item.estatus}","${item.observacion || ''}"\n`;
+                });
+
+                const encodedUri = encodeURI(csvContent);
+                const link = document.createElement("a");
+                link.setAttribute("href", encodedUri);
+                link.setAttribute("download", "reporte_recetas_yello.csv");
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+
+            cerrarModalExport();
+            showToast('¡Reporte CSV descargado con éxito!', 'success');
         }
 
         function notificarAdminWhatsApp(empleado, usuarioRetail, folio, motivo, inicio, fin) {
@@ -1667,7 +1769,6 @@
         // RENDERIZADO DE ESTADÍSTICAS Y GRÁFICAS
         // ==========================================
         function renderizarGraficas() {
-            // Actualizar tarjetas de KPI rápido
             document.getElementById('kpi-total-incapacidades').innerText = incapacidadesGlobales.length;
             document.getElementById('kpi-total-recetas').innerText = recetasGlobales.length;
             document.getElementById('kpi-total-usuarios').innerText = usuariosGlobales.length;
