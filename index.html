@@ -54,30 +54,6 @@
         </div>
     </div>
 
-    <!-- MODAL DE ADMINISTRACIÓN DE MARCAS -->
-    <div id="custom-brand-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[60] hidden flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl max-w-md w-full p-6 border-t-4 border-yellow-400 transform transition-all">
-            <h3 class="text-lg font-bold text-slate-800 dark:text-white mb-1">Añadir Nueva Marca</h3>
-            <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">Ingresa el nombre de la marca y el número de WhatsApp para notificaciones.</p>
-            
-            <div class="space-y-3 mb-4">
-                <div>
-                    <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Nombre de la Marca</label>
-                    <input type="text" id="new-brand-input" placeholder="Ej. Yello Fashion, S.A." class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm text-slate-700 dark:text-slate-200 font-medium">
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Número de WhatsApp (con código de país, ej. 521...)</label>
-                    <input type="tel" id="new-brand-phone" placeholder="Ej. 5212222099376" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm text-slate-700 dark:text-slate-200 font-medium">
-                </div>
-            </div>
-
-            <div class="flex justify-end gap-3">
-                <button onclick="cerrarModalMarca()" class="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-300 font-semibold rounded-xl text-sm transition">Cancelar</button>
-                <button onclick="guardarNuevaMarca()" class="px-4 py-2 bg-yellow-400 hover:bg-yellow-500 text-slate-900 font-bold rounded-xl text-sm transition shadow-sm">Guardar Marca</button>
-            </div>
-        </div>
-    </div>
-
     <!-- MODAL DE ADMINISTRACIÓN DE PUESTOS -->
     <div id="custom-puesto-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[60] hidden flex items-center justify-center p-4">
         <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl max-w-md w-full p-6 border-t-4 border-yellow-400 transform transition-all">
@@ -278,12 +254,6 @@
                                 </select>
                             </div>
                             <div>
-                                <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Marca:</label>
-                                <select id="emp-marca" required class="w-full px-3 py-2 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none bg-white dark:bg-slate-800 text-sm dark:text-white">
-                                    <!-- Dinámico -->
-                                </select>
-                            </div>
-                            <div>
                                 <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Inicio:</label>
                                 <input type="date" id="emp-inicio" required class="w-full px-3 py-2 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none text-sm bg-white dark:bg-slate-800 dark:text-white">
                             </div>
@@ -308,9 +278,8 @@
                                 <thead>
                                     <tr class="bg-yellow-50/80 dark:bg-slate-800 text-yellow-900 dark:text-yellow-400 text-xs font-semibold border-b border-yellow-100 dark:border-slate-700">
                                         <th class="p-3">Colaborador / Folio</th>
-                                        <th class="p-3">Usuario Mi Retail / Marca</th>
+                                        <th class="p-3">Usuario Mi Retail</th>
                                         <th class="p-3">Fechas</th>
-                                        <th class="p-3">Días</th>
                                         <th class="p-3">Estatus</th>
                                         <th class="p-3">PDF / Actualizar</th>
                                     </tr>
@@ -337,12 +306,6 @@
                             <div>
                                 <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Usuario Mi Retail:</label>
                                 <input type="text" id="receta-usuario-retail" placeholder="Ingresa usuario Mi Retail" required class="w-full px-3 py-2 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none bg-white dark:bg-slate-800 text-sm font-medium text-slate-700 dark:text-white">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Marca:</label>
-                                <select id="receta-marca" required class="w-full px-3 py-2 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none bg-white dark:bg-slate-800 text-sm dark:text-white">
-                                    <!-- Dinámico -->
-                                </select>
                             </div>
                             <div>
                                 <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Fecha de Consulta:</label>
@@ -373,7 +336,7 @@
                                 <thead>
                                     <tr class="bg-yellow-50/80 dark:bg-slate-800 text-yellow-900 dark:text-yellow-400 text-xs font-semibold border-b border-yellow-100 dark:border-slate-700">
                                         <th class="p-3">Colaborador / Institución</th>
-                                        <th class="p-3">Usuario Mi Retail / Marca</th>
+                                        <th class="p-3">Usuario Mi Retail</th>
                                         <th class="p-3">Fecha</th>
                                         <th class="p-3">Estatus</th>
                                         <th class="p-3">PDF / Actualizar</th>
@@ -414,7 +377,6 @@
                 <button onclick="switchAdminTab('incapacidades')" id="tab-btn-incapacidades" class="px-5 py-2.5 font-bold text-sm text-yellow-600 border-b-2 border-yellow-400 transition whitespace-nowrap">Incapacidades</button>
                 <button onclick="switchAdminTab('recetas')" id="tab-btn-recetas" class="px-5 py-2.5 font-bold text-sm text-slate-400 hover:text-slate-600 transition whitespace-nowrap">Recetas Médicas</button>
                 <button onclick="switchAdminTab('usuarios')" id="tab-btn-usuarios" class="px-5 py-2.5 font-bold text-sm text-slate-400 hover:text-slate-600 transition whitespace-nowrap">Usuarios y Límites</button>
-                <button onclick="switchAdminTab('marcas')" id="tab-btn-marcas" class="px-5 py-2.5 font-bold text-sm text-slate-400 hover:text-slate-600 transition whitespace-nowrap">Marcas</button>
                 <button onclick="switchAdminTab('puestos')" id="tab-btn-puestos" class="px-5 py-2.5 font-bold text-sm text-slate-400 hover:text-slate-600 transition whitespace-nowrap">Puestos</button>
                 <button onclick="switchAdminTab('estadisticas')" id="tab-btn-estadisticas" class="px-5 py-2.5 font-bold text-sm text-slate-400 hover:text-slate-600 transition whitespace-nowrap">Estadísticas</button>
             </div>
@@ -440,9 +402,8 @@
                         <thead>
                             <tr class="bg-yellow-50/80 dark:bg-slate-800 text-yellow-900 dark:text-yellow-400 text-sm font-semibold border-b border-yellow-100 dark:border-slate-700">
                                 <th class="p-3">Empleado / Folio</th>
-                                <th class="p-3">Usuario Mi Retail / Marca</th>
+                                <th class="p-3">Usuario Mi Retail</th>
                                 <th class="p-3">Fechas</th>
-                                <th class="p-3">Días</th>
                                 <th class="p-3">Estatus</th>
                                 <th class="p-3">PDF / Archivo</th>
                                 <th class="p-3 text-center">Acciones</th>
@@ -474,7 +435,7 @@
                         <thead>
                             <tr class="bg-yellow-50/80 dark:bg-slate-800 text-yellow-900 dark:text-yellow-400 text-sm font-semibold border-b border-yellow-100 dark:border-slate-700">
                                 <th class="p-3">Colaborador / Institución</th>
-                                <th class="p-3">Usuario Mi Retail / Marca</th>
+                                <th class="p-3">Usuario Mi Retail</th>
                                 <th class="p-3">Fecha de Consulta</th>
                                 <th class="p-3">Estatus</th>
                                 <th class="p-3">PDF Receta</th>
@@ -519,31 +480,7 @@
                 </div>
             </div>
 
-            <!-- SECCIÓN 4: GESTIÓN DE MARCAS -->
-            <div id="admin-section-marcas" class="hidden">
-                <div class="flex justify-between items-center mb-6">
-                    <h3 class="font-bold text-slate-700 dark:text-white text-base">Catálogo de Marcas y Teléfonos de Notificación</h3>
-                    <button onclick="abrirModalNuevaMarca()" class="bg-yellow-400 hover:bg-yellow-500 text-slate-900 px-4 py-2 rounded-xl text-sm font-bold transition shadow-sm">
-                        + Añadir Marca
-                    </button>
-                </div>
-                <div class="overflow-x-auto rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm bg-white dark:bg-slate-900">
-                    <table class="w-full text-left border-collapse min-w-[500px]">
-                        <thead>
-                            <tr class="bg-yellow-50/80 dark:bg-slate-800 text-yellow-900 dark:text-yellow-400 text-sm font-semibold border-b border-yellow-100 dark:border-slate-700">
-                                <th class="p-3">Nombre de la Marca</th>
-                                <th class="p-3">Teléfono WhatsApp Destino</th>
-                                <th class="p-3 text-center">Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody id="admin-brands-table-body" class="divide-y divide-slate-100 dark:divide-slate-800 text-sm text-slate-700 dark:text-slate-300">
-                            <!-- Dinámico -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- SECCIÓN 4.5: GESTIÓN DE PUESTOS -->
+            <!-- SECCIÓN 4: GESTIÓN DE PUESTOS -->
             <div id="admin-section-puestos" class="hidden">
                 <div class="flex justify-between items-center mb-6">
                     <h3 class="font-bold text-slate-700 dark:text-white text-base">Catálogo de Puestos de Trabajo</h3>
@@ -566,18 +503,53 @@
                 </div>
             </div>
 
-            <!-- SECCIÓN 5: ESTADÍSTICAS Y GRÁFICAS -->
-            <div id="admin-section-estadisticas" class="hidden grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
-                    <h3 class="font-bold text-slate-700 dark:text-white mb-4 text-center">Incapacidad por Motivo</h3>
-                    <div class="w-full h-64 flex justify-center items-center">
-                        <canvas id="chartMotivos"></canvas>
+            <!-- SECCIÓN 5: ESTADÍSTICAS Y GRÁFICAS (DISEÑO MEJORADO) -->
+            <div id="admin-section-estadisticas" class="hidden space-y-6">
+                <!-- TARJETAS DE RESUMEN RÁPIDO (KPIs) -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div class="bg-gradient-to-br from-amber-500/10 to-yellow-500/5 dark:from-slate-800 dark:to-slate-900 p-5 rounded-2xl border border-yellow-400/30 dark:border-slate-800 shadow-sm flex items-center justify-between">
+                        <div>
+                            <p class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Total Incapacidades</p>
+                            <h4 id="kpi-total-incapacidades" class="text-2xl font-black text-slate-800 dark:text-white mt-1">0</h4>
+                        </div>
+                        <div class="w-12 h-12 bg-yellow-400/20 text-yellow-600 dark:text-yellow-400 rounded-xl flex items-center justify-center text-xl font-bold">📊</div>
+                    </div>
+                    <div class="bg-gradient-to-br from-emerald-500/10 to-teal-500/5 dark:from-slate-800 dark:to-slate-900 p-5 rounded-2xl border border-emerald-400/30 dark:border-slate-800 shadow-sm flex items-center justify-between">
+                        <div>
+                            <p class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Total Recetas Médicas</p>
+                            <h4 id="kpi-total-recetas" class="text-2xl font-black text-slate-800 dark:text-white mt-1">0</h4>
+                        </div>
+                        <div class="w-12 h-12 bg-emerald-400/20 text-emerald-600 dark:text-emerald-400 rounded-xl flex items-center justify-center text-xl font-bold">📋</div>
+                    </div>
+                    <div class="bg-gradient-to-br from-blue-500/10 to-indigo-500/5 dark:from-slate-800 dark:to-slate-900 p-5 rounded-2xl border border-blue-400/30 dark:border-slate-800 shadow-sm flex items-center justify-between">
+                        <div>
+                            <p class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Total Colaboradores</p>
+                            <h4 id="kpi-total-usuarios" class="text-2xl font-black text-slate-800 dark:text-white mt-1">0</h4>
+                        </div>
+                        <div class="w-12 h-12 bg-blue-400/20 text-blue-600 dark:text-blue-400 rounded-xl flex items-center justify-center text-xl font-bold">👥</div>
                     </div>
                 </div>
-                <div class="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
-                    <h3 class="font-bold text-slate-700 dark:text-white mb-4 text-center">Estatus General de Solicitudes</h3>
-                    <div class="w-full h-64 flex justify-center items-center">
-                        <canvas id="chartEstatus"></canvas>
+
+                <!-- CONTENEDOR DE GRÁFICAS -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-slate-50/80 dark:bg-slate-800/60 p-6 rounded-2xl border border-slate-200/80 dark:border-slate-700/60 shadow-md backdrop-blur-sm flex flex-col justify-between">
+                        <div class="mb-4 text-center">
+                            <h3 class="font-bold text-slate-800 dark:text-white text-base">Incapacidad por Motivo</h3>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Distribución porcentual según causa médica</p>
+                        </div>
+                        <div class="w-full h-72 flex justify-center items-center relative">
+                            <canvas id="chartMotivos"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-slate-50/80 dark:bg-slate-800/60 p-6 rounded-2xl border border-slate-200/80 dark:border-slate-700/60 shadow-md backdrop-blur-sm flex flex-col justify-between">
+                        <div class="mb-4 text-center">
+                            <h3 class="font-bold text-slate-800 dark:text-white text-base">Estatus General de Solicitudes</h3>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Estado actual de validación administrativa</p>
+                        </div>
+                        <div class="w-full h-72 flex justify-center items-center relative">
+                            <canvas id="chartEstatus"></canvas>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -597,6 +569,9 @@
             } else {
                 document.documentElement.classList.add('dark');
                 localStorage.setItem('yello_theme', 'dark');
+            }
+            if (chartMotivoInstance || chartEstatusInstance) {
+                renderizarGraficas();
             }
         }
 
@@ -698,7 +673,6 @@
         let incapacidadesGlobales = [];
         let recetasGlobales = [];
         let usuariosGlobales = [];
-        let marcasGlobales = [];
         let puestosGlobales = [];
         let intentosFallidosLogin = 5;
         let chartMotivoInstance = null;
@@ -706,7 +680,6 @@
 
         window.onload = function() {
             inicializarAdminPorDefecto();
-            escucharMarcas();
             escucharPuestos();
 
             setTimeout(() => {
@@ -773,7 +746,6 @@
                 document.getElementById('receta-nombre-colaborador').value = '';
                 document.getElementById('receta-usuario-retail').value = '';
                 
-                renderSelectMarcasEmpleado(); 
                 escucharIncapacidadesEmpleado();
                 escucharRecetasEmpleado();
             } else if (viewName === 'admin') {
@@ -808,28 +780,24 @@
             const secInc = document.getElementById('admin-section-incapacidades');
             const secRec = document.getElementById('admin-section-recetas');
             const secUsr = document.getElementById('admin-section-usuarios');
-            const secMar = document.getElementById('admin-section-marcas');
             const secPue = document.getElementById('admin-section-puestos');
             const secEst = document.getElementById('admin-section-estadisticas');
             
             const btnInc = document.getElementById('tab-btn-incapacidades');
             const btnRec = document.getElementById('tab-btn-recetas');
             const btnUsr = document.getElementById('tab-btn-usuarios');
-            const btnMar = document.getElementById('tab-btn-marcas');
             const btnPue = document.getElementById('tab-btn-puestos');
             const btnEst = document.getElementById('tab-btn-estadisticas');
 
             secInc.classList.add('hidden');
             secRec.classList.add('hidden');
             secUsr.classList.add('hidden');
-            secMar.classList.add('hidden');
             secPue.classList.add('hidden');
             secEst.classList.add('hidden');
             
             btnInc.className = "px-5 py-2.5 font-bold text-sm text-slate-400 hover:text-slate-600 transition whitespace-nowrap";
             btnRec.className = "px-5 py-2.5 font-bold text-sm text-slate-400 hover:text-slate-600 transition whitespace-nowrap";
             btnUsr.className = "px-5 py-2.5 font-bold text-sm text-slate-400 hover:text-slate-600 transition whitespace-nowrap";
-            btnMar.className = "px-5 py-2.5 font-bold text-sm text-slate-400 hover:text-slate-600 transition whitespace-nowrap";
             btnPue.className = "px-5 py-2.5 font-bold text-sm text-slate-400 hover:text-slate-600 transition whitespace-nowrap";
             btnEst.className = "px-5 py-2.5 font-bold text-sm text-slate-400 hover:text-slate-600 transition whitespace-nowrap";
 
@@ -842,9 +810,6 @@
             } else if (tabName === 'usuarios') {
                 secUsr.classList.remove('hidden');
                 btnUsr.className = "px-5 py-2.5 font-bold text-sm text-yellow-600 border-b-2 border-yellow-400 transition whitespace-nowrap";
-            } else if (tabName === 'marcas') {
-                secMar.classList.remove('hidden');
-                btnMar.className = "px-5 py-2.5 font-bold text-sm text-yellow-600 border-b-2 border-yellow-400 transition whitespace-nowrap";
             } else if (tabName === 'puestos') {
                 secPue.classList.remove('hidden');
                 btnPue.className = "px-5 py-2.5 font-bold text-sm text-yellow-600 border-b-2 border-yellow-400 transition whitespace-nowrap";
@@ -1031,14 +996,6 @@
             showToast('Sesión cerrada correctamente', 'info');
         }
 
-        function calcularDiasIncapacidad(inicio, fin) {
-            const d1 = new Date(inicio);
-            const d2 = new Date(fin);
-            const diffTime = Math.abs(d2 - d1);
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
-            return isNaN(diffDays) || diffDays < 0 ? 0 : diffDays;
-        }
-
         // ==========================================
         // GESTIÓN DE PUESTOS
         // ==========================================
@@ -1157,7 +1114,6 @@
             const usuarioRetail = document.getElementById('emp-usuario-retail').value.trim();
             const folio = document.getElementById('emp-folio').value.trim();
             const motivo = document.getElementById('emp-motivo').value;
-            const marca = document.getElementById('emp-marca').value;
             const inicio = document.getElementById('emp-inicio').value;
             const fin = document.getElementById('emp-fin').value;
             const fileInput = document.getElementById('emp-pdf');
@@ -1179,24 +1135,21 @@
 
             const reader = new FileReader();
             reader.onload = function(e) {
-                subirIncapacidadANube(empleadoNombre, usuarioRetail, folio, motivo, marca, inicio, fin, e.target.result, event.target, submitBtn);
+                subirIncapacidadANube(empleadoNombre, usuarioRetail, folio, motivo, inicio, fin, e.target.result, event.target, submitBtn);
             };
             reader.readAsDataURL(file);
         }
 
-        async function subirIncapacidadANube(empleadoNombre, usuarioRetail, folio, motivo, marca, inicio, fin, pdf, formElement, submitBtn) {
+        async function subirIncapacidadANube(empleadoNombre, usuarioRetail, folio, motivo, inicio, fin, pdf, formElement, submitBtn) {
             try {
-                const diasCalculados = calcularDiasIncapacidad(inicio, fin);
                 await db.collection('incapacidades').add({
                     phone: sessionActual.phone,
                     empleado: empleadoNombre,
                     usuarioRetail: usuarioRetail,
                     folio,
                     motivo,
-                    marca,
                     inicio,
                     fin,
-                    dias: diasCalculados,
                     estatus: 'Pendiente',
                     observacion: 'Sin observaciones',
                     pdf,
@@ -1205,18 +1158,11 @@
                 
                 showToast('¡Incapacidad solicitada con éxito!', 'success');
                 
-                let telefonoDestino = ADMIN_PHONE;
-                const marcaEncontrada = marcasGlobales.find(m => m.nombre === marca);
-                if (marcaEncontrada && marcaEncontrada.telefono) {
-                    telefonoDestino = marcaEncontrada.telefono;
-                }
-
-                let mensaje = `🚨 *Nueva Solicitud de Incapacidad*\n\n*Colaborador:* ${empleadoNombre}\n*Usuario Mi Retail:* ${usuarioRetail}\n*Folio:* ${folio}\n*Motivo:* ${motivo}\n*Marca:* ${marca}\n*Del:* ${inicio} *al:* ${fin}\n*Total:* ${diasCalculados} días\n\nPor favor revise la plataforma de Yello MKT Group.`;
-                let url = `https://api.whatsapp.com/send?phone=${telefonoDestino}&text=${encodeURIComponent(mensaje)}`;
+                let mensaje = `🚨 *Nueva Solicitud de Incapacidad*\n\n*Colaborador:* ${empleadoNombre}\n*Usuario Mi Retail:* ${usuarioRetail}\n*Folio:* ${folio}\n*Motivo:* ${motivo}\n*Del:* ${inicio} *al:* ${fin}\n\nPor favor revise la plataforma de Yello MKT Group.`;
+                let url = `https://api.whatsapp.com/send?phone=${ADMIN_PHONE}&text=${encodeURIComponent(mensaje)}`;
                 window.open(url, '_blank');
 
                 formElement.reset();
-                renderSelectMarcasEmpleado();
             } catch (error) {
                 showToast("Hubo un error al guardar en la nube.", 'error');
             } finally {
@@ -1236,7 +1182,6 @@
 
             const empleadoNombre = document.getElementById('receta-nombre-colaborador').value.trim().toUpperCase();
             const usuarioRetail = document.getElementById('receta-usuario-retail').value.trim();
-            const marca = document.getElementById('receta-marca').value;
             const fecha = document.getElementById('receta-fecha').value;
             const institucion = document.getElementById('receta-institucion').value;
             const fileInput = document.getElementById('receta-pdf');
@@ -1258,18 +1203,17 @@
 
             const reader = new FileReader();
             reader.onload = function(e) {
-                subirRecetaANube(empleadoNombre, usuarioRetail, marca, fecha, institucion, e.target.result, event.target, submitBtn);
+                subirRecetaANube(empleadoNombre, usuarioRetail, fecha, institucion, e.target.result, event.target, submitBtn);
             };
             reader.readAsDataURL(file);
         }
 
-        async function subirRecetaANube(empleadoNombre, usuarioRetail, marca, fecha, institucion, pdf, formElement, submitBtn) {
+        async function subirRecetaANube(empleadoNombre, usuarioRetail, fecha, institucion, pdf, formElement, submitBtn) {
             try {
                 await db.collection('recetas').add({
                     phone: sessionActual.phone,
                     empleado: empleadoNombre,
                     usuarioRetail: usuarioRetail,
-                    marca,
                     fecha,
                     institucion,
                     estatus: 'Pendiente',
@@ -1280,18 +1224,11 @@
                 
                 showToast('¡Receta médica subida con éxito!', 'success');
                 
-                let telefonoDestino = ADMIN_PHONE;
-                const marcaEncontrada = marcasGlobales.find(m => m.nombre === marca);
-                if (marcaEncontrada && marcaEncontrada.telefono) {
-                    telefonoDestino = marcaEncontrada.telefono;
-                }
-
-                let mensaje = `📋 *Nueva Receta Médica Registrada*\n\n*Colaborador:* ${empleadoNombre}\n*Usuario Mi Retail:* ${usuarioRetail}\n*Marca:* ${marca}\n*Fecha Consulta:* ${fecha}\n*Institución:* ${institucion}\n\nPor favor revise la plataforma de Yello MKT Group.`;
-                let url = `https://api.whatsapp.com/send?phone=${telefonoDestino}&text=${encodeURIComponent(mensaje)}`;
+                let mensaje = `📋 *Nueva Receta Médica Registrada*\n\n*Colaborador:* ${empleadoNombre}\n*Usuario Mi Retail:* ${usuarioRetail}\n*Fecha Consulta:* ${fecha}\n*Institución:* ${institucion}\n\nPor favor revise la plataforma de Yello MKT Group.`;
+                let url = `https://api.whatsapp.com/send?phone=${ADMIN_PHONE}&text=${encodeURIComponent(mensaje)}`;
                 window.open(url, '_blank');
 
                 formElement.reset();
-                renderSelectMarcasEmpleado();
             } catch (error) {
                 showToast("Hubo un error al guardar la receta en la nube.", 'error');
             } finally {
@@ -1333,7 +1270,7 @@
             input.onchange = e => {
                 const file = e.target.files[0];
                 if (file) {
-                    if (file.size > 200 * 1024 * 1024) {
+                    if (file.size > 20 * 1024 * 1024) {
                         showToast('El archivo excede los 20 MB permitidos.', 'error');
                         return;
                     }
@@ -1353,113 +1290,6 @@
         }
 
         // ==========================================
-        // GESTIÓN DE MARCAS
-        // ==========================================
-        function escucharMarcas() {
-            db.collection('marcas').onSnapshot(snapshot => {
-                marcasGlobales = [];
-                snapshot.forEach(doc => {
-                    marcasGlobales.push({ id: doc.id, ...doc.data() });
-                });
-                renderSelectMarcasEmpleado();
-                renderAdminBrandsTable();
-            });
-        }
-
-        function renderSelectMarcasEmpleado() {
-            const selectInc = document.getElementById('emp-marca');
-            const selectRec = document.getElementById('receta-marca');
-            
-            [selectInc, selectRec].forEach(select => {
-                if (!select) return;
-                select.innerHTML = '';
-                
-                if (marcasGlobales.length === 0) {
-                    select.innerHTML = `<option value="Sin marca">Sin marcas registradas</option>`;
-                    return;
-                }
-
-                marcasGlobales.forEach(m => {
-                    const option = document.createElement('option');
-                    option.value = m.nombre;
-                    option.innerText = m.nombre;
-                    select.appendChild(option.cloneNode(true));
-                });
-            });
-        }
-
-        function abrirModalNuevaMarca() {
-            document.getElementById('new-brand-input').value = '';
-            document.getElementById('new-brand-phone').value = '';
-            document.getElementById('custom-brand-modal').classList.remove('hidden');
-            document.getElementById('new-brand-input').focus();
-        }
-
-        function cerrarModalMarca() {
-            document.getElementById('custom-brand-modal').classList.add('hidden');
-        }
-
-        async function guardarNuevaMarca() {
-            const nombreMarca = document.getElementById('new-brand-input').value.trim();
-            const telefonoMarca = document.getElementById('new-brand-phone').value.trim();
-
-            if (!nombreMarca) {
-                showToast('Escribe el nombre de la marca', 'error');
-                return;
-            }
-            if (!telefonoMarca) {
-                showToast('Escribe el número de WhatsApp para la marca', 'error');
-                return;
-            }
-
-            try {
-                await db.collection('marcas').add({
-                    nombre: nombreMarca,
-                    telefono: telefonoMarca,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-                showToast('Marca agregada con éxito', 'success');
-                cerrarModalMarca();
-            } catch (e) {
-                showToast('Error al guardar la marca', 'error');
-            }
-        }
-
-        function renderAdminBrandsTable() {
-            const tbody = document.getElementById('admin-brands-table-body');
-            if (!tbody) return;
-            tbody.innerHTML = '';
-
-            if (marcasGlobales.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="3" class="text-center p-6 text-slate-400">No hay marcas registradas</td></tr>`;
-                return;
-            }
-
-            marcasGlobales.forEach(m => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td class="p-3 font-medium text-slate-800 dark:text-slate-200">${m.nombre}</td>
-                    <td class="p-3 text-slate-600 dark:text-slate-400 font-mono text-xs">${m.telefono || 'Sin número'}</td>
-                    <td class="p-3 text-center">
-                        <button onclick="eliminarMarca('${m.id}')" class="bg-rose-100 text-rose-700 hover:bg-rose-200 px-3 py-1 rounded-lg text-xs font-semibold transition">Eliminar</button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function eliminarMarca(docId) {
-            showConfirm('Eliminar Marca', '¿Estás seguro de eliminar esta marca del sistema?', async () => {
-                try {
-                    await db.collection('marcas').doc(docId).delete();
-                    showToast('Marca eliminada correctamente', 'success');
-                } catch (e) {
-                    showToast('Error al eliminar la marca', 'error');
-                }
-            });
-        }
-
-        // ==========================================
         // ESCUCHAS EMPLEADO Y ADMIN
         // ==========================================
         function escucharIncapacidadesEmpleado() {
@@ -1471,7 +1301,7 @@
                     tbody.innerHTML = '';
                     
                     if (snapshot.empty) {
-                        tbody.innerHTML = `<tr><td colspan="6" class="text-center p-4 text-slate-400">No tienes incapacidades registradas</td></tr>`;
+                        tbody.innerHTML = `<tr><td colspan="5" class="text-center p-4 text-slate-400">No tienes incapacidades registradas</td></tr>`;
                         return;
                     }
 
@@ -1482,9 +1312,8 @@
                         const tr = document.createElement('tr');
                         tr.innerHTML = `
                             <td class="p-3 font-medium text-slate-800 dark:text-slate-200">${item.empleado}<br><span class="text-[10px] text-yellow-600 dark:text-yellow-400 font-semibold">Folio: ${item.folio || 'N/D'}</span></td>
-                            <td class="p-3"><span class="font-bold text-slate-700 dark:text-slate-200">${item.usuarioRetail || 'N/D'}</span><br><span class="text-[10px] text-indigo-600 dark:text-indigo-400 font-semibold">Marca: ${item.marca || 'N/D'}</span></td>
+                            <td class="p-3"><span class="font-bold text-slate-700 dark:text-slate-200">${item.usuarioRetail || 'N/D'}</span></td>
                             <td class="p-3">${item.inicio} al ${item.fin}</td>
-                            <td class="p-3 font-bold">${item.dias || 0} días</td>
                             <td class="p-3 font-semibold ${item.estatus === 'Aprobado' ? 'text-emerald-600' : item.estatus === 'Rechazado' ? 'text-rose-600' : 'text-amber-600'}">
                                 ${item.estatus}<br><span class="text-[10px] text-slate-400 font-normal">Nota: ${item.observacion || 'Ninguna'}</span>
                             </td>
@@ -1518,7 +1347,7 @@
                         const tr = document.createElement('tr');
                         tr.innerHTML = `
                             <td class="p-3 font-medium text-slate-800 dark:text-slate-200">${item.empleado}<br><span class="text-[10px] text-yellow-600 dark:text-yellow-400 font-semibold">Inst: ${item.institucion || 'N/D'}</span></td>
-                            <td class="p-3"><span class="font-bold text-slate-700 dark:text-slate-200">${item.usuarioRetail || 'N/D'}</span><br><span class="text-[10px] text-teal-600 dark:text-teal-400 font-semibold">Marca: ${item.marca || 'N/D'}</span></td>
+                            <td class="p-3"><span class="font-bold text-slate-700 dark:text-slate-200">${item.usuarioRetail || 'N/D'}</span></td>
                             <td class="p-3">${item.fecha}</td>
                             <td class="p-3 font-semibold ${item.estatus === 'Revisado' ? 'text-teal-600' : 'text-amber-600'}">
                                 ${item.estatus}<br><span class="text-[10px] text-slate-400 font-normal">Nota: ${item.observacion || 'Ninguna'}</span>
@@ -1590,7 +1419,7 @@
             });
 
             if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" class="text-center p-6 text-slate-400">No hay registros encontrados</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center p-6 text-slate-400">No hay registros encontrados</td></tr>`;
                 return;
             }
 
@@ -1598,9 +1427,8 @@
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td class="p-3 font-medium text-slate-800 dark:text-slate-200">${item.empleado}<br><span class="text-xs text-yellow-600 dark:text-yellow-400 font-semibold">Folio: ${item.folio || 'N/D'}</span></td>
-                    <td class="p-3"><span class="font-bold text-slate-700 dark:text-slate-200">${item.usuarioRetail || 'N/D'}</span><br><span class="text-xs text-indigo-600 dark:text-indigo-400 font-semibold">Marca: ${item.marca || 'N/D'}</span></td>
+                    <td class="p-3"><span class="font-bold text-slate-700 dark:text-slate-200">${item.usuarioRetail || 'N/D'}</span></td>
                     <td class="p-3">${item.inicio} al ${item.fin}</td>
-                    <td class="p-3 font-bold">${item.dias || 0} días</td>
                     <td class="p-3">
                         <select onchange="updateStatusAndObservation('${item.docId}', this.value, '${item.observacion || ''}')" class="px-2 py-1 border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-xs font-medium focus:outline-none">
                             <option value="Pendiente" ${item.estatus === 'Pendiente' ? 'selected' : ''}>Pendiente</option>
@@ -1615,7 +1443,7 @@
                         </div>
                     </td>
                     <td class="p-3 text-center flex items-center justify-center gap-1">
-                        <button onclick="notificarAdminWhatsApp('${item.empleado}', '${item.usuarioRetail || 'N/D'}', '${item.folio || 'N/D'}', '${item.motivo}', '${item.marca || 'N/D'}', '${item.inicio}', '${item.fin}', '${item.dias || 0}')" class="bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300 px-2.5 py-1 rounded-lg text-xs font-semibold">💬 Wats</button>
+                        <button onclick="notificarAdminWhatsApp('${item.empleado}', '${item.usuarioRetail || 'N/D'}', '${item.folio || 'N/D'}', '${item.motivo}', '${item.inicio}', '${item.fin}')" class="bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300 px-2.5 py-1 rounded-lg text-xs font-semibold">💬 Wats</button>
                         <button onclick="deleteItem('${item.docId}')" class="bg-rose-100 text-rose-700 dark:bg-rose-900/50 dark:text-rose-300 px-2.5 py-1 rounded-lg text-xs font-semibold">X</button>
                     </td>
                 `;
@@ -1645,7 +1473,7 @@
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td class="p-3 font-medium text-slate-800 dark:text-slate-200">${item.empleado}<br><span class="text-xs text-yellow-600 dark:text-yellow-400 font-semibold">Inst: ${item.institucion || 'N/D'}</span></td>
-                    <td class="p-3"><span class="font-bold text-slate-700 dark:text-slate-200">${item.usuarioRetail || 'N/D'}</span><br><span class="text-xs text-teal-600 dark:text-teal-400 font-semibold">Marca: ${item.marca || 'N/D'}</span></td>
+                    <td class="p-3"><span class="font-bold text-slate-700 dark:text-slate-200">${item.usuarioRetail || 'N/D'}</span></td>
                     <td class="p-3">${item.fecha}</td>
                     <td class="p-3">
                         <select onchange="updateRecetaStatus('${item.docId}', this.value, '${item.observacion || ''}')" class="px-2 py-1 border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-xs font-medium focus:outline-none">
@@ -1676,7 +1504,6 @@
                 return (u.nombre && u.nombre.toLowerCase().includes(search)) || (u.phone && u.phone.includes(search)) || (u.username && u.username.toLowerCase().includes(search));
             });
 
-            // Ordenamiento alfabético por Nombre
             filtered.sort((a, b) => {
                 let nombreA = a.nombre ? a.nombre.toLowerCase() : '';
                 let nombreB = b.nombre ? b.nombre.toLowerCase() : '';
@@ -1701,7 +1528,6 @@
                     optionsHtml = `<option value="${u.puesto || 'Sin puesto'}">${u.puesto || 'Sin puesto'}</option>`;
                 }
 
-                // Diseño mejorado para EMPLOYEE y ADMIN con badges distintivos
                 const roleBadge = u.role === 'admin' 
                     ? `<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold bg-amber-100 dark:bg-amber-950/60 text-amber-700 dark:text-amber-400 border border-amber-300 dark:border-amber-700/50 shadow-sm"><span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>ADMIN</span>`
                     : `<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-blue-100 dark:bg-blue-950/60 text-blue-700 dark:text-blue-400 border border-blue-300 dark:border-blue-700/50 shadow-sm"><span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>EMPLOYEE</span>`;
@@ -1792,36 +1618,22 @@
 
         function viewPDFFromData(base64Data) {
             const win = window.open();
-            win.document.write(`
-                <html>
-                <head><title>Visualizador de PDF - Yello MKT</title></head>
-                <body style="margin:0;background:#0f172a;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;">
-                    <iframe src="${base64Data}" style="width:100%;height:90%;border:none;"></iframe>
-                    <div style="padding:10px;"><a href="${base64Data}" download="documento.pdf" style="color:#facc15;font-family:sans-serif;font-size:16px;text-decoration:none;font-weight:bold;">📥 Descargar Documento PDF</a></div>
-                </body>
-                </html>
-            `);
-        }
-
-        function notificarAdminWhatsApp(empleado, usuarioRetail, folio, motivo, marca, inicio, fin, dias) {
-            let mensaje = `📢 *Actualización de Incapacidad*\n\n*Colaborador:* ${empleado}\n*Usuario Mi Retail:* ${usuarioRetail}\n*Folio:* ${folio}\n*Motivo:* ${motivo}\n*Marca:* ${marca}\n*Del:* ${inicio} al ${fin} (${dias} días)\n\nPor favor revise su estatus en la plataforma de Yello MKT Group.`;
-            let url = `https://api.whatsapp.com/send?phone=${ADMIN_PHONE}&text=${encodeURIComponent(mensaje)}`;
-            window.open(url, '_blank');
+            win.document.write(`<iframe src="${base64Data}" frameborder="0" style="border:0; top:0; left:0; bottom:0; right:0; width:100%; height:100%;" allowfullscreen></iframe>`);
         }
 
         function exportCSV() {
             if (incapacidadesGlobales.length === 0) {
-                showToast('No hay datos para exportar', 'error');
+                showToast('No hay datos de incapacidades para exportar', 'error');
                 return;
             }
-            let csvContent = "data:text/csv;charset=utf-8,Colaborador,UsuarioRetail,Folio,Motivo,Marca,Inicio,Fin,Dias,Estatus,Observacion\n";
-            incapacidadesGlobales.forEach(row => {
-                csvContent += `"${row.empleado}","${row.usuarioRetail || ''}","${row.folio || ''}","${row.motivo}","${row.marca || ''}","${row.inicio}","${row.fin}",${row.dias},"${row.estatus}","${row.observacion || ''}"\n`;
+            let csvContent = "data:text/csv;charset=utf-8,Colaborador,Usuario Mi Retail,Folio,Motivo,Inicio,Fin,Estatus,Observacion\n";
+            incapacidadesGlobales.forEach(item => {
+                csvContent += `"${item.empleado}","${item.usuarioRetail || ''}","${item.folio || ''}","${item.motivo}","${item.inicio}","${item.fin}","${item.estatus}","${item.observacion || ''}"\n`;
             });
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
             link.setAttribute("href", encodedUri);
-            link.setAttribute("download", "incapacidades_yello.csv");
+            link.setAttribute("download", "reporte_incapacidades_yello.csv");
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
@@ -1829,37 +1641,53 @@
 
         function exportRecetasCSV() {
             if (recetasGlobales.length === 0) {
-                showToast('No hay recetas para exportar', 'error');
+                showToast('No hay datos de recetas para exportar', 'error');
                 return;
             }
-            let csvContent = "data:text/csv;charset=utf-8,Colaborador,UsuarioRetail,Marca,Fecha,Institucion,Estatus,Observacion\n";
-            recetasGlobales.forEach(row => {
-                csvContent += `"${row.empleado}","${row.usuarioRetail || ''}","${row.marca || ''}","${row.fecha}","${row.institucion}","${row.estatus}","${row.observacion || ''}"\n`;
+            let csvContent = "data:text/csv;charset=utf-8,Colaborador,Usuario Mi Retail,Fecha Consulta,Institucion,Estatus,Observacion\n";
+            recetasGlobales.forEach(item => {
+                csvContent += `"${item.empleado}","${item.usuarioRetail || ''}","${item.fecha}","${item.institucion}","${item.estatus}","${item.observacion || ''}"\n`;
             });
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
             link.setAttribute("href", encodedUri);
-            link.setAttribute("download", "recetas_yello.csv");
+            link.setAttribute("download", "reporte_recetas_yello.csv");
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
         }
 
+        function notificarAdminWhatsApp(empleado, usuarioRetail, folio, motivo, inicio, fin) {
+            let mensaje = `🔔 *Notificación Yello MKT Group*\n\nEstimado(a) *${empleado}* (Usuario: ${usuarioRetail}):\nSu incapacidad con Folio *${folio}* (${motivo}) del ${inicio} al ${fin} ha sido revisada en la plataforma.`;
+            let url = `https://api.whatsapp.com/send?phone=${ADMIN_PHONE}&text=${encodeURIComponent(mensaje)}`;
+            window.open(url, '_blank');
+        }
+
+        // ==========================================
+        // RENDERIZADO DE ESTADÍSTICAS Y GRÁFICAS
+        // ==========================================
         function renderizarGraficas() {
-            const ctxMotivo = document.getElementById('chartMotivos');
-            const ctxEstatus = document.getElementById('chartEstatus');
-            if (!ctxMotivo || !ctxEstatus) return;
+            // Actualizar tarjetas de KPI rápido
+            document.getElementById('kpi-total-incapacidades').innerText = incapacidadesGlobales.length;
+            document.getElementById('kpi-total-recetas').innerText = recetasGlobales.length;
+            document.getElementById('kpi-total-usuarios').innerText = usuariosGlobales.length;
 
+            const isDark = document.documentElement.classList.contains('dark');
+            const textColor = isDark ? '#94a3b8' : '#64748b';
+            const gridColor = isDark ? '#334155' : '#e2e8f0';
+
+            // 1. Datos para Incapacidades por Motivo
             let motivosCount = { 'Enfermedad general': 0, 'Maternidad': 0, 'Accidente de trabajo': 0 };
-            let estatusCount = { 'Pendiente': 0, 'Aprobado': 0, 'Rechazado': 0 };
-
             incapacidadesGlobales.forEach(item => {
-                if (motivosCount[item.motivo] !== undefined) motivosCount[item.motivo]++;
-                if (estatusCount[item.estatus] !== undefined) estatusCount[item.estatus]++;
+                if (motivosCount[item.motivo] !== undefined) {
+                    motivosCount[item.motivo]++;
+                } else {
+                    motivosCount[item.motivo] = 1;
+                }
             });
 
+            const ctxMotivo = document.getElementById('chartMotivos').getContext('2d');
             if (chartMotivoInstance) chartMotivoInstance.destroy();
-            if (chartEstatusInstance) chartEstatusInstance.destroy();
 
             chartMotivoInstance = new Chart(ctxMotivo, {
                 type: 'doughnut',
@@ -1867,11 +1695,35 @@
                     labels: Object.keys(motivosCount),
                     datasets: [{
                         data: Object.values(motivosCount),
-                        backgroundColor: ['#f59e0b', '#ec4899', '#3b82f6']
+                        backgroundColor: ['#facc15', '#38bdf8', '#34d399', '#f43f5e', '#a855f7'],
+                        borderWidth: isDark ? 2 : 1,
+                        borderColor: isDark ? '#1e293b' : '#ffffff'
                     }]
                 },
-                options: { responsive: true, maintainAspectRatio: false }
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { color: textColor, font: { size: 11, weight: '600' } }
+                        }
+                    }
+                }
             });
+
+            // 2. Datos para Estatus General de Solicitudes
+            let estatusCount = { 'Pendiente': 0, 'Aprobado': 0, 'Rechazado': 0 };
+            incapacidadesGlobales.forEach(item => {
+                if (estatusCount[item.estatus] !== undefined) {
+                    estatusCount[item.estatus]++;
+                } else {
+                    estatusCount[item.estatus] = 1;
+                }
+            });
+
+            const ctxEstatus = document.getElementById('chartEstatus').getContext('2d');
+            if (chartEstatusInstance) chartEstatusInstance.destroy();
 
             chartEstatusInstance = new Chart(ctxEstatus, {
                 type: 'bar',
@@ -1880,10 +1732,28 @@
                     datasets: [{
                         label: 'Solicitudes',
                         data: Object.values(estatusCount),
-                        backgroundColor: ['#f59e0b', '#10b981', '#ef4444']
+                        backgroundColor: ['#f59e0b', '#10b981', '#ef4444'],
+                        borderRadius: 8,
+                        borderSkipped: false
                     }]
                 },
-                options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            ticks: { color: textColor, font: { weight: '600' } },
+                            grid: { display: false }
+                        },
+                        y: {
+                            ticks: { color: textColor, precision: 0 },
+                            grid: { color: gridColor }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
             });
         }
     </script>
