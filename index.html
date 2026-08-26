@@ -101,7 +101,7 @@
         </div>
     </div>
 
-    <div class="w-full max-w-6xl bg-white dark:bg-slate-900 rounded-2xl shadow-xl overflow-hidden relative border-t-8 border-yellow-400 my-auto transition-colors duration-300">
+    <div class="w-full max-w-7xl bg-white dark:bg-slate-900 rounded-2xl shadow-xl overflow-hidden relative border-t-8 border-yellow-400 my-auto transition-colors duration-300">
         
         <!-- VISTA 1: LOGIN / ACCESO SEGURO -->
         <div id="view-login" class="p-6 sm:p-10 md:p-12 max-w-md mx-auto w-full">
@@ -425,15 +425,16 @@
                 </div>
 
                 <div class="overflow-x-auto rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm bg-white dark:bg-slate-900">
-                    <table class="w-full text-left border-collapse min-w-[750px]">
+                    <table class="w-full text-left border-collapse min-w-[900px]">
                         <thead>
                             <tr class="bg-yellow-50/80 dark:bg-slate-800 text-yellow-900 dark:text-yellow-400 text-sm font-semibold border-b border-yellow-100 dark:border-slate-700">
-                                <th class="p-3">Empleado / Folio</th>
-                                <th class="p-3">Usuario Mi Retail</th>
-                                <th class="p-3">Fechas / Días</th>
-                                <th class="p-3">Estatus</th>
-                                <th class="p-3">PDF / Archivo</th>
-                                <th class="p-3 text-center">Acciones</th>
+                                <th class="py-3.5 px-4">Empleado / Folio</th>
+                                <th class="py-3.5 px-4">Usuario Mi Retail</th>
+                                <th class="py-3.5 px-4">Tipo / Motivo</th>
+                                <th class="py-3.5 px-4">Fechas / Días</th>
+                                <th class="py-3.5 px-4">Estatus</th>
+                                <th class="py-3.5 px-4">PDF / Archivo</th>
+                                <th class="py-3.5 px-4 text-center">Acciones</th>
                             </tr>
                         </thead>
                         <tbody id="admin-table-body" class="divide-y divide-slate-100 dark:divide-slate-800 text-sm text-slate-700 dark:text-slate-300">
@@ -1461,7 +1462,7 @@
             });
 
             if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" class="text-center p-6 text-slate-400">No hay registros encontrados</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="7" class="text-center p-6 text-slate-400">No hay registros encontrados</td></tr>`;
                 return;
             }
 
@@ -1469,25 +1470,38 @@
                 const totalDias = calcularDiasIncapacidad(item.inicio, item.fin);
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td class="p-3 font-medium text-slate-800 dark:text-slate-200">${item.empleado}<br><span class="text-xs text-yellow-600 dark:text-yellow-400 font-semibold">Folio: ${item.folio || 'N/D'}</span></td>
-                    <td class="p-3"><span class="font-bold text-slate-700 dark:text-slate-200">${item.usuarioRetail || 'N/D'}</span></td>
-                    <td class="p-3">${item.inicio} al ${item.fin}<br><span class="inline-block mt-1 px-2 py-0.5 bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 font-bold rounded text-xs">⏱️ ${totalDias} ${totalDias === 1 ? 'día' : 'días'}</span></td>
-                    <td class="p-3">
-                        <select onchange="updateStatusAndObservation('${item.docId}', this.value, '${item.observacion || ''}')" class="px-2 py-1 border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-xs font-medium focus:outline-none">
+                    <td class="py-3.5 px-4 font-medium text-slate-800 dark:text-slate-200">
+                        <div class="font-bold text-slate-900 dark:text-white">${item.empleado}</div>
+                        <div class="text-xs text-yellow-600 dark:text-yellow-400 font-semibold mt-0.5">Folio: ${item.folio || 'N/D'}</div>
+                    </td>
+                    <td class="py-3.5 px-4">
+                        <span class="font-bold text-slate-700 dark:text-slate-200">${item.usuarioRetail || 'N/D'}</span>
+                    </td>
+                    <td class="py-3.5 px-4">
+                        <span class="inline-flex px-2.5 py-1 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 font-bold rounded-lg text-xs shadow-sm">
+                            ${item.motivo || 'No especificado'}
+                        </span>
+                    </td>
+                    <td class="py-3.5 px-4">
+                        <div class="text-slate-700 dark:text-slate-300 font-medium">${item.inicio} al ${item.fin}</div>
+                        <div class="inline-block mt-1 px-2 py-0.5 bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 font-bold rounded text-xs">⏱️ ${totalDias} ${totalDias === 1 ? 'día' : 'días'}</div>
+                    </td>
+                    <td class="py-3.5 px-4">
+                        <select onchange="updateStatusAndObservation('${item.docId}', this.value, '${item.observacion || ''}')" class="px-2.5 py-1.5 border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-yellow-400">
                             <option value="Pendiente" ${item.estatus === 'Pendiente' ? 'selected' : ''}>Pendiente</option>
                             <option value="Aprobado" ${item.estatus === 'Aprobado' ? 'selected' : ''}>Aprobado</option>
                             <option value="Rechazado" ${item.estatus === 'Rechazado' ? 'selected' : ''}>Rechazado</option>
                         </select>
-                        <br><span class="text-[10px] text-slate-400 mt-1 block">Obs: ${item.observacion || 'Ninguna'}</span>
+                        <div class="text-[11px] text-slate-400 mt-1 max-w-[180px] truncate" title="${item.observacion || 'Ninguna'}">Obs: ${item.observacion || 'Ninguna'}</div>
                     </td>
-                    <td class="p-3">
-                        <div class="flex items-center gap-2">
-                            ${item.pdf ? `<button onclick="viewPDFFromData('${item.pdf}')" class="bg-sky-100 text-sky-700 dark:bg-sky-900/50 dark:text-sky-300 px-2.5 py-1 rounded-lg text-xs font-semibold">Ver</button>` : ''}
+                    <td class="py-3.5 px-4">
+                        ${item.pdf ? `<button onclick="viewPDFFromData('${item.pdf}')" class="bg-sky-100 text-sky-700 dark:bg-sky-900/50 dark:text-sky-300 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-sky-200 transition shadow-sm">Ver PDF</button>` : '<span class="text-xs text-slate-400">Sin archivo</span>'}
+                    </td>
+                    <td class="py-3.5 px-4 text-center">
+                        <div class="flex items-center justify-center gap-1.5">
+                            <button onclick="notificarAdminWhatsApp('${item.empleado}', '${item.usuarioRetail || 'N/D'}', '${item.folio || 'N/D'}', '${item.motivo}', '${item.inicio}', '${item.fin}')" class="bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300 px-2.5 py-1.5 rounded-lg text-xs font-bold hover:bg-emerald-200 transition shadow-sm" title="Notificar por WhatsApp">💬 Wats</button>
+                            <button onclick="deleteItem('${item.docId}')" class="bg-rose-100 text-rose-700 dark:bg-rose-900/50 dark:text-rose-300 px-2.5 py-1.5 rounded-lg text-xs font-bold hover:bg-rose-200 transition shadow-sm" title="Eliminar registro">🗑️</button>
                         </div>
-                    </td>
-                    <td class="p-3 text-center flex items-center justify-center gap-1">
-                        <button onclick="notificarAdminWhatsApp('${item.empleado}', '${item.usuarioRetail || 'N/D'}', '${item.folio || 'N/D'}', '${item.motivo}', '${item.inicio}', '${item.fin}')" class="bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300 px-2.5 py-1 rounded-lg text-xs font-semibold">💬 Wats</button>
-                        <button onclick="deleteItem('${item.docId}')" class="bg-rose-100 text-rose-700 dark:bg-rose-900/50 dark:text-rose-300 px-2.5 py-1 rounded-lg text-xs font-semibold">X</button>
                     </td>
                 `;
                 tbody.appendChild(tr);
@@ -1675,7 +1689,6 @@
 
             title.innerText = tipo === 'incapacidades' ? 'Filtrar y Descargar CSV de Incapacidades' : 'Filtrar y Descargar CSV de Recetas Médicas';
 
-            // Extraer lista única de colaboradores de la fuente activa
             let fuenteDatos = tipo === 'incapacidades' ? incapacidadesGlobales : recetasGlobales;
             let nombresUnicos = [...new Set(fuenteDatos.map(item => item.empleado))].sort();
 
@@ -1707,97 +1720,104 @@
 
         function ejecutarDescargaCSV() {
             const checkboxes = document.querySelectorAll('.export-collab-chk:checked');
-            let colaboradoresSeleccionados = Array.from(checkboxes).map(chk => chk.value);
+            const colaboradoresSeleccionados = Array.from(checkboxes).map(chk => chk.value);
 
             if (colaboradoresSeleccionados.length === 0) {
-                showToast('Selecciona al menos un colaborador para exportar', 'error');
+                showToast('Selecciona al menos un colaborador', 'error');
                 return;
             }
 
+            let csvContent = "data:text/csv;charset=utf-8,";
+            let fuenteDatos = tipoExportActual === 'incapacidades' ? incapacidadesGlobales : recetasGlobales;
+            let filtrados = fuenteDatos.filter(item => colaboradoresSeleccionados.includes(item.empleado));
+
             if (tipoExportActual === 'incapacidades') {
-                let datosFiltrados = incapacidadesGlobales.filter(item => colaboradoresSeleccionados.includes(item.empleado));
-                if (datosFiltrados.length === 0) {
-                    showToast('No hay datos con los filtros seleccionados', 'error');
-                    return;
-                }
-
-                let csvContent = "data:text/csv;charset=utf-8,Colaborador,Usuario Mi Retail,Folio,Motivo,Inicio,Fin,Dias,Estatus,Observacion\n";
-                datosFiltrados.forEach(item => {
-                    const totalDias = calcularDiasIncapacidad(item.inicio, item.fin);
-                    csvContent += `"${item.empleado}","${item.usuarioRetail || ''}","${item.folio || ''}","${item.motivo}","${item.inicio}","${item.fin}","${totalDias}","${item.estatus}","${item.observacion || ''}"\n`;
+                csvContent += "Colaborador,Usuario Mi Retail,Folio,Motivo,Inicio,Fin,Dias,Estatus,Observacion\r\n";
+                filtrados.forEach(item => {
+                    let dias = calcularDiasIncapacidad(item.inicio, item.fin);
+                    let row = [
+                        `"${item.empleado}"`,
+                        `"${item.usuarioRetail || ''}"`,
+                        `"${item.folio || ''}"`,
+                        `"${item.motivo || ''}"`,
+                        `"${item.inicio || ''}"`,
+                        `"${item.fin || ''}"`,
+                        dias,
+                        `"${item.estatus || ''}"`,
+                        `"${item.observacion || ''}"`
+                    ].join(",");
+                    csvContent += row + "\r\n";
                 });
-
-                const encodedUri = encodeURI(csvContent);
-                const link = document.createElement("a");
-                link.setAttribute("href", encodedUri);
-                link.setAttribute("download", "reporte_incapacidades_yello.csv");
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
             } else {
-                let datosFiltrados = recetasGlobales.filter(item => colaboradoresSeleccionados.includes(item.empleado));
-                if (datosFiltrados.length === 0) {
-                    showToast('No hay datos con los filtros seleccionados', 'error');
-                    return;
-                }
-
-                let csvContent = "data:text/csv;charset=utf-8,Colaborador,Usuario Mi Retail,Fecha Consulta,Institucion,Estatus,Observacion\n";
-                datosFiltrados.forEach(item => {
-                    csvContent += `"${item.empleado}","${item.usuarioRetail || ''}","${item.fecha}","${item.institucion}","${item.estatus}","${item.observacion || ''}"\n`;
+                csvContent += "Colaborador,Usuario Mi Retail,Fecha Consulta,Institucion,Estatus,Observacion\r\n";
+                filtrados.forEach(item => {
+                    let row = [
+                        `"${item.empleado}"`,
+                        `"${item.usuarioRetail || ''}"`,
+                        `"${item.fecha || ''}"`,
+                        `"${item.institucion || ''}"`,
+                        `"${item.estatus || ''}"`,
+                        `"${item.observacion || ''}"`
+                    ].join(",");
+                    csvContent += row + "\r\n";
                 });
-
-                const encodedUri = encodeURI(csvContent);
-                const link = document.createElement("a");
-                link.setAttribute("href", encodedUri);
-                link.setAttribute("download", "reporte_recetas_yello.csv");
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
             }
 
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `reporte_${tipoExportActual}_yello.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
             cerrarModalExport();
-            showToast('¡Reporte CSV descargado con éxito!', 'success');
+            showToast('Reporte CSV descargado con éxito', 'success');
         }
 
         function notificarAdminWhatsApp(empleado, usuarioRetail, folio, motivo, inicio, fin) {
-            let mensaje = `🔔 *Notificación Yello MKT Group*\n\nEstimado(a) *${empleado}* (Usuario: ${usuarioRetail}):\nSu incapacidad con Folio *${folio}* (${motivo}) del ${inicio} al ${fin} ha sido revisada en la plataforma.`;
-            let url = `https://api.whatsapp.com/send?phone=${ADMIN_PHONE}&text=${encodeURIComponent(mensaje)}`;
+            let mensaje = `Hola *${empleado}* 👋, nos comunicamos de *Yello MKT Group* respecto a tu incapacidad con Folio *${folio}* (${motivo}) del ${inicio} al ${fin}.`;
+            let url = `https://api.whatsapp.com/send?text=${encodeURIComponent(mensaje)}`;
             window.open(url, '_blank');
         }
 
         // ==========================================
-        // RENDERIZADO DE ESTADÍSTICAS Y GRÁFICAS
+        // ESTADÍSTICAS Y GRÁFICAS CHART.JS
         // ==========================================
         function renderizarGraficas() {
             document.getElementById('kpi-total-incapacidades').innerText = incapacidadesGlobales.length;
             document.getElementById('kpi-total-recetas').innerText = recetasGlobales.length;
             document.getElementById('kpi-total-usuarios').innerText = usuariosGlobales.length;
 
-            const isDark = document.documentElement.classList.contains('dark');
-            const textColor = isDark ? '#94a3b8' : '#64748b';
-            const gridColor = isDark ? '#334155' : '#e2e8f0';
-
-            // 1. Datos para Incapacidades por Motivo
-            let motivosCount = { 'Enfermedad general': 0, 'Maternidad': 0, 'Accidente de trabajo': 0 };
+            let motivosConteo = { "Enfermedad general": 0, "Maternidad": 0, "Accidente de trabajo": 0 };
             incapacidadesGlobales.forEach(item => {
-                if (motivosCount[item.motivo] !== undefined) {
-                    motivosCount[item.motivo]++;
+                if (motivosConteo[item.motivo] !== undefined) {
+                    motivosConteo[item.motivo]++;
                 } else {
-                    motivosCount[item.motivo] = 1;
+                    motivosConteo[item.motivo] = 1;
                 }
             });
 
-            const ctxMotivo = document.getElementById('chartMotivos').getContext('2d');
-            if (chartMotivoInstance) chartMotivoInstance.destroy();
+            let estatusConteo = { "Pendiente": 0, "Aprobado": 0, "Rechazado": 0 };
+            incapacidadesGlobales.forEach(item => {
+                if (estatusConteo[item.estatus] !== undefined) {
+                    estatusConteo[item.estatus]++;
+                }
+            });
 
-            chartMotivoInstance = new Chart(ctxMotivo, {
+            const isDark = document.documentElement.classList.contains('dark');
+            const textColor = isDark ? '#cbd5e1' : '#475569';
+
+            const ctxMotivos = document.getElementById('chartMotivos').getContext('2d');
+            if (chartMotivoInstance) chartMotivoInstance.destroy();
+            chartMotivoInstance = new Chart(ctxMotivos, {
                 type: 'doughnut',
                 data: {
-                    labels: Object.keys(motivosCount),
+                    labels: Object.keys(motivosConteo),
                     datasets: [{
-                        data: Object.values(motivosCount),
-                        backgroundColor: ['#facc15', '#38bdf8', '#34d399', '#f43f5e', '#a855f7'],
-                        borderWidth: isDark ? 2 : 1,
+                        data: Object.values(motivosConteo),
+                        backgroundColor: ['#facc15', '#38bdf8', '#fb7185'],
+                        borderWidth: isDark ? 2 : 0,
                         borderColor: isDark ? '#1e293b' : '#ffffff'
                     }]
                 },
@@ -1805,54 +1825,29 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: { color: textColor, font: { size: 11, weight: '600' } }
-                        }
+                        legend: { position: 'bottom', labels: { color: textColor, font: { size: 11, weight: 'bold' } } }
                     }
-                }
-            });
-
-            // 2. Datos para Estatus General de Solicitudes
-            let estatusCount = { 'Pendiente': 0, 'Aprobado': 0, 'Rechazado': 0 };
-            incapacidadesGlobales.forEach(item => {
-                if (estatusCount[item.estatus] !== undefined) {
-                    estatusCount[item.estatus]++;
-                } else {
-                    estatusCount[item.estatus] = 1;
                 }
             });
 
             const ctxEstatus = document.getElementById('chartEstatus').getContext('2d');
             if (chartEstatusInstance) chartEstatusInstance.destroy();
-
             chartEstatusInstance = new Chart(ctxEstatus, {
-                type: 'bar',
+                type: 'pie',
                 data: {
-                    labels: Object.keys(estatusCount),
+                    labels: Object.keys(estatusConteo),
                     datasets: [{
-                        label: 'Solicitudes',
-                        data: Object.values(estatusCount),
-                        backgroundColor: ['#f59e0b', '#10b981', '#ef4444'],
-                        borderRadius: 8,
-                        borderSkipped: false
+                        data: Object.values(estatusConteo),
+                        backgroundColor: ['#fbbf24', '#34d399', '#f87171'],
+                        borderWidth: isDark ? 2 : 0,
+                        borderColor: isDark ? '#1e293b' : '#ffffff'
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    scales: {
-                        x: {
-                            ticks: { color: textColor, font: { weight: '600' } },
-                            grid: { display: false }
-                        },
-                        y: {
-                            ticks: { color: textColor, precision: 0 },
-                            grid: { color: gridColor }
-                        }
-                    },
                     plugins: {
-                        legend: { display: false }
+                        legend: { position: 'bottom', labels: { color: textColor, font: { size: 11, weight: 'bold' } } }
                     }
                 }
             });
