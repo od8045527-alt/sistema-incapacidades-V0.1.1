@@ -20,7 +20,7 @@
 <body class="bg-slate-100 dark:bg-slate-950 min-h-screen flex items-center justify-center p-2 sm:p-4 md:p-6 relative transition-colors duration-300">
 
     <!-- BOTÓN DE MODO OSCURO FLOTANTE -->
-    <button onclick="toggleDarkMode()" class="fixed top-5 left-5 z-[100] bg-white dark:bg-slate-800 text-slate-800 dark:text-yellow-400 p-2.5 rounded-full shadow-lg border border-slate-200 dark:border-slate-700 text-sm transition">
+    <button onclick="toggleDarkMode()" class="fixed top-5 left-5 z-[100] bg-white dark:bg-slate-800 text-slate-800 dark:text-yellow-400 p-2.5 rounded-full shadow-lg border border-slate-200 dark:border-slate-700 text-sm transition hover:scale-105">
         🌙 / ☀️
     </button>
 
@@ -240,7 +240,7 @@
                     <h1 class="text-xl sm:text-2xl font-bold text-slate-800 dark:text-white" id="welcome-employee-title">Mi Portal</h1>
                     <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider">Yello MKT Group - Colaborador</p>
                 </div>
-                <button onclick="logout()" class="bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-4 py-2 rounded-xl text-sm font-semibold hover:bg-slate-200 dark:hover:bg-slate-700 transition text-center">
+                <button onclick="logout()" class="bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-4 py-2 rounded-xl text-sm font-semibold hover:bg-slate-200 dark:hover:bg-slate-700 transition text-center shadow-sm">
                     Cerrar Sesión
                 </button>
             </div>
@@ -254,7 +254,7 @@
             <!-- SECCIÓN EMPLEADO: INCAPACIDADES -->
             <div id="emp-section-incapacidades">
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
-                    <div class="bg-slate-50 dark:bg-slate-800/50 p-4 sm:p-6 rounded-2xl border border-slate-200/80 dark:border-slate-800">
+                    <div class="bg-slate-50 dark:bg-slate-800/50 p-4 sm:p-6 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm">
                         <h2 class="text-base sm:text-lg font-bold text-slate-800 dark:text-white mb-4">Registrar Nueva Incapacidad</h2>
                         <form onsubmit="saveIncapacidad(event)" autocomplete="off" class="space-y-4">
                             <div>
@@ -327,7 +327,7 @@
             <!-- SECCIÓN EMPLEADO: RECETAS MÉDICAS -->
             <div id="emp-section-recetas" class="hidden">
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
-                    <div class="bg-slate-50 dark:bg-slate-800/50 p-4 sm:p-6 rounded-2xl border border-slate-200/80 dark:border-slate-800">
+                    <div class="bg-slate-50 dark:bg-slate-800/50 p-4 sm:p-6 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm">
                         <h2 class="text-base sm:text-lg font-bold text-slate-800 dark:text-white mb-4">Subir Receta Médica</h2>
                         <form onsubmit="saveReceta(event)" autocomplete="off" class="space-y-4">
                             <div>
@@ -396,27 +396,27 @@
                     <h1 class="text-xl sm:text-2xl md:text-3xl font-bold text-slate-800 dark:text-white">Panel de Administración</h1>
                     <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider">Yello MKT Group - Vista General Cloud</p>
                 </div>
-                <div class="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
-                    <button onclick="exportCSV()" class="bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300 px-4 py-2 rounded-xl text-sm font-semibold hover:bg-emerald-200 transition flex items-center justify-center gap-1 shadow-sm">
-                        📥 Descargar CSV Incapacidades
+                <div class="flex flex-wrap gap-2 w-full sm:w-auto">
+                    <button onclick="exportCSV()" class="bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300 px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold hover:bg-emerald-200 transition flex items-center justify-center gap-1 shadow-sm">
+                        📥 CSV Incapacidades
                     </button>
-                    <button onclick="exportRecetasCSV()" class="bg-teal-100 text-teal-800 dark:bg-teal-900/40 dark:text-teal-300 px-4 py-2 rounded-xl text-sm font-semibold hover:bg-teal-200 transition flex items-center justify-center gap-1 shadow-sm">
-                        📥 Descargar CSV Recetas
+                    <button onclick="exportRecetasCSV()" class="bg-teal-100 text-teal-800 dark:bg-teal-900/40 dark:text-teal-300 px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold hover:bg-teal-200 transition flex items-center justify-center gap-1 shadow-sm">
+                        📥 CSV Recetas
                     </button>
-                    <button onclick="logout()" class="bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-4 py-2 rounded-xl text-sm font-semibold hover:bg-slate-200 transition text-center">
+                    <button onclick="logout()" class="bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold hover:bg-slate-200 transition text-center shadow-sm">
                         Cerrar Sesión
                     </button>
                 </div>
             </div>
 
             <!-- PESTAÑAS DEL ADMINISTRADOR -->
-            <div class="flex border-b border-slate-200 dark:border-slate-800 mb-6 overflow-x-auto">
-                <button onclick="switchAdminTab('incapacidades')" id="tab-btn-incapacidades" class="px-6 py-2.5 font-bold text-sm text-yellow-600 border-b-2 border-yellow-400 transition whitespace-nowrap">Incapacidades</button>
-                <button onclick="switchAdminTab('recetas')" id="tab-btn-recetas" class="px-6 py-2.5 font-bold text-sm text-slate-400 hover:text-slate-600 transition whitespace-nowrap">Recetas Médicas</button>
-                <button onclick="switchAdminTab('usuarios')" id="tab-btn-usuarios" class="px-6 py-2.5 font-bold text-sm text-slate-400 hover:text-slate-600 transition whitespace-nowrap">Usuarios y Límites</button>
-                <button onclick="switchAdminTab('marcas')" id="tab-btn-marcas" class="px-6 py-2.5 font-bold text-sm text-slate-400 hover:text-slate-600 transition whitespace-nowrap">Marcas</button>
-                <button onclick="switchAdminTab('puestos')" id="tab-btn-puestos" class="px-6 py-2.5 font-bold text-sm text-slate-400 hover:text-slate-600 transition whitespace-nowrap">Puestos</button>
-                <button onclick="switchAdminTab('estadisticas')" id="tab-btn-estadisticas" class="px-6 py-2.5 font-bold text-sm text-slate-400 hover:text-slate-600 transition whitespace-nowrap">Estadísticas</button>
+            <div class="flex border-b border-slate-200 dark:border-slate-800 mb-6 overflow-x-auto gap-2">
+                <button onclick="switchAdminTab('incapacidades')" id="tab-btn-incapacidades" class="px-5 py-2.5 font-bold text-sm text-yellow-600 border-b-2 border-yellow-400 transition whitespace-nowrap">Incapacidades</button>
+                <button onclick="switchAdminTab('recetas')" id="tab-btn-recetas" class="px-5 py-2.5 font-bold text-sm text-slate-400 hover:text-slate-600 transition whitespace-nowrap">Recetas Médicas</button>
+                <button onclick="switchAdminTab('usuarios')" id="tab-btn-usuarios" class="px-5 py-2.5 font-bold text-sm text-slate-400 hover:text-slate-600 transition whitespace-nowrap">Usuarios y Límites</button>
+                <button onclick="switchAdminTab('marcas')" id="tab-btn-marcas" class="px-5 py-2.5 font-bold text-sm text-slate-400 hover:text-slate-600 transition whitespace-nowrap">Marcas</button>
+                <button onclick="switchAdminTab('puestos')" id="tab-btn-puestos" class="px-5 py-2.5 font-bold text-sm text-slate-400 hover:text-slate-600 transition whitespace-nowrap">Puestos</button>
+                <button onclick="switchAdminTab('estadisticas')" id="tab-btn-estadisticas" class="px-5 py-2.5 font-bold text-sm text-slate-400 hover:text-slate-600 transition whitespace-nowrap">Estadísticas</button>
             </div>
 
             <!-- SECCIÓN 1: INCAPACIDADES (ADMIN) -->
@@ -435,7 +435,7 @@
                     </div>
                 </div>
 
-                <div class="overflow-x-auto rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm">
+                <div class="overflow-x-auto rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm bg-white dark:bg-slate-900">
                     <table class="w-full text-left border-collapse min-w-[750px]">
                         <thead>
                             <tr class="bg-yellow-50/80 dark:bg-slate-800 text-yellow-900 dark:text-yellow-400 text-sm font-semibold border-b border-yellow-100 dark:border-slate-700">
@@ -469,7 +469,7 @@
                     </div>
                 </div>
 
-                <div class="overflow-x-auto rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm">
+                <div class="overflow-x-auto rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm bg-white dark:bg-slate-900">
                     <table class="w-full text-left border-collapse min-w-[750px]">
                         <thead>
                             <tr class="bg-yellow-50/80 dark:bg-slate-800 text-yellow-900 dark:text-yellow-400 text-sm font-semibold border-b border-yellow-100 dark:border-slate-700">
@@ -492,9 +492,17 @@
             <div id="admin-section-usuarios" class="hidden">
                 <div class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-3">
                     <input type="text" id="search-user-input" placeholder="Buscar usuario o teléfono..." onkeyup="renderUsersTable()" class="px-4 py-2 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-white rounded-xl focus:ring-2 focus:ring-yellow-400 focus:outline-none w-full sm:w-72 text-sm">
+                    
+                    <div class="flex items-center gap-2 w-full sm:w-auto">
+                        <label class="text-xs font-semibold text-slate-500 dark:text-slate-400 whitespace-nowrap">Ordenar A-Z:</label>
+                        <select id="sort-users-select" onchange="renderUsersTable()" class="px-3 py-2 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-white rounded-xl text-sm focus:outline-none font-medium">
+                            <option value="asc">Nombre (A - Z)</option>
+                            <option value="desc">Nombre (Z - A)</option>
+                        </select>
+                    </div>
                 </div>
 
-                <div class="overflow-x-auto rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm">
+                <div class="overflow-x-auto rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm bg-white dark:bg-slate-900">
                     <table class="w-full text-left border-collapse min-w-[550px]">
                         <thead>
                             <tr class="bg-yellow-50/80 dark:bg-slate-800 text-yellow-900 dark:text-yellow-400 text-sm font-semibold border-b border-yellow-100 dark:border-slate-700">
@@ -519,7 +527,7 @@
                         + Añadir Marca
                     </button>
                 </div>
-                <div class="overflow-x-auto rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm">
+                <div class="overflow-x-auto rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm bg-white dark:bg-slate-900">
                     <table class="w-full text-left border-collapse min-w-[500px]">
                         <thead>
                             <tr class="bg-yellow-50/80 dark:bg-slate-800 text-yellow-900 dark:text-yellow-400 text-sm font-semibold border-b border-yellow-100 dark:border-slate-700">
@@ -543,7 +551,7 @@
                         + Añadir Puesto
                     </button>
                 </div>
-                <div class="overflow-x-auto rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm">
+                <div class="overflow-x-auto rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm bg-white dark:bg-slate-900">
                     <table class="w-full text-left border-collapse min-w-[400px]">
                         <thead>
                             <tr class="bg-yellow-50/80 dark:bg-slate-800 text-yellow-900 dark:text-yellow-400 text-sm font-semibold border-b border-yellow-100 dark:border-slate-700">
@@ -560,13 +568,13 @@
 
             <!-- SECCIÓN 5: ESTADÍSTICAS Y GRÁFICAS -->
             <div id="admin-section-estadisticas" class="hidden grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-200 dark:border-slate-800">
+                <div class="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
                     <h3 class="font-bold text-slate-700 dark:text-white mb-4 text-center">Incapacidad por Motivo</h3>
                     <div class="w-full h-64 flex justify-center items-center">
                         <canvas id="chartMotivos"></canvas>
                     </div>
                 </div>
-                <div class="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-200 dark:border-slate-800">
+                <div class="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
                     <h3 class="font-bold text-slate-700 dark:text-white mb-4 text-center">Estatus General de Solicitudes</h3>
                     <div class="w-full h-64 flex justify-center items-center">
                         <canvas id="chartEstatus"></canvas>
@@ -818,31 +826,31 @@
             secPue.classList.add('hidden');
             secEst.classList.add('hidden');
             
-            btnInc.className = "px-6 py-2.5 font-bold text-sm text-slate-400 hover:text-slate-600 transition whitespace-nowrap";
-            btnRec.className = "px-6 py-2.5 font-bold text-sm text-slate-400 hover:text-slate-600 transition whitespace-nowrap";
-            btnUsr.className = "px-6 py-2.5 font-bold text-sm text-slate-400 hover:text-slate-600 transition whitespace-nowrap";
-            btnMar.className = "px-6 py-2.5 font-bold text-sm text-slate-400 hover:text-slate-600 transition whitespace-nowrap";
-            btnPue.className = "px-6 py-2.5 font-bold text-sm text-slate-400 hover:text-slate-600 transition whitespace-nowrap";
-            btnEst.className = "px-6 py-2.5 font-bold text-sm text-slate-400 hover:text-slate-600 transition whitespace-nowrap";
+            btnInc.className = "px-5 py-2.5 font-bold text-sm text-slate-400 hover:text-slate-600 transition whitespace-nowrap";
+            btnRec.className = "px-5 py-2.5 font-bold text-sm text-slate-400 hover:text-slate-600 transition whitespace-nowrap";
+            btnUsr.className = "px-5 py-2.5 font-bold text-sm text-slate-400 hover:text-slate-600 transition whitespace-nowrap";
+            btnMar.className = "px-5 py-2.5 font-bold text-sm text-slate-400 hover:text-slate-600 transition whitespace-nowrap";
+            btnPue.className = "px-5 py-2.5 font-bold text-sm text-slate-400 hover:text-slate-600 transition whitespace-nowrap";
+            btnEst.className = "px-5 py-2.5 font-bold text-sm text-slate-400 hover:text-slate-600 transition whitespace-nowrap";
 
             if (tabName === 'incapacidades') {
                 secInc.classList.remove('hidden');
-                btnInc.className = "px-6 py-2.5 font-bold text-sm text-yellow-600 border-b-2 border-yellow-400 transition whitespace-nowrap";
+                btnInc.className = "px-5 py-2.5 font-bold text-sm text-yellow-600 border-b-2 border-yellow-400 transition whitespace-nowrap";
             } else if (tabName === 'recetas') {
                 secRec.classList.remove('hidden');
-                btnRec.className = "px-6 py-2.5 font-bold text-sm text-yellow-600 border-b-2 border-yellow-400 transition whitespace-nowrap";
+                btnRec.className = "px-5 py-2.5 font-bold text-sm text-yellow-600 border-b-2 border-yellow-400 transition whitespace-nowrap";
             } else if (tabName === 'usuarios') {
                 secUsr.classList.remove('hidden');
-                btnUsr.className = "px-6 py-2.5 font-bold text-sm text-yellow-600 border-b-2 border-yellow-400 transition whitespace-nowrap";
+                btnUsr.className = "px-5 py-2.5 font-bold text-sm text-yellow-600 border-b-2 border-yellow-400 transition whitespace-nowrap";
             } else if (tabName === 'marcas') {
                 secMar.classList.remove('hidden');
-                btnMar.className = "px-6 py-2.5 font-bold text-sm text-yellow-600 border-b-2 border-yellow-400 transition whitespace-nowrap";
+                btnMar.className = "px-5 py-2.5 font-bold text-sm text-yellow-600 border-b-2 border-yellow-400 transition whitespace-nowrap";
             } else if (tabName === 'puestos') {
                 secPue.classList.remove('hidden');
-                btnPue.className = "px-6 py-2.5 font-bold text-sm text-yellow-600 border-b-2 border-yellow-400 transition whitespace-nowrap";
+                btnPue.className = "px-5 py-2.5 font-bold text-sm text-yellow-600 border-b-2 border-yellow-400 transition whitespace-nowrap";
             } else if (tabName === 'estadisticas') {
                 secEst.classList.remove('hidden');
-                btnEst.className = "px-6 py-2.5 font-bold text-sm text-yellow-600 border-b-2 border-yellow-400 transition whitespace-nowrap";
+                btnEst.className = "px-5 py-2.5 font-bold text-sm text-yellow-600 border-b-2 border-yellow-400 transition whitespace-nowrap";
                 renderizarGraficas();
             }
         }
@@ -1325,7 +1333,7 @@
             input.onchange = e => {
                 const file = e.target.files[0];
                 if (file) {
-                    if (file.size > 20 * 1024 * 1024) {
+                    if (file.size > 200 * 1024 * 1024) {
                         showToast('El archivo excede los 20 MB permitidos.', 'error');
                         return;
                     }
@@ -1647,43 +1655,13 @@
                         <br><span class="text-[10px] text-slate-400 mt-1 block">Obs: ${item.observacion || 'Ninguna'}</span>
                     </td>
                     <td class="p-3">
-                        <div class="flex items-center gap-2">
-                            ${item.pdf ? `<button onclick="viewPDFFromData('${item.pdf}')" class="bg-sky-100 text-sky-700 dark:bg-sky-900/50 dark:text-sky-300 px-2.5 py-1 rounded-lg text-xs font-semibold">Ver</button>` : ''}
-                        </div>
+                        ${item.pdf ? `<button onclick="viewPDFFromData('${item.pdf}')" class="bg-sky-100 text-sky-700 dark:bg-sky-900/50 dark:text-sky-300 px-2.5 py-1 rounded-lg text-xs font-semibold">Ver</button>` : ''}
                     </td>
-                    <td class="p-3 text-center flex items-center justify-center gap-1">
-                        <button onclick="deleteRecetaItem('${item.docId}')" class="bg-rose-100 text-rose-700 dark:bg-rose-900/50 dark:text-rose-300 px-2.5 py-1 rounded-lg text-xs font-semibold">X</button>
+                    <td class="p-3 text-center">
+                        <button onclick="deleteRecetaItem('${item.docId}')" class="bg-rose-100 text-rose-700 dark:bg-rose-900/50 dark:text-rose-300 px-2.5 py-1 rounded-lg text-xs font-semibold">Eliminar</button>
                     </td>
                 `;
                 tbody.appendChild(tr);
-            });
-        }
-
-        function updateStatusAndObservation(docId, newStatus, currentObs) {
-            showObservationModal(currentObs, async (observacion) => {
-                try {
-                    await db.collection('incapacidades').doc(docId).update({ 
-                        estatus: newStatus,
-                        observacion: observacion || "Sin comentarios"
-                    });
-                    showToast('Estatus actualizado correctamente', 'success');
-                } catch (error) {
-                    showToast("Error al actualizar estatus", 'error');
-                }
-            });
-        }
-
-        function updateRecetaStatus(docId, newStatus, currentObs) {
-            showObservationModal(currentObs, async (observacion) => {
-                try {
-                    await db.collection('recetas').doc(docId).update({ 
-                        estatus: newStatus,
-                        observacion: observacion || "Sin comentarios"
-                    });
-                    showToast('Estatus de receta actualizado', 'success');
-                } catch (error) {
-                    showToast("Error al actualizar estatus", 'error');
-                }
             });
         }
 
@@ -1691,153 +1669,210 @@
             const tbody = document.getElementById('admin-users-table-body');
             if(!tbody) return;
             const search = document.getElementById('search-user-input').value.toLowerCase();
+            const sortOrder = document.getElementById('sort-users-select') ? document.getElementById('sort-users-select').value : 'asc';
             tbody.innerHTML = '';
 
-            const filtered = usuariosGlobales.filter(u => 
-                (u.nombre && u.nombre.toLowerCase().includes(search)) || 
-                (u.phone && u.phone.includes(search))
-            );
+            let filtered = usuariosGlobales.filter(u => {
+                return (u.nombre && u.nombre.toLowerCase().includes(search)) || (u.phone && u.phone.includes(search)) || (u.username && u.username.toLowerCase().includes(search));
+            });
+
+            // Ordenamiento alfabético por Nombre
+            filtered.sort((a, b) => {
+                let nombreA = a.nombre ? a.nombre.toLowerCase() : '';
+                let nombreB = b.nombre ? b.nombre.toLowerCase() : '';
+                if (sortOrder === 'asc') {
+                    return nombreA.localeCompare(nombreB);
+                } else {
+                    return nombreB.localeCompare(nombreA);
+                }
+            });
 
             if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="text-center p-6 text-slate-400">No hay usuarios encontrados</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="4" class="text-center p-6 text-slate-400">No hay usuarios registrados</td></tr>`;
                 return;
             }
 
             filtered.forEach(u => {
-                let opcionesPuestosHtml = '';
+                let optionsHtml = '';
                 puestosGlobales.forEach(p => {
-                    opcionesPuestosHtml += `<option value="${p.nombre}" ${u.puesto === p.nombre ? 'selected' : ''}>${p.nombre}</option>`;
+                    optionsHtml += `<option value="${p.nombre}" ${u.puesto === p.nombre ? 'selected' : ''}>${p.nombre}</option>`;
                 });
+                if (puestosGlobales.length === 0) {
+                    optionsHtml = `<option value="${u.puesto || 'Sin puesto'}">${u.puesto || 'Sin puesto'}</option>`;
+                }
+
+                // Diseño mejorado para EMPLOYEE y ADMIN con badges distintivos
+                const roleBadge = u.role === 'admin' 
+                    ? `<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold bg-amber-100 dark:bg-amber-950/60 text-amber-700 dark:text-amber-400 border border-amber-300 dark:border-amber-700/50 shadow-sm"><span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>ADMIN</span>`
+                    : `<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-blue-100 dark:bg-blue-950/60 text-blue-700 dark:text-blue-400 border border-blue-300 dark:border-blue-700/50 shadow-sm"><span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>EMPLOYEE</span>`;
 
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td class="p-3 font-medium text-slate-800 dark:text-slate-200">
-                        <div class="flex flex-col sm:flex-row sm:items-center gap-2">
-                            <span>${u.nombre || 'N/D'}</span>
-                            <select onchange="actualizarPuestoUsuario('${u.docId}', this.value)" class="px-2 py-1 border border-slate-200 dark:border-slate-700 rounded-lg bg-slate-50 dark:bg-slate-800 text-xs font-semibold text-yellow-700 dark:text-yellow-400 focus:outline-none">
-                                <option value="Sin puesto" ${!u.puesto ? 'selected' : ''}>Sin puesto</option>
-                                ${opcionesPuestosHtml}
+                        <div class="font-bold text-slate-900 dark:text-white">${u.nombre}</div>
+                        <div class="mt-1.5">
+                            <select onchange="actualizarPuestoUsuario('${u.docId}', this.value)" class="text-xs px-2.5 py-1 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-300 font-medium focus:ring-1 focus:ring-yellow-400 focus:outline-none">
+                                ${optionsHtml}
                             </select>
                         </div>
                     </td>
-                    <td class="p-3 text-slate-600 dark:text-slate-400">${u.phone || 'N/D'}</td>
-                    <td class="p-3">
-                        <span class="px-2 py-1 rounded-lg text-xs font-bold ${u.role === 'admin' ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 text-slate-700'}">
-                            ${u.role || 'employee'}
-                        </span>
+                    <td class="p-3 text-xs text-slate-600 dark:text-slate-400">
+                        <span class="font-bold text-indigo-600 dark:text-indigo-400">@${u.username}</span>
+                        <div class="text-slate-500 mt-0.5">${u.phone}</div>
                     </td>
-                    <td class="p-3 text-center">
-                        ${u.phone === sessionActual.phone ? '<span class="text-xs text-slate-400 italic">Actual</span>' : `<button onclick="deleteUser('${u.docId}')" class="bg-rose-100 text-rose-700 px-3 py-1 rounded-lg text-xs font-semibold">Eliminar</button>`}
+                    <td class="p-3 align-middle">${roleBadge}</td>
+                    <td class="p-3 text-center align-middle">
+                        ${u.role !== 'admin' ? `<button onclick="deleteUser('${u.docId}')" class="bg-rose-100 text-rose-700 hover:bg-rose-200 dark:bg-rose-900/50 dark:text-rose-300 px-3 py-1 rounded-lg text-xs font-semibold transition">Eliminar</button>` : '<span class="text-xs text-slate-400 italic">Protegido</span>'}
                     </td>
                 `;
                 tbody.appendChild(tr);
             });
         }
 
-        function notificarAdminWhatsApp(empleado, usuarioRetail, folio, motivo, marca, inicio, fin, dias) {
-            let telefonoDestino = ADMIN_PHONE;
-            const marcaEncontrada = marcasGlobales.find(m => m.nombre === marca);
-            if (marcaEncontrada && marcaEncontrada.telefono) {
-                telefonoDestino = marcaEncontrada.telefono;
-            }
+        function updateStatusAndObservation(docId, nuevoEstatus, obsActual) {
+            showObservationModal(obsActual, async (nuevaObservacion) => {
+                try {
+                    await db.collection('incapacidades').doc(docId).update({
+                        estatus: nuevoEstatus,
+                        observacion: nuevaObservacion || 'Sin observaciones'
+                    });
+                    showToast('Estatus y observación actualizados', 'success');
+                } catch (e) {
+                    showToast('Error al actualizar estatus', 'error');
+                }
+            });
+        }
 
-            let mensaje = `🚨 *Nueva Solicitud de Incapacidad*\n\n*Colaborador:* ${empleado}\n*Usuario Mi Retail:* ${usuarioRetail}\n*Folio:* ${folio}\n*Motivo:* ${motivo}\n*Marca:* ${marca}\n*Del:* ${inicio} *al:* ${fin}\n*Total:* ${dias} días\n\nPor favor revise la plataforma de Yello MKT Group.`;
-            let url = `https://api.whatsapp.com/send?phone=${telefonoDestino}&text=${encodeURIComponent(mensaje)}`;
-            window.open(url, '_blank');
+        function updateRecetaStatus(docId, nuevoEstatus, obsActual) {
+            showObservationModal(obsActual, async (nuevaObservacion) => {
+                try {
+                    await db.collection('recetas').doc(docId).update({
+                        estatus: nuevoEstatus,
+                        observacion: nuevaObservacion || 'Sin observaciones'
+                    });
+                    showToast('Estatus de receta actualizado', 'success');
+                } catch (e) {
+                    showToast('Error al actualizar estatus', 'error');
+                }
+            });
         }
 
         function deleteItem(docId) {
-            showConfirm('Eliminar registro', '¿Estás seguro de eliminar este registro?', async () => {
+            showConfirm('Eliminar Solicitud', '¿Estás seguro de eliminar permanentemente esta incapacidad?', async () => {
                 try {
                     await db.collection('incapacidades').doc(docId).delete();
-                    showToast('Registro eliminado con éxito', 'success');
-                } catch (error) {
-                    showToast("Error al eliminar", 'error');
+                    showToast('Incapacidad eliminada', 'success');
+                } catch (e) {
+                    showToast('Error al eliminar', 'error');
                 }
             });
         }
 
         function deleteRecetaItem(docId) {
-            showConfirm('Eliminar receta', '¿Estás seguro de eliminar esta receta?', async () => {
+            showConfirm('Eliminar Receta', '¿Estás seguro de eliminar permanentemente esta receta médica?', async () => {
                 try {
                     await db.collection('recetas').doc(docId).delete();
-                    showToast('Receta eliminada con éxito', 'success');
-                } catch (error) {
-                    showToast("Error al eliminar", 'error');
+                    showToast('Receta eliminada', 'success');
+                } catch (e) {
+                    showToast('Error al eliminar receta', 'error');
                 }
             });
         }
 
         function deleteUser(docId) {
-            showConfirm('Eliminar usuario', '¿Estás seguro de eliminar este usuario?', async () => {
+            showConfirm('Eliminar Usuario', '¿Estás seguro de eliminar este usuario del sistema?', async () => {
                 try {
                     await db.collection('usuarios').doc(docId).delete();
-                    showToast('Usuario eliminado con éxito', 'success');
-                } catch (error) {
-                    showToast("Error al eliminar usuario", 'error');
+                    showToast('Usuario eliminado', 'success');
+                } catch (e) {
+                    showToast('Error al eliminar usuario', 'error');
                 }
             });
         }
 
-        function viewPDFFromData(pdfBase64) {
+        function viewPDFFromData(base64Data) {
             const win = window.open();
-            win.document.write(`<iframe src="${pdfBase64}" frameborder="0" style="width:100%; height:100%;"></iframe>`);
+            win.document.write(`
+                <html>
+                <head><title>Visualizador de PDF - Yello MKT</title></head>
+                <body style="margin:0;background:#0f172a;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;">
+                    <iframe src="${base64Data}" style="width:100%;height:90%;border:none;"></iframe>
+                    <div style="padding:10px;"><a href="${base64Data}" download="documento.pdf" style="color:#facc15;font-family:sans-serif;font-size:16px;text-decoration:none;font-weight:bold;">📥 Descargar Documento PDF</a></div>
+                </body>
+                </html>
+            `);
+        }
+
+        function notificarAdminWhatsApp(empleado, usuarioRetail, folio, motivo, marca, inicio, fin, dias) {
+            let mensaje = `📢 *Actualización de Incapacidad*\n\n*Colaborador:* ${empleado}\n*Usuario Mi Retail:* ${usuarioRetail}\n*Folio:* ${folio}\n*Motivo:* ${motivo}\n*Marca:* ${marca}\n*Del:* ${inicio} al ${fin} (${dias} días)\n\nPor favor revise su estatus en la plataforma de Yello MKT Group.`;
+            let url = `https://api.whatsapp.com/send?phone=${ADMIN_PHONE}&text=${encodeURIComponent(mensaje)}`;
+            window.open(url, '_blank');
         }
 
         function exportCSV() {
-            let csv = 'Empleado,Usuario Mi Retail,Folio,Motivo,Marca,Inicio,Fin,Dias,Estatus\n';
-            incapacidadesGlobales.forEach(i => {
-                csv += `"${i.empleado}","${i.usuarioRetail || 'N/D'}","${i.folio || 'N/D'}","${i.motivo}","${i.marca || 'N/D'}","${i.inicio}","${i.fin}","${i.dias || 0}","${i.estatus}"\n`;
+            if (incapacidadesGlobales.length === 0) {
+                showToast('No hay datos para exportar', 'error');
+                return;
+            }
+            let csvContent = "data:text/csv;charset=utf-8,Colaborador,UsuarioRetail,Folio,Motivo,Marca,Inicio,Fin,Dias,Estatus,Observacion\n";
+            incapacidadesGlobales.forEach(row => {
+                csvContent += `"${row.empleado}","${row.usuarioRetail || ''}","${row.folio || ''}","${row.motivo}","${row.marca || ''}","${row.inicio}","${row.fin}",${row.dias},"${row.estatus}","${row.observacion || ''}"\n`;
             });
-            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'reporte_incapacidades_yello.csv';
-            a.click();
-            showToast('Reporte CSV descargado con éxito', 'success');
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "incapacidades_yello.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
 
         function exportRecetasCSV() {
-            let csv = 'Colaborador,Usuario Mi Retail,Marca,Fecha Consulta,Institucion,Estatus\n';
-            recetasGlobales.forEach(r => {
-                csv += `"${r.empleado}","${r.usuarioRetail || 'N/D'}","${r.marca || 'N/D'}","${r.fecha}","${r.institucion || 'N/D'}","${r.estatus}"\n`;
+            if (recetasGlobales.length === 0) {
+                showToast('No hay recetas para exportar', 'error');
+                return;
+            }
+            let csvContent = "data:text/csv;charset=utf-8,Colaborador,UsuarioRetail,Marca,Fecha,Institucion,Estatus,Observacion\n";
+            recetasGlobales.forEach(row => {
+                csvContent += `"${row.empleado}","${row.usuarioRetail || ''}","${row.marca || ''}","${row.fecha}","${row.institucion}","${row.estatus}","${row.observacion || ''}"\n`;
             });
-            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'reporte_recetas_yello.csv';
-            a.click();
-            showToast('Reporte CSV de recetas descargado con éxito', 'success');
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "recetas_yello.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
 
         function renderizarGraficas() {
-            let motivosCount = {};
-            let estatusCount = { Pendiente: 0, Aprobado: 0, Rechazado: 0 };
+            const ctxMotivo = document.getElementById('chartMotivos');
+            const ctxEstatus = document.getElementById('chartEstatus');
+            if (!ctxMotivo || !ctxEstatus) return;
 
-            incapacidadesGlobales.forEach(i => {
-                motivosCount[i.motivo] = (motivosCount[i.motivo] || 0) + 1;
-                if(estatusCount[i.estatus] !== undefined) {
-                    estatusCount[i.estatus]++;
-                }
+            let motivosCount = { 'Enfermedad general': 0, 'Maternidad': 0, 'Accidente de trabajo': 0 };
+            let estatusCount = { 'Pendiente': 0, 'Aprobado': 0, 'Rechazado': 0 };
+
+            incapacidadesGlobales.forEach(item => {
+                if (motivosCount[item.motivo] !== undefined) motivosCount[item.motivo]++;
+                if (estatusCount[item.estatus] !== undefined) estatusCount[item.estatus]++;
             });
 
-            const ctxMotivo = document.getElementById('chartMotivos').getContext('2d');
-            if(chartMotivoInstance) chartMotivoInstance.destroy();
+            if (chartMotivoInstance) chartMotivoInstance.destroy();
+            if (chartEstatusInstance) chartEstatusInstance.destroy();
+
             chartMotivoInstance = new Chart(ctxMotivo, {
                 type: 'doughnut',
                 data: {
                     labels: Object.keys(motivosCount),
                     datasets: [{
                         data: Object.values(motivosCount),
-                        backgroundColor: ['#fbbf24', '#38bdf8', '#34d399', '#f43f5e']
+                        backgroundColor: ['#f59e0b', '#ec4899', '#3b82f6']
                     }]
-                }
+                },
+                options: { responsive: true, maintainAspectRatio: false }
             });
 
-            const ctxEstatus = document.getElementById('chartEstatus').getContext('2d');
-            if(chartEstatusInstance) chartEstatusInstance.destroy();
             chartEstatusInstance = new Chart(ctxEstatus, {
                 type: 'bar',
                 data: {
@@ -1845,10 +1880,10 @@
                     datasets: [{
                         label: 'Solicitudes',
                         data: Object.values(estatusCount),
-                        backgroundColor: ['#fbbf24', '#34d399', '#f43f5e']
+                        backgroundColor: ['#f59e0b', '#10b981', '#ef4444']
                     }]
                 },
-                options: { scales: { y: { beginAtZero: true } } }
+                options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
             });
         }
     </script>
