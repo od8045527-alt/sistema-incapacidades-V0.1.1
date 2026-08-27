@@ -27,6 +27,33 @@
     <!-- CONTENEDOR DE NOTIFICACIONES FLOTANTES (TOAST) -->
     <div id="toast-container" class="fixed top-5 right-5 z-[100] flex flex-col gap-2 pointer-events-none"></div>
 
+    <!-- MODAL DE VISUALIZACIÓN DE PDF MEJORADO -->
+    <div id="pdf-viewer-modal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-md z-[120] hidden flex items-center justify-center p-2 sm:p-6">
+        <div class="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl w-full max-w-5xl h-[92vh] flex flex-col border border-slate-200 dark:border-slate-800 overflow-hidden transform transition-all">
+            <!-- Barra Superior del Visualizador -->
+            <div class="px-6 py-4 bg-slate-50 dark:bg-slate-800/80 border-b border-slate-200 dark:border-slate-700 flex flex-wrap items-center justify-between gap-3">
+                <div class="flex items-center gap-2">
+                    <span class="text-xl">📄</span>
+                    <h3 class="font-bold text-slate-800 dark:text-white text-base">Visualizador de Documento PDF</h3>
+                </div>
+                <!-- Controles de Zoom y Descarga -->
+                <div class="flex items-center gap-2">
+                    <button onclick="zoomPdf(-0.15)" class="px-3 py-1.5 bg-white dark:bg-slate-700 hover:bg-slate-100 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 text-xs font-bold rounded-xl border border-slate-200 dark:border-slate-600 shadow-sm transition">🔍➖ Reducir</button>
+                    <button onclick="zoomPdf(0.15)" class="px-3 py-1.5 bg-white dark:bg-slate-700 hover:bg-slate-100 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 text-xs font-bold rounded-xl border border-slate-200 dark:border-slate-600 shadow-sm transition">🔍➕ Ampliar</button>
+                    <button onclick="resetZoomPdf()" class="px-3 py-1.5 bg-white dark:bg-slate-700 hover:bg-slate-100 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 text-xs font-bold rounded-xl border border-slate-200 dark:border-slate-600 shadow-sm transition">🔄 Normal</button>
+                    <a id="pdf-download-btn" href="#" download="documento.pdf" class="px-4 py-1.5 bg-yellow-400 hover:bg-yellow-500 text-slate-900 text-xs font-bold rounded-xl shadow-sm transition flex items-center gap-1">📥 Descargar</a>
+                    <button onclick="cerrarVisualizadorPDF()" class="w-8 h-8 ml-2 flex items-center justify-center bg-rose-100 dark:bg-rose-900/40 text-rose-700 dark:text-rose-300 rounded-full hover:bg-rose-200 transition font-bold text-sm">✕</button>
+                </div>
+            </div>
+            <!-- Contenedor del Iframe con Zoom -->
+            <div class="flex-1 bg-slate-200 dark:bg-slate-950 overflow-auto flex items-center justify-center p-4 relative">
+                <div id="pdf-wrapper" class="transition-transform duration-200 w-full h-full flex items-center justify-center" style="transform: scale(1);">
+                    <iframe id="pdf-iframe" src="" class="w-full h-full rounded-2xl shadow-inner border border-slate-300 dark:border-slate-800 bg-white"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- MODAL DE FILTRO Y EXPORTACIÓN AVANZADA CSV -->
     <div id="custom-export-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[60] hidden flex items-center justify-center p-4">
         <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl max-w-lg w-full p-6 border-t-4 border-yellow-400 transform transition-all">
@@ -719,6 +746,7 @@
         let chartMotivoInstance = null;
         let chartEstatusInstance = null;
         let tipoExportActual = 'incapacidades';
+        let currentZoomLevel = 1;
 
         window.onload = function() {
             inicializarAdminPorDefecto();
@@ -1332,6 +1360,34 @@
         }
 
         // ==========================================
+        // VISUALIZADOR DE PDF MODERNO Y ZOOM
+        // ==========================================
+        function viewPDFFromData(base64Data) {
+            currentZoomLevel = 1;
+            document.getElementById('pdf-wrapper').style.transform = `scale(${currentZoomLevel})`;
+            document.getElementById('pdf-iframe').src = base64Data;
+            document.getElementById('pdf-download-btn').href = base64Data;
+            document.getElementById('pdf-viewer-modal').classList.remove('hidden');
+        }
+
+        function cerrarVisualizadorPDF() {
+            document.getElementById('pdf-viewer-modal').classList.add('hidden');
+            document.getElementById('pdf-iframe').src = '';
+        }
+
+        function zoomPdf(delta) {
+            currentZoomLevel += delta;
+            if (currentZoomLevel < 0.5) currentZoomLevel = 0.5;
+            if (currentZoomLevel > 3.0) currentZoomLevel = 3.0;
+            document.getElementById('pdf-wrapper').style.transform = `scale(${currentZoomLevel})`;
+        }
+
+        function resetZoomPdf() {
+            currentZoomLevel = 1;
+            document.getElementById('pdf-wrapper').style.transform = `scale(${currentZoomLevel})`;
+        }
+
+        // ==========================================
         // ESCUCHAS EMPLEADO Y ADMIN
         // ==========================================
         function escucharIncapacidadesEmpleado() {
@@ -1673,11 +1729,6 @@
             });
         }
 
-        function viewPDFFromData(base64Data) {
-            const win = window.open();
-            win.document.write(`<iframe src="${base64Data}" frameborder="0" style="border:0; top:0; left:0; bottom:0; right:0; width:100%; height:100%;" allowfullscreen></iframe>`);
-        }
-
         // ==========================================
         // FILTROS Y DESCARGAS CSV AVANZADAS
         // ==========================================
@@ -1732,41 +1783,22 @@
             let filtrados = fuenteDatos.filter(item => colaboradoresSeleccionados.includes(item.empleado));
 
             if (tipoExportActual === 'incapacidades') {
-                csvContent += "Colaborador,Usuario Mi Retail,Folio,Motivo,Inicio,Fin,Dias,Estatus,Observacion\r\n";
+                csvContent += "Colaborador,Usuario Mi Retail,Folio,Motivo,Inicio,Fin,Dias,Estatus,Observacion\n";
                 filtrados.forEach(item => {
-                    let dias = calcularDiasIncapacidad(item.inicio, item.fin);
-                    let row = [
-                        `"${item.empleado}"`,
-                        `"${item.usuarioRetail || ''}"`,
-                        `"${item.folio || ''}"`,
-                        `"${item.motivo || ''}"`,
-                        `"${item.inicio || ''}"`,
-                        `"${item.fin || ''}"`,
-                        dias,
-                        `"${item.estatus || ''}"`,
-                        `"${item.observacion || ''}"`
-                    ].join(",");
-                    csvContent += row + "\r\n";
+                    const dias = calcularDiasIncapacidad(item.inicio, item.fin);
+                    csvContent += `"${item.empleado}","${item.usuarioRetail || ''}","${item.folio || ''}","${item.motivo || ''}","${item.inicio || ''}","${item.fin || ''}",${dias},"${item.estatus || ''}","${item.observacion || ''}"\n`;
                 });
             } else {
-                csvContent += "Colaborador,Usuario Mi Retail,Fecha Consulta,Institucion,Estatus,Observacion\r\n";
+                csvContent += "Colaborador,Usuario Mi Retail,Fecha,Institucion,Estatus,Observacion\n";
                 filtrados.forEach(item => {
-                    let row = [
-                        `"${item.empleado}"`,
-                        `"${item.usuarioRetail || ''}"`,
-                        `"${item.fecha || ''}"`,
-                        `"${item.institucion || ''}"`,
-                        `"${item.estatus || ''}"`,
-                        `"${item.observacion || ''}"`
-                    ].join(",");
-                    csvContent += row + "\r\n";
+                    csvContent += `"${item.empleado}","${item.usuarioRetail || ''}","${item.fecha || ''}","${item.institucion || ''}","${item.estatus || ''}","${item.observacion || ''}"\n`;
                 });
             }
 
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
             link.setAttribute("href", encodedUri);
-            link.setAttribute("download", `reporte_${tipoExportActual}_yello.csv`);
+            link.setAttribute("download", `reporte_${tipoExportActual}.csv`);
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
@@ -1775,14 +1807,8 @@
             showToast('Reporte CSV descargado con éxito', 'success');
         }
 
-        function notificarAdminWhatsApp(empleado, usuarioRetail, folio, motivo, inicio, fin) {
-            let mensaje = `Hola *${empleado}* 👋, nos comunicamos de *Yello MKT Group* respecto a tu incapacidad con Folio *${folio}* (${motivo}) del ${inicio} al ${fin}.`;
-            let url = `https://api.whatsapp.com/send?text=${encodeURIComponent(mensaje)}`;
-            window.open(url, '_blank');
-        }
-
         // ==========================================
-        // ESTADÍSTICAS Y GRÁFICAS CHART.JS
+        // ESTADÍSTICAS Y GRÁFICAS (CHART.JS)
         // ==========================================
         function renderizarGraficas() {
             document.getElementById('kpi-total-incapacidades').innerText = incapacidadesGlobales.length;
@@ -1802,22 +1828,24 @@
             incapacidadesGlobales.forEach(item => {
                 if (estatusConteo[item.estatus] !== undefined) {
                     estatusConteo[item.estatus]++;
+                } else {
+                    estatusConteo[item.estatus] = 1;
                 }
             });
 
             const isDark = document.documentElement.classList.contains('dark');
-            const textColor = isDark ? '#cbd5e1' : '#475569';
+            const textColor = isDark ? '#cbd5e1' : '#334155';
 
-            const ctxMotivos = document.getElementById('chartMotivos').getContext('2d');
             if (chartMotivoInstance) chartMotivoInstance.destroy();
-            chartMotivoInstance = new Chart(ctxMotivos, {
+            const ctxMotivo = document.getElementById('chartMotivos').getContext('2d');
+            chartMotivoInstance = new Chart(ctxMotivo, {
                 type: 'doughnut',
                 data: {
                     labels: Object.keys(motivosConteo),
                     datasets: [{
                         data: Object.values(motivosConteo),
-                        backgroundColor: ['#facc15', '#38bdf8', '#fb7185'],
-                        borderWidth: isDark ? 2 : 0,
+                        backgroundColor: ['#facc15', '#38bdf8', '#f43f5e'],
+                        borderWidth: isDark ? 2 : 1,
                         borderColor: isDark ? '#1e293b' : '#ffffff'
                     }]
                 },
@@ -1830,24 +1858,28 @@
                 }
             });
 
-            const ctxEstatus = document.getElementById('chartEstatus').getContext('2d');
             if (chartEstatusInstance) chartEstatusInstance.destroy();
+            const ctxEstatus = document.getElementById('chartEstatus').getContext('2d');
             chartEstatusInstance = new Chart(ctxEstatus, {
-                type: 'pie',
+                type: 'bar',
                 data: {
                     labels: Object.keys(estatusConteo),
                     datasets: [{
+                        label: 'Solicitudes',
                         data: Object.values(estatusConteo),
-                        backgroundColor: ['#fbbf24', '#34d399', '#f87171'],
-                        borderWidth: isDark ? 2 : 0,
-                        borderColor: isDark ? '#1e293b' : '#ffffff'
+                        backgroundColor: ['#fbbf24', '#34d399', '#fb7185'],
+                        borderRadius: 8
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true, ticks: { color: textColor, precision: 0 }, grid: { color: isDark ? '#334155' : '#e2e8f0' } },
+                        x: { ticks: { color: textColor, font: { weight: 'bold' } }, grid: { display: false } }
+                    },
                     plugins: {
-                        legend: { position: 'bottom', labels: { color: textColor, font: { size: 11, weight: 'bold' } } }
+                        legend: { display: false }
                     }
                 }
             });
