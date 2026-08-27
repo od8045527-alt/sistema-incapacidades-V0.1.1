@@ -28,28 +28,26 @@
     <div id="toast-container" class="fixed top-5 right-5 z-[100] flex flex-col gap-2 pointer-events-none"></div>
 
     <!-- MODAL DE VISUALIZACIÓN DE PDF MEJORADO -->
-    <div id="pdf-viewer-modal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-md z-[120] hidden flex items-center justify-center p-2 sm:p-6">
-        <div class="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl w-full max-w-5xl h-[92vh] flex flex-col border border-slate-200 dark:border-slate-800 overflow-hidden transform transition-all">
-            <!-- Barra Superior del Visualizador -->
-            <div class="px-6 py-4 bg-slate-50 dark:bg-slate-800/80 border-b border-slate-200 dark:border-slate-700 flex flex-wrap items-center justify-between gap-3">
+    <div id="pdf-viewer-modal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-md z-[80] hidden flex items-center justify-center p-4 sm:p-6">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl max-w-4xl w-full h-[85vh] flex flex-col border border-slate-200 dark:border-slate-800 transform transition-all overflow-hidden">
+            <!-- Cabecera del Modal -->
+            <div class="px-6 py-4 bg-slate-50 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center">
                 <div class="flex items-center gap-2">
                     <span class="text-xl">📄</span>
-                    <h3 class="font-bold text-slate-800 dark:text-white text-base">Visualizador de Documento PDF</h3>
+                    <h3 class="text-base font-bold text-slate-800 dark:text-white">Visor de Documento PDF</h3>
                 </div>
-                <!-- Controles de Zoom y Descarga -->
                 <div class="flex items-center gap-2">
-                    <button onclick="zoomPdf(-0.15)" class="px-3 py-1.5 bg-white dark:bg-slate-700 hover:bg-slate-100 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 text-xs font-bold rounded-xl border border-slate-200 dark:border-slate-600 shadow-sm transition">🔍➖ Reducir</button>
-                    <button onclick="zoomPdf(0.15)" class="px-3 py-1.5 bg-white dark:bg-slate-700 hover:bg-slate-100 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 text-xs font-bold rounded-xl border border-slate-200 dark:border-slate-600 shadow-sm transition">🔍➕ Ampliar</button>
-                    <button onclick="resetZoomPdf()" class="px-3 py-1.5 bg-white dark:bg-slate-700 hover:bg-slate-100 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 text-xs font-bold rounded-xl border border-slate-200 dark:border-slate-600 shadow-sm transition">🔄 Normal</button>
-                    <a id="pdf-download-btn" href="#" download="documento.pdf" class="px-4 py-1.5 bg-yellow-400 hover:bg-yellow-500 text-slate-900 text-xs font-bold rounded-xl shadow-sm transition flex items-center gap-1">📥 Descargar</a>
-                    <button onclick="cerrarVisualizadorPDF()" class="w-8 h-8 ml-2 flex items-center justify-center bg-rose-100 dark:bg-rose-900/40 text-rose-700 dark:text-rose-300 rounded-full hover:bg-rose-200 transition font-bold text-sm">✕</button>
+                    <a id="pdf-download-btn" href="#" download="documento-incapacidad.pdf" class="px-3.5 py-1.5 bg-yellow-400 hover:bg-yellow-500 text-slate-900 font-bold rounded-xl text-xs transition shadow-sm flex items-center gap-1.5">
+                        📥 Descargar PDF
+                    </a>
+                    <button onclick="cerrarModalPDF()" class="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 flex items-center justify-center font-bold transition">
+                        ✕
+                    </button>
                 </div>
             </div>
-            <!-- Contenedor del Iframe con Zoom -->
-            <div class="flex-1 bg-slate-200 dark:bg-slate-950 overflow-auto flex items-center justify-center p-4 relative">
-                <div id="pdf-wrapper" class="transition-transform duration-200 w-full h-full flex items-center justify-center" style="transform: scale(1);">
-                    <iframe id="pdf-iframe" src="" class="w-full h-full rounded-2xl shadow-inner border border-slate-300 dark:border-slate-800 bg-white"></iframe>
-                </div>
+            <!-- Cuerpo del Visor (Iframe integrado) -->
+            <div class="flex-1 bg-slate-200 dark:bg-slate-950 relative">
+                <iframe id="pdf-iframe" src="" class="w-full h-full border-0"></iframe>
             </div>
         </div>
     </div>
@@ -746,7 +744,6 @@
         let chartMotivoInstance = null;
         let chartEstatusInstance = null;
         let tipoExportActual = 'incapacidades';
-        let currentZoomLevel = 1;
 
         window.onload = function() {
             inicializarAdminPorDefecto();
@@ -1360,34 +1357,6 @@
         }
 
         // ==========================================
-        // VISUALIZADOR DE PDF MODERNO Y ZOOM
-        // ==========================================
-        function viewPDFFromData(base64Data) {
-            currentZoomLevel = 1;
-            document.getElementById('pdf-wrapper').style.transform = `scale(${currentZoomLevel})`;
-            document.getElementById('pdf-iframe').src = base64Data;
-            document.getElementById('pdf-download-btn').href = base64Data;
-            document.getElementById('pdf-viewer-modal').classList.remove('hidden');
-        }
-
-        function cerrarVisualizadorPDF() {
-            document.getElementById('pdf-viewer-modal').classList.add('hidden');
-            document.getElementById('pdf-iframe').src = '';
-        }
-
-        function zoomPdf(delta) {
-            currentZoomLevel += delta;
-            if (currentZoomLevel < 0.5) currentZoomLevel = 0.5;
-            if (currentZoomLevel > 3.0) currentZoomLevel = 3.0;
-            document.getElementById('pdf-wrapper').style.transform = `scale(${currentZoomLevel})`;
-        }
-
-        function resetZoomPdf() {
-            currentZoomLevel = 1;
-            document.getElementById('pdf-wrapper').style.transform = `scale(${currentZoomLevel})`;
-        }
-
-        // ==========================================
         // ESCUCHAS EMPLEADO Y ADMIN
         // ==========================================
         function escucharIncapacidadesEmpleado() {
@@ -1417,7 +1386,7 @@
                                 ${item.estatus}<br><span class="text-[10px] text-slate-400 font-normal">Nota: ${item.observacion || 'Ninguna'}</span>
                             </td>
                             <td class="p-3 flex items-center gap-2">
-                                ${item.pdf ? `<button onclick="viewPDFFromData('${item.pdf}')" class="bg-sky-100 text-sky-700 dark:bg-sky-900/50 dark:text-sky-300 px-2.5 py-1 rounded-lg text-xs font-semibold hover:bg-sky-200 transition">Ver</button>` : ''}
+                                ${item.pdf ? `<button onclick="viewPDFFromData('${item.pdf}', '${item.empleado}_incapacidad')" class="bg-sky-100 text-sky-700 dark:bg-sky-900/50 dark:text-sky-300 px-2.5 py-1 rounded-lg text-xs font-semibold hover:bg-sky-200 transition">Ver</button>` : ''}
                                 <button onclick="uploadFinalPDF('${item.docId}')" class="bg-indigo-100 text-indigo-700 dark:bg-indigo-900/50 dark:text-indigo-300 px-2.5 py-1 rounded-lg text-xs font-semibold hover:bg-indigo-200 transition">PDF</button>
                             </td>
                         `;
@@ -1452,7 +1421,7 @@
                                 ${item.estatus}<br><span class="text-[10px] text-slate-400 font-normal">Nota: ${item.observacion || 'Ninguna'}</span>
                             </td>
                             <td class="p-3 flex items-center gap-2">
-                                ${item.pdf ? `<button onclick="viewPDFFromData('${item.pdf}')" class="bg-sky-100 text-sky-700 dark:bg-sky-900/50 dark:text-sky-300 px-2.5 py-1 rounded-lg text-xs font-semibold hover:bg-sky-200 transition">Ver</button>` : ''}
+                                ${item.pdf ? `<button onclick="viewPDFFromData('${item.pdf}', '${item.empleado}_receta')" class="bg-sky-100 text-sky-700 dark:bg-sky-900/50 dark:text-sky-300 px-2.5 py-1 rounded-lg text-xs font-semibold hover:bg-sky-200 transition">Ver</button>` : ''}
                                 <button onclick="uploadRecetaPDF('${item.docId}')" class="bg-teal-100 text-teal-700 dark:bg-teal-900/50 dark:text-teal-300 px-2.5 py-1 rounded-lg text-xs font-semibold hover:bg-teal-200 transition">PDF</button>
                             </td>
                         `;
@@ -1551,7 +1520,7 @@
                         <div class="text-[11px] text-slate-400 mt-1 max-w-[180px] truncate" title="${item.observacion || 'Ninguna'}">Obs: ${item.observacion || 'Ninguna'}</div>
                     </td>
                     <td class="py-3.5 px-4">
-                        ${item.pdf ? `<button onclick="viewPDFFromData('${item.pdf}')" class="bg-sky-100 text-sky-700 dark:bg-sky-900/50 dark:text-sky-300 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-sky-200 transition shadow-sm">Ver PDF</button>` : '<span class="text-xs text-slate-400">Sin archivo</span>'}
+                        ${item.pdf ? `<button onclick="viewPDFFromData('${item.pdf}', '${item.empleado}_incapacidad')" class="bg-sky-100 text-sky-700 dark:bg-sky-900/50 dark:text-sky-300 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-sky-200 transition shadow-sm">Ver PDF</button>` : '<span class="text-xs text-slate-400">Sin archivo</span>'}
                     </td>
                     <td class="py-3.5 px-4 text-center">
                         <div class="flex items-center justify-center gap-1.5">
@@ -1596,7 +1565,7 @@
                         <br><span class="text-[10px] text-slate-400 mt-1 block">Obs: ${item.observacion || 'Ninguna'}</span>
                     </td>
                     <td class="p-3">
-                        ${item.pdf ? `<button onclick="viewPDFFromData('${item.pdf}')" class="bg-sky-100 text-sky-700 dark:bg-sky-900/50 dark:text-sky-300 px-2.5 py-1 rounded-lg text-xs font-semibold">Ver</button>` : ''}
+                        ${item.pdf ? `<button onclick="viewPDFFromData('${item.pdf}', '${item.empleado}_receta')" class="bg-sky-100 text-sky-700 dark:bg-sky-900/50 dark:text-sky-300 px-2.5 py-1 rounded-lg text-xs font-semibold">Ver</button>` : ''}
                     </td>
                     <td class="p-3 text-center">
                         <button onclick="deleteRecetaItem('${item.docId}')" class="bg-rose-100 text-rose-700 dark:bg-rose-900/50 dark:text-rose-300 px-2.5 py-1 rounded-lg text-xs font-semibold">Eliminar</button>
@@ -1730,6 +1699,28 @@
         }
 
         // ==========================================
+        // VISOR MODAL DE PDF MEJORADO
+        // ==========================================
+        function viewPDFFromData(base64Data, nombreArchivo = 'documento_pdf') {
+            const modal = document.getElementById('pdf-viewer-modal');
+            const iframe = document.getElementById('pdf-iframe');
+            const downloadBtn = document.getElementById('pdf-download-btn');
+
+            iframe.src = base64Data;
+            downloadBtn.href = base64Data;
+            downloadBtn.download = `${nombreArchivo.replace(/\s+/g, '_')}.pdf`;
+            
+            modal.classList.remove('hidden');
+        }
+
+        function cerrarModalPDF() {
+            const modal = document.getElementById('pdf-viewer-modal');
+            const iframe = document.getElementById('pdf-iframe');
+            modal.classList.add('hidden');
+            iframe.src = ''; // Limpia el iframe para detener reproducciones o uso de memoria
+        }
+
+        // ==========================================
         // FILTROS Y DESCARGAS CSV AVANZADAS
         // ==========================================
         function abrirModalExport(tipo) {
@@ -1783,37 +1774,60 @@
             let filtrados = fuenteDatos.filter(item => colaboradoresSeleccionados.includes(item.empleado));
 
             if (tipoExportActual === 'incapacidades') {
-                csvContent += "Colaborador,Usuario Mi Retail,Folio,Motivo,Inicio,Fin,Dias,Estatus,Observacion\n";
+                csvContent += "Colaborador,Usuario Mi Retail,Folio,Motivo,Inicio,Fin,Dias,Estatus,Observacion\r\n";
                 filtrados.forEach(item => {
-                    const dias = calcularDiasIncapacidad(item.inicio, item.fin);
-                    csvContent += `"${item.empleado}","${item.usuarioRetail || ''}","${item.folio || ''}","${item.motivo || ''}","${item.inicio || ''}","${item.fin || ''}",${dias},"${item.estatus || ''}","${item.observacion || ''}"\n`;
+                    let dias = calcularDiasIncapacidad(item.inicio, item.fin);
+                    let row = [
+                        `"${item.empleado || ''}"`,
+                        `"${item.usuarioRetail || ''}"`,
+                        `"${item.folio || ''}"`,
+                        `"${item.motivo || ''}"`,
+                        `"${item.inicio || ''}"`,
+                        `"${item.fin || ''}"`,
+                        dias,
+                        `"${item.estatus || ''}"`,
+                        `"${item.observacion || ''}"`
+                    ].join(",");
+                    csvContent += row + "\r\n";
                 });
             } else {
-                csvContent += "Colaborador,Usuario Mi Retail,Fecha,Institucion,Estatus,Observacion\n";
+                csvContent += "Colaborador,Usuario Mi Retail,Fecha Consulta,Institucion,Estatus,Observacion\r\n";
                 filtrados.forEach(item => {
-                    csvContent += `"${item.empleado}","${item.usuarioRetail || ''}","${item.fecha || ''}","${item.institucion || ''}","${item.estatus || ''}","${item.observacion || ''}"\n`;
+                    let row = [
+                        `"${item.empleado || ''}"`,
+                        `"${item.usuarioRetail || ''}"`,
+                        `"${item.fecha || ''}"`,
+                        `"${item.institucion || ''}"`,
+                        `"${item.estatus || ''}"`,
+                        `"${item.observacion || ''}"`
+                    ].join(",");
+                    csvContent += row + "\r\n";
                 });
             }
 
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
             link.setAttribute("href", encodedUri);
-            link.setAttribute("download", `reporte_${tipoExportActual}.csv`);
+            link.setAttribute("download", `reporte_${tipoExportActual}_yello.csv`);
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
 
             cerrarModalExport();
-            showToast('Reporte CSV descargado con éxito', 'success');
+            showToast('¡Reporte CSV descargado con éxito!', 'success');
         }
 
         // ==========================================
         // ESTADÍSTICAS Y GRÁFICAS (CHART.JS)
         // ==========================================
         function renderizarGraficas() {
-            document.getElementById('kpi-total-incapacidades').innerText = incapacidadesGlobales.length;
-            document.getElementById('kpi-total-recetas').innerText = recetasGlobales.length;
-            document.getElementById('kpi-total-usuarios').innerText = usuariosGlobales.length;
+            const totalInc = incapacidadesGlobales.length;
+            const totalRec = recetasGlobales.length;
+            const totalUsr = usuariosGlobales.length;
+
+            document.getElementById('kpi-total-incapacidades').innerText = totalInc;
+            document.getElementById('kpi-total-recetas').innerText = totalRec;
+            document.getElementById('kpi-total-usuarios').innerText = totalUsr;
 
             let motivosConteo = { "Enfermedad general": 0, "Maternidad": 0, "Accidente de trabajo": 0 };
             incapacidadesGlobales.forEach(item => {
@@ -1828,23 +1842,21 @@
             incapacidadesGlobales.forEach(item => {
                 if (estatusConteo[item.estatus] !== undefined) {
                     estatusConteo[item.estatus]++;
-                } else {
-                    estatusConteo[item.estatus] = 1;
                 }
             });
 
             const isDark = document.documentElement.classList.contains('dark');
-            const textColor = isDark ? '#cbd5e1' : '#334155';
+            const textColor = isDark ? '#cbd5e1' : '#475569';
 
             if (chartMotivoInstance) chartMotivoInstance.destroy();
-            const ctxMotivo = document.getElementById('chartMotivos').getContext('2d');
-            chartMotivoInstance = new Chart(ctxMotivo, {
+            const ctxMotivos = document.getElementById('chartMotivos').getContext('2d');
+            chartMotivoInstance = new Chart(ctxMotivos, {
                 type: 'doughnut',
                 data: {
                     labels: Object.keys(motivosConteo),
                     datasets: [{
                         data: Object.values(motivosConteo),
-                        backgroundColor: ['#facc15', '#38bdf8', '#f43f5e'],
+                        backgroundColor: ['#facc15', '#38bdf8', '#f43f5e', '#34d399'],
                         borderWidth: isDark ? 2 : 1,
                         borderColor: isDark ? '#1e293b' : '#ffffff'
                     }]
@@ -1867,19 +1879,19 @@
                     datasets: [{
                         label: 'Solicitudes',
                         data: Object.values(estatusConteo),
-                        backgroundColor: ['#fbbf24', '#34d399', '#fb7185'],
+                        backgroundColor: ['#fbbf24', '#34d399', '#f87171'],
                         borderRadius: 8
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    scales: {
-                        y: { beginAtZero: true, ticks: { color: textColor, precision: 0 }, grid: { color: isDark ? '#334155' : '#e2e8f0' } },
-                        x: { ticks: { color: textColor, font: { weight: 'bold' } }, grid: { display: false } }
-                    },
                     plugins: {
                         legend: { display: false }
+                    },
+                    scales: {
+                        x: { ticks: { color: textColor, font: { weight: 'bold' } }, grid: { display: false } },
+                        y: { ticks: { color: textColor, stepSize: 1 }, grid: { color: isDark ? '#334155' : '#e2e8f0' } }
                     }
                 }
             });
