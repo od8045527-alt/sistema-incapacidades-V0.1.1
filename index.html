@@ -1697,27 +1697,109 @@
                 }
             });
         }
+        // ==========================================
+        // VISOR MODAL DE PDF CORREGIDO
+        // IMPORTANTE: solo cambia la forma de visualizar/descargar.
+        // No modifica Firebase, colecciones, registros ni datos existentes.
+        // ==========================================
+        let pdfBlobUrlActual = null;
 
-        // ==========================================
-        // VISOR MODAL DE PDF MEJORADO
-        // ==========================================
         function viewPDFFromData(base64Data, nombreArchivo = 'documento_pdf') {
             const modal = document.getElementById('pdf-viewer-modal');
             const iframe = document.getElementById('pdf-iframe');
             const downloadBtn = document.getElementById('pdf-download-btn');
 
-            iframe.src = base64Data;
-            downloadBtn.href = base64Data;
-            downloadBtn.download = `${nombreArchivo.replace(/\s+/g, '_')}.pdf`;
-            
-            modal.classList.remove('hidden');
+            try {
+                if (!base64Data) {
+                    showToast('No se encontró el archivo PDF.', 'error');
+                    return;
+                }
+
+                // Limpia un Blob URL anterior, si existe.
+                if (pdfBlobUrlActual) {
+                    URL.revokeObjectURL(pdfBlobUrlActual);
+                    pdfBlobUrlActual = null;
+                }
+
+                let blob;
+
+                // Los registros actuales guardan el PDF como Data URL:
+                // data:application/pdf;base64,JVBERi0x...
+                if (typeof base64Data === 'string' && base64Data.startsWith('data:')) {
+                    const partes = base64Data.split(',');
+                    if (partes.length < 2) {
+                        throw new Error('Data URL de PDF inválida');
+                    }
+
+                    const metadata = partes[0];
+                    const contenido = partes.slice(1).join(',');
+                    const mimeMatch = metadata.match(/^data:([^;]+);base64$/i);
+                    const mimeType = mimeMatch ? mimeMatch[1] : 'application/pdf';
+
+                    const byteCharacters = atob(contenido);
+                    const sliceSize = 1024;
+                    const byteArrays = [];
+
+                    for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+                        const slice = byteCharacters.slice(offset, offset + sliceSize);
+                        const byteNumbers = new Array(slice.length);
+
+                        for (let i = 0; i < slice.length; i++) {
+                            byteNumbers[i] = slice.charCodeAt(i);
+                        }
+
+                        byteArrays.push(new Uint8Array(byteNumbers));
+                    }
+
+                    blob = new Blob(byteArrays, { type: mimeType || 'application/pdf' });
+                } else {
+                    // Compatibilidad adicional por si algún registro antiguo tiene
+                    // únicamente el contenido Base64 sin prefijo data:application/pdf.
+                    const base64Clean = String(base64Data).replace(/\s/g, '');
+                    const byteCharacters = atob(base64Clean);
+                    const sliceSize = 1024;
+                    const byteArrays = [];
+
+                    for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+                        const slice = byteCharacters.slice(offset, offset + sliceSize);
+                        const byteNumbers = new Array(slice.length);
+
+                        for (let i = 0; i < slice.length; i++) {
+                            byteNumbers[i] = slice.charCodeAt(i);
+                        }
+
+                        byteArrays.push(new Uint8Array(byteNumbers));
+                    }
+
+                    blob = new Blob(byteArrays, { type: 'application/pdf' });
+                }
+
+                pdfBlobUrlActual = URL.createObjectURL(blob);
+
+                iframe.src = pdfBlobUrlActual;
+                downloadBtn.href = pdfBlobUrlActual;
+                downloadBtn.download = `${String(nombreArchivo).replace(/\s+/g, '_')}.pdf`;
+
+                modal.classList.remove('hidden');
+            } catch (error) {
+                console.error('Error al abrir PDF:', error);
+                showToast('No fue posible abrir el PDF. El archivo puede estar dañado o incompleto.', 'error');
+            }
         }
 
         function cerrarModalPDF() {
             const modal = document.getElementById('pdf-viewer-modal');
             const iframe = document.getElementById('pdf-iframe');
+            const downloadBtn = document.getElementById('pdf-download-btn');
+
             modal.classList.add('hidden');
-            iframe.src = ''; // Limpia el iframe para detener reproducciones o uso de memoria
+            iframe.src = '';
+            downloadBtn.href = '#';
+
+            if (pdfBlobUrlActual) {
+                URL.revokeObjectURL(pdfBlobUrlActual);
+                pdfBlobUrlActual = null;
+            }
         }
 
         // ==========================================
