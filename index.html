@@ -1,3 +1,137 @@
+martes 9:31 a.m.
+incapacidades Yello 2026 .pdf
+PDF
+Ayudame a mejorar la siguiente presentacion 
+
+Sí. Ya revisé las 9 páginas y el contenido está bien encaminado, pero visualmente puede mejorar muchísimo. Ahora mismo se siente más como un instructivo armado con capturas que como una guía corporativa de proceso. El flujo sí está completo: registro, creación de cuenta, captura de incapacidad, confirmación, riesgos ST7/ST2 y recuperación de cuenta.
+
+Yo la transformaría en una presentación mucho más limpia, visual y fácil de seguir, conservando las capturas reales de la plataforma porque son importantes para que el colaborador identifique exactamente dónde dar clic.
+
+Propuesta de nueva estructura
+Slide	Título propuesto	Mejora
+01	Gestión de Incapacidades Yello	Portada limpia Yello + Xiaomi. Subtítulo: Guía rápida para registro y seguimiento 2026.
+02	Tu proceso en 4 pasos	Crear cuenta → Registrar incapacidad → Adjuntar documento → Confirmar envío. Esto hoy no existe y ayudaría muchísimo a entender el flujo antes de comenzar.
+03	1. Crea tu cuenta	Captura grande de login, resaltando únicamente Registrarse. Eliminar flechas grandes y elementos decorativos innecesarios.
+04	2. Completa tus datos	Captura + pequeños indicadores numerados sobre los campos obligatorios. Cerrar con CTA: Completar registro.
+05	3. Registra tu incapacidad	Simplificar todo el texto actual. Mostrar visualmente: Nombre → Folio → Motivo → Fechas → PDF → Guardar.
+06	4. Verifica tu registro	Mostrar el registro generado del lado derecho y remarcar: Si aparece aquí, tu captura fue registrada correctamente.
+07	Confirmación al administrador	Captura de WhatsApp + explicación breve del permiso para abrir WhatsApp y enviar la notificación.
+08	Importante: Riesgos de Trabajo	Convertir el actual slide ST7/ST2 en un slide de alerta corporativa mucho más contundente.
+09	¿Olvidaste tu contraseña?	Recuperación en 3 pasos: teléfono → pregunta de seguridad → nueva contraseña.
+10	Antes de finalizar, recuerda	Checklist final con 5 puntos críticos y contacto/área responsable si aplica.
+
+En particular, el slide actual de captura tiene demasiadas instrucciones simultáneas, aunque la información que contiene sí es necesaria: nombre como aparece en HC, folio, tipo de incapacidad, fechas, archivo y guardado. Yo convertiría eso en un flujo numerado de seis pasos en lugar de un bloque de texto.
+
+También reforzaría mucho el slide de ST7/ST2. Actualmente comunica correctamente que un ST7 activo debe contar con incapacidad vigente y que no debe permitirse laborar sin el ST2 correspondiente, pero visualmente puede convertirse en una verdadera alerta operativa.
+
+Estilo visual que usaría
+
+Mantendría amarillo Yello + blanco + negro, pero eliminaría gran parte del naranja, las flechas azules, recuadros de diferentes estilos y la marca de agua gigante. Usaría una sola tipografía sans serif, títulos grandes, máximo 2 tamaños secundarios y códigos visuales consistentes: amarillo = acción, verde = correcto, rojo = alerta.
+
+Además cambiaría frases como “Clip en REGÍSTRATE” por “Haz clic en Registrarse”, “Al correcto guardo...” por “Al guardar correctamente la solicitud...”, y cerraría con “Proceso completado” o “¡Listo!” en lugar de “THANK YOU SO MUCH”. El contenido de recuperación también puede reducirse visualmente a tres acciones.
+
+Sí te recomiendo rehacerla completa, no solamente retocarla. Puedo conservar toda la información y las capturas de la plataforma, pero darle una apariencia mucho más corporativa Yello, moderna, limpia y tipo manual visual, además de corregir redacción y ortografía.
+
+Si quieres, puedo pasar directamente a generarte la nueva presentación en PowerPoint, ya diseñada y lista para presentar.
+
+hoy 11:05 a.m.
+index.html
+Archivo
+Tengo este proyecto, ya es un proyecto solido, ya se esta ocupando por otras personas, sin embargo no me permite ver ni descargar los pdf, ayudame a corregir mi codigo, no hay que mover nada mas por que como te comente ya se esta utilizando, dame el codigo 
+index(1).html
+Archivo
+Tengo este proyecto, ya es un proyecto solido, ya se esta ocupando por otras personas, sin embargo no me permite ver ni descargar los pdf, ayudame a corregir mi codigo, no hay que mover nada mas por que como te comente ya se esta utilizando, dame el codigo
+Sigue igual, con los registros pasados 
+hoy 1:01 p.m.
+index(2).html
+Archivo
+Me podrias ayudar con una presentacion profesional para explicar el funcionamiento del sistema
+Editar
+
+Lista. La hice más visual, con capturas reales del sistema y enfoque para directivos.
+
+Descargar presentación directiva
+
+Presentacion_Directiva_Sistema_Incapacidades_Yello.pptx
+Presentación
+index(3).html
+Archivo
+Ayudame que en la seccion de incapacidades, en el panel de administracion al precionar el boton de whats se mande un mensaje con el estatus de la solicitud, y se mande al numero con el que se registro el usuario que subio la incapacidad
+
+Sí. Ya lo ajusté directamente sobre tu index(3).html, sin mover el resto del proyecto.
+
+El cambio aprovecha que cada incapacidad ya guarda el teléfono del usuario que la subió mediante phone: sessionActual.phone, así que el sistema puede identificar al colaborador correcto sin buscarlo por nombre ni por usuario.
+
+También corregí el botón 💬 Wats del panel administrativo. Antes llamaba a una función que no estaba definida y no enviaba el estatus actual de la solicitud. Ahora, al presionarlo:
+
+toma el registro seleccionado;
+lee de Firestore el estatus más reciente;
+toma el número con el que se registró el usuario;
+incluye folio, motivo, periodo, estatus y observación;
+abre WhatsApp directamente con ese colaborador y el mensaje preparado.
+
+El mensaje queda aproximadamente así:
+
+Hola JORGE SÁNCHEZ 👋
+
+Te compartimos una actualización sobre tu solicitud de incapacidad:
+
+📄 Folio: OR466710
+🩺 Motivo: Enfermedad general
+📅 Periodo: 2026-08-23 al 2026-08-27
+✅ Estatus: Aprobado
+📝 Observación: OK
+
+Este mensaje corresponde al seguimiento de tu solicitud registrada en la Plataforma de Incapacidades Yello MKT Group.
+
+Además, si el estatus es Pendiente, Aprobado o Rechazado, cambia automáticamente el ícono del mensaje. El estatus sigue siendo administrado desde el selector que ya tienes actualmente en tu panel.
+
+Descargar código actualizado – WhatsApp de estatus al colaborador
+
+Importante: con el enlace estándar de WhatsApp que usa actualmente tu proyecto, el botón abre el chat correcto con el mensaje precargado; la persona que administra debe presionar Enviar en WhatsApp. Para que saliera automáticamente sin esa última confirmación necesitarías integrar WhatsApp Business API, que sería un cambio de arquitectura mucho mayor. 
+
+index_whatsapp_estatus_corregido.html
+HTML
+Hola *Nombre del que esta registrado el usuario* 👋
+
+Te compartimos una actualización sobre tu solicitud de incapacidad de (nombre del promotor):
+
+📄 *Folio:* UE194096
+🩺 *Motivo:* Enfermedad general
+📅 *Periodo:* 2026-08-25 al 2026-08-27
+🟡 *Estatus:* Pendiente
+📝 *Observación:* Sin observaciones adicionales
+
+Este mensaje corresponde al seguimiento de tu solicitud registrada en la Plataforma de Incapacidades Yello MKT Group.
+
+_Yello MKT Group_
+
+Sí, justo así quedaría mejor. Ya actualicé el código para que el mensaje haga la distinción correcta:
+
+“Hola Nombre del usuario registrado” toma el nombre de la colección usuarios usando el teléfono con el que inició sesión quien subió la incapacidad. La incapacidad ya guarda ese teléfono en phone: sessionActual.phone, así que se puede identificar correctamente al responsable del registro.
+
+Después, en “solicitud de incapacidad de…” coloca el nombre del promotor capturado dentro de la incapacidad.
+
+El mensaje final queda:
+
+Hola NOMBRE DEL USUARIO REGISTRADO 👋
+
+Te compartimos una actualización sobre tu solicitud de incapacidad de NOMBRE DEL PROMOTOR:
+
+📄 Folio: UE194096
+🩺 Motivo: Enfermedad general
+📅 Periodo: 2026-08-25 al 2026-08-27
+🟡 Estatus: Pendiente
+📝 Observación: Sin observaciones adicionales
+
+Este mensaje corresponde al seguimiento de tu solicitud registrada en la Plataforma de Incapacidades Yello MKT Group.
+
+Yello MKT Group
+
+Y se sigue enviando al número del usuario que originalmente cargó esa incapacidad, no al teléfono del promotor.
+
+Descargar index actualizado con nombre del usuario + promotor 
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -1524,7 +1658,7 @@
                     </td>
                     <td class="py-3.5 px-4 text-center">
                         <div class="flex items-center justify-center gap-1.5">
-                            <button onclick="notificarAdminWhatsApp('${item.empleado}', '${item.usuarioRetail || 'N/D'}', '${item.folio || 'N/D'}', '${item.motivo}', '${item.inicio}', '${item.fin}')" class="bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300 px-2.5 py-1.5 rounded-lg text-xs font-bold hover:bg-emerald-200 transition shadow-sm" title="Notificar por WhatsApp">💬 Wats</button>
+                            <button onclick="notificarEstatusWhatsApp('${item.docId}')" class="bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300 px-2.5 py-1.5 rounded-lg text-xs font-bold hover:bg-emerald-200 transition shadow-sm" title="Enviar estatus al colaborador por WhatsApp">💬 Wats</button>
                             <button onclick="deleteItem('${item.docId}')" class="bg-rose-100 text-rose-700 dark:bg-rose-900/50 dark:text-rose-300 px-2.5 py-1.5 rounded-lg text-xs font-bold hover:bg-rose-200 transition shadow-sm" title="Eliminar registro">🗑️</button>
                         </div>
                     </td>
@@ -1635,6 +1769,98 @@
                 `;
                 tbody.appendChild(tr);
             });
+        }
+
+
+        // ==========================================
+        // WHATSAPP: NOTIFICAR ESTATUS AL COLABORADOR
+        // Usa el teléfono guardado en la incapacidad al momento del registro.
+        // No modifica ningún registro en Firebase.
+        // ==========================================
+        async function notificarEstatusWhatsApp(docId) {
+            try {
+                const incapacidadDoc = await db.collection('incapacidades').doc(docId).get();
+
+                if (!incapacidadDoc.exists) {
+                    showToast('No se encontró la incapacidad seleccionada.', 'error');
+                    return;
+                }
+
+                const item = incapacidadDoc.data();
+
+                // Teléfono del usuario que subió la incapacidad.
+                let telefonoOriginal = String(item.phone || '').replace(/\D/g, '');
+
+                if (!telefonoOriginal) {
+                    showToast('Este registro no tiene un número de teléfono asociado.', 'error');
+                    return;
+                }
+
+                // Busca el nombre real del usuario registrado usando el teléfono.
+                let nombreUsuarioRegistrado = 'colaborador';
+
+                try {
+                    const usuarioDoc = await db.collection('usuarios').doc(telefonoOriginal).get();
+
+                    if (usuarioDoc.exists) {
+                        const usuarioData = usuarioDoc.data();
+                        nombreUsuarioRegistrado = usuarioData.nombre || usuarioData.username || 'colaborador';
+                    } else {
+                        // Compatibilidad por si el teléfono del documento de usuarios está en otro formato.
+                        const usuarioQuery = await db.collection('usuarios')
+                            .where('phone', '==', telefonoOriginal)
+                            .limit(1)
+                            .get();
+
+                        if (!usuarioQuery.empty) {
+                            const usuarioData = usuarioQuery.docs[0].data();
+                            nombreUsuarioRegistrado = usuarioData.nombre || usuarioData.username || 'colaborador';
+                        }
+                    }
+                } catch (userError) {
+                    console.warn('No se pudo recuperar el nombre del usuario registrado:', userError);
+                }
+
+                // Normalización para WhatsApp México.
+                let telefono = telefonoOriginal;
+
+                if (telefono.length === 10) {
+                    telefono = '52' + telefono;
+                } else if (telefono.length === 13 && telefono.startsWith('521')) {
+                    telefono = '52' + telefono.substring(3);
+                }
+
+                const estatus = item.estatus || 'Pendiente';
+                const observacion = item.observacion && item.observacion !== 'Sin observaciones'
+                    ? item.observacion
+                    : 'Sin observaciones adicionales';
+
+                let iconoEstatus = '🟡';
+                if (estatus === 'Aprobado') iconoEstatus = '✅';
+                if (estatus === 'Rechazado') iconoEstatus = '❌';
+
+                const mensaje =
+`Hola *${nombreUsuarioRegistrado}* 👋
+
+Te compartimos una actualización sobre tu solicitud de incapacidad de *${item.empleado || 'N/D'}*:
+
+📄 *Folio:* ${item.folio || 'N/D'}
+🩺 *Motivo:* ${item.motivo || 'No especificado'}
+📅 *Periodo:* ${item.inicio || 'N/D'} al ${item.fin || 'N/D'}
+${iconoEstatus} *Estatus:* ${estatus}
+📝 *Observación:* ${observacion}
+
+Este mensaje corresponde al seguimiento de tu solicitud registrada en la Plataforma de Incapacidades Yello MKT Group.
+
+_Yello MKT Group_`;
+
+                const url = `https://api.whatsapp.com/send?phone=${telefono}&text=${encodeURIComponent(mensaje)}`;
+                window.open(url, '_blank');
+
+            } catch (error) {
+                console.error('Error al preparar WhatsApp:', error);
+                showToast('No fue posible preparar el mensaje de WhatsApp.', 'error');
+            }
         }
 
         function updateStatusAndObservation(docId, nuevoEstatus, obsActual) {
